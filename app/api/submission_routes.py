@@ -20,7 +20,7 @@
 #     if form.validate_on_submit():
 
 #         new_submission = Submission(
-#             creator_id=current_user.id,
+#             student_id=current_user.id,
 #             opportunity_id=opportunity.id,
 #             name=form.name.data,
 #             notes=form.notes.data,

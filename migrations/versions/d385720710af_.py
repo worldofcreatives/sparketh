@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: fa23250f3af3
+Revision ID: d385720710af
 Revises: 
-Create Date: 2024-06-07 19:27:20.985291
+Create Date: 2024-06-07 19:34:48.708205
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'fa23250f3af3'
+revision = 'd385720710af'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -48,7 +48,7 @@ def upgrade():
     sa.UniqueConstraint('stripe_subscription_id'),
     sa.UniqueConstraint('username')
     )
-    op.create_table('companies',
+    op.create_table('parents',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=255), nullable=True),
@@ -60,10 +60,25 @@ def upgrade():
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('user_id')
     )
-    op.create_table('creators',
+    op.create_table('opportunities',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=255), nullable=False),
+    sa.Column('description', sa.Text(), nullable=False),
+    sa.Column('target_audience', sa.String(length=255), nullable=True),
+    sa.Column('budget', sa.DECIMAL(precision=10, scale=2), nullable=True),
+    sa.Column('guidelines', sa.Text(), nullable=True),
+    sa.Column('parent_id', sa.Integer(), nullable=True),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('created_date', sa.DateTime(), nullable=False),
+    sa.Column('updated_date', sa.DateTime(), nullable=False),
+    sa.ForeignKeyConstraint(['parent_id'], ['parents.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('students',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('company_id', sa.Integer(), nullable=True),
+    sa.Column('parent_id', sa.Integer(), nullable=True),
     sa.Column('first_name', sa.String(length=255), nullable=True),
     sa.Column('last_name', sa.String(length=255), nullable=True),
     sa.Column('stage_name', sa.String(length=255), nullable=True),
@@ -88,39 +103,10 @@ def upgrade():
     sa.Column('reference_relationship', sa.String(length=100), nullable=True),
     sa.Column('created_date', sa.DateTime(), nullable=False),
     sa.Column('updated_date', sa.DateTime(), nullable=False),
-    sa.ForeignKeyConstraint(['company_id'], ['companies.id'], ),
+    sa.ForeignKeyConstraint(['parent_id'], ['parents.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('user_id')
-    )
-    op.create_table('opportunities',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(length=255), nullable=False),
-    sa.Column('description', sa.Text(), nullable=False),
-    sa.Column('target_audience', sa.String(length=255), nullable=True),
-    sa.Column('budget', sa.DECIMAL(precision=10, scale=2), nullable=True),
-    sa.Column('guidelines', sa.Text(), nullable=True),
-    sa.Column('company_id', sa.Integer(), nullable=True),
-    sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('created_date', sa.DateTime(), nullable=False),
-    sa.Column('updated_date', sa.DateTime(), nullable=False),
-    sa.ForeignKeyConstraint(['company_id'], ['companies.id'], ),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('creator_genres',
-    sa.Column('creator_id', sa.Integer(), nullable=False),
-    sa.Column('genre_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['creator_id'], ['creators.id'], ),
-    sa.ForeignKeyConstraint(['genre_id'], ['genres.id'], ),
-    sa.PrimaryKeyConstraint('creator_id', 'genre_id')
-    )
-    op.create_table('creator_types',
-    sa.Column('creator_id', sa.Integer(), nullable=False),
-    sa.Column('type_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['creator_id'], ['creators.id'], ),
-    sa.ForeignKeyConstraint(['type_id'], ['types.id'], ),
-    sa.PrimaryKeyConstraint('creator_id', 'type_id')
     )
     op.create_table('opportunity_genres',
     sa.Column('opportunity_id', sa.Integer(), nullable=False),
@@ -135,6 +121,20 @@ def upgrade():
     sa.ForeignKeyConstraint(['opportunity_id'], ['opportunities.id'], ),
     sa.ForeignKeyConstraint(['type_id'], ['types.id'], ),
     sa.PrimaryKeyConstraint('opportunity_id', 'type_id')
+    )
+    op.create_table('student_genres',
+    sa.Column('student_id', sa.Integer(), nullable=False),
+    sa.Column('genre_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['genre_id'], ['genres.id'], ),
+    sa.ForeignKeyConstraint(['student_id'], ['students.id'], ),
+    sa.PrimaryKeyConstraint('student_id', 'genre_id')
+    )
+    op.create_table('student_types',
+    sa.Column('student_id', sa.Integer(), nullable=False),
+    sa.Column('type_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['student_id'], ['students.id'], ),
+    sa.ForeignKeyConstraint(['type_id'], ['types.id'], ),
+    sa.PrimaryKeyConstraint('student_id', 'type_id')
     )
     op.create_table('submissions',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -225,13 +225,13 @@ def downgrade():
     op.drop_table('media')
     op.drop_table('feedback')
     op.drop_table('submissions')
+    op.drop_table('student_types')
+    op.drop_table('student_genres')
     op.drop_table('opportunity_types')
     op.drop_table('opportunity_genres')
-    op.drop_table('creator_types')
-    op.drop_table('creator_genres')
+    op.drop_table('students')
     op.drop_table('opportunities')
-    op.drop_table('creators')
-    op.drop_table('companies')
+    op.drop_table('parents')
     op.drop_table('users')
     op.drop_table('types')
     op.drop_table('genres')

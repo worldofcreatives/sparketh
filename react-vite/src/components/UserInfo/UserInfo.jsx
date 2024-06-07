@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserById } from '../../redux/users'; // Adjust the import path according to your project structure
 import { thunkUpdateUserStatus } from '../../redux/users';
-import WithCompanyGuard from '../WithCompanyGuard/WithCompanyGuard';
+import WithParentGuard from '../WithParentGuard/WithParentGuard';
 import './UserInfo.css';
 
 
@@ -81,35 +81,35 @@ const UserInfo = () => {
       </button>
 
       <p><strong>Type:</strong> {user.type}</p>
-      {user.creator && (
+      {user.student && (
         <>
-          <h3>Creator Information</h3>
-          <p><strong>First Name:</strong> {user.creator.first_name}</p>
-          <p><strong>Last Name:</strong> {user.creator.last_name}</p>
-          <p><strong>Stage Name:</strong> {user.creator.stage_name}</p>
-          <p><strong>Bio:</strong> {user.creator.bio}</p>
-          <p><strong>Phone:</strong> {user.creator.phone}</p>
-          <p><strong>Address:</strong> {user.creator.address}</p>
-          <p><strong>Portfolio URL:</strong> {user.creator.portfolio_url}</p>
-          <p><strong>Previous Projects:</strong> {user.creator.previous_projects}</p>
-          <p><strong>Instagram:</strong> {user.creator.instagram}</p>
-          <p><strong>Twitter:</strong> {user.creator.twitter}</p>
-          <p><strong>Facebook:</strong> {user.creator.facebook}</p>
-          <p><strong>YouTube:</strong> {user.creator.youtube}</p>
-          <p><strong>Other Social Media:</strong> {user.creator.other_social_media}</p>
-          <p><strong>Reference Name:</strong> {user.creator.reference_name}</p>
-          <p><strong>Reference Email:</strong> {user.creator.reference_email}</p>
-          <p><strong>Reference Phone:</strong> {user.creator.reference_phone}</p>
-          <p><strong>Reference Relationship:</strong> {user.creator.reference_relationship}</p>
-          <p><strong>Genres:</strong> {user.creator.genres.map(genre => genre.name).join(', ')}</p>
-          <p><strong>Types:</strong> {user.creator.types.map(type => type.name).join(', ')}</p>
+          <h3>Student Information</h3>
+          <p><strong>First Name:</strong> {user.student.first_name}</p>
+          <p><strong>Last Name:</strong> {user.student.last_name}</p>
+          <p><strong>Stage Name:</strong> {user.student.stage_name}</p>
+          <p><strong>Bio:</strong> {user.student.bio}</p>
+          <p><strong>Phone:</strong> {user.student.phone}</p>
+          <p><strong>Address:</strong> {user.student.address}</p>
+          <p><strong>Portfolio URL:</strong> {user.student.portfolio_url}</p>
+          <p><strong>Previous Projects:</strong> {user.student.previous_projects}</p>
+          <p><strong>Instagram:</strong> {user.student.instagram}</p>
+          <p><strong>Twitter:</strong> {user.student.twitter}</p>
+          <p><strong>Facebook:</strong> {user.student.facebook}</p>
+          <p><strong>YouTube:</strong> {user.student.youtube}</p>
+          <p><strong>Other Social Media:</strong> {user.student.other_social_media}</p>
+          <p><strong>Reference Name:</strong> {user.student.reference_name}</p>
+          <p><strong>Reference Email:</strong> {user.student.reference_email}</p>
+          <p><strong>Reference Phone:</strong> {user.student.reference_phone}</p>
+          <p><strong>Reference Relationship:</strong> {user.student.reference_relationship}</p>
+          <p><strong>Genres:</strong> {user.student.genres.map(genre => genre.name).join(', ')}</p>
+          <p><strong>Types:</strong> {user.student.types.map(type => type.name).join(', ')}</p>
         </>
       )}
     </div>
   );
 };
 
-export default WithCompanyGuard(UserInfo); // Wrap the component with the HOC
+export default WithParentGuard(UserInfo); // Wrap the component with the HOC
 
 
 // import React, { useEffect } from 'react';
@@ -117,7 +117,7 @@ export default WithCompanyGuard(UserInfo); // Wrap the component with the HOC
 // import { useDispatch, useSelector } from 'react-redux';
 // import { fetchUserById } from '../../redux/users'; // Adjust the import path according to your project structure
 // import { thunkUpdateUserStatus } from '../../redux/users';
-// import WithCompanyGuard from '../WithCompanyGuard/WithCompanyGuard';
+// import WithParentGuard from '../WithParentGuard/WithParentGuard';
 // import './UserInfo.css';
 
 
@@ -160,32 +160,32 @@ export default WithCompanyGuard(UserInfo); // Wrap the component with the HOC
 
 
 //       <p><strong>Type:</strong> {user.type}</p>
-//       {user.creator && (
+//       {user.student && (
 //         <>
-//           <h3>Creator Information</h3>
-//           <p><strong>First Name:</strong> {user.creator.first_name}</p>
-//           <p><strong>Last Name:</strong> {user.creator.last_name}</p>
-//           <p><strong>Stage Name:</strong> {user.creator.stage_name}</p>
-//             <p><strong>Bio:</strong> {user.creator.bio}</p>
-//             <p><strong>Phone:</strong> {user.creator.phone}</p>
-//             <p><strong>Address:</strong> {user.creator.address}</p>
-//             <p><strong>Portfolio URL:</strong> {user.creator.portfolio_url}</p>
-//             <p><strong>Previous Projects:</strong> {user.creator.previous_projects}</p>
-//             <p><strong>Instagram:</strong> {user.creator.instagram}</p>
-//             <p><strong>Twitter:</strong> {user.creator.twitter}</p>
-//             <p><strong>Facebook:</strong> {user.creator.facebook}</p>
-//             <p><strong>YouTube:</strong> {user.creator.youtube}</p>
-//             <p><strong>Other Social Media:</strong> {user.creator.other_social_media}</p>
-//             <p><strong>Reference Name:</strong> {user.creator.reference_name}</p>
-//             <p><strong>Reference Email:</strong> {user.creator.reference_email}</p>
-//             <p><strong>Reference Phone:</strong> {user.creator.reference_phone}</p>
-//             <p><strong>Reference Relationship:</strong> {user.creator.reference_relationship}</p>
-//             <p><strong>Genres:</strong> {user.creator.genres.map(genre => genre.name).join(', ')}</p>
-//             <p><strong>Types:</strong> {user.creator.types.map(type => type.name).join(', ')}</p>
+//           <h3>Student Information</h3>
+//           <p><strong>First Name:</strong> {user.student.first_name}</p>
+//           <p><strong>Last Name:</strong> {user.student.last_name}</p>
+//           <p><strong>Stage Name:</strong> {user.student.stage_name}</p>
+//             <p><strong>Bio:</strong> {user.student.bio}</p>
+//             <p><strong>Phone:</strong> {user.student.phone}</p>
+//             <p><strong>Address:</strong> {user.student.address}</p>
+//             <p><strong>Portfolio URL:</strong> {user.student.portfolio_url}</p>
+//             <p><strong>Previous Projects:</strong> {user.student.previous_projects}</p>
+//             <p><strong>Instagram:</strong> {user.student.instagram}</p>
+//             <p><strong>Twitter:</strong> {user.student.twitter}</p>
+//             <p><strong>Facebook:</strong> {user.student.facebook}</p>
+//             <p><strong>YouTube:</strong> {user.student.youtube}</p>
+//             <p><strong>Other Social Media:</strong> {user.student.other_social_media}</p>
+//             <p><strong>Reference Name:</strong> {user.student.reference_name}</p>
+//             <p><strong>Reference Email:</strong> {user.student.reference_email}</p>
+//             <p><strong>Reference Phone:</strong> {user.student.reference_phone}</p>
+//             <p><strong>Reference Relationship:</strong> {user.student.reference_relationship}</p>
+//             <p><strong>Genres:</strong> {user.student.genres.map(genre => genre.name).join(', ')}</p>
+//             <p><strong>Types:</strong> {user.student.types.map(type => type.name).join(', ')}</p>
 //         </>
 //       )}
 //     </div>
 //   );
 // };
 
-// export default WithCompanyGuard(UserInfo); // Wrap the component with the HOC
+// export default WithParentGuard(UserInfo); // Wrap the component with the HOC

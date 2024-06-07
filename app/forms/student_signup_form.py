@@ -9,7 +9,7 @@ def username_exists(form, field):
     if user:
         raise ValidationError('Username is already in use.')
 
-class CreatorSignUpForm(FlaskForm):
+class StudentSignUpForm(FlaskForm):
     username = StringField('username', validators=[
         DataRequired(),
         Length(min=3, max=40, message="Username must be between 3 and 40 characters."),

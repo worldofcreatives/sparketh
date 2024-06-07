@@ -32,11 +32,11 @@ const UsersChart = () => {
                     <tr key={user.id}>
                         <td>{user.email}</td>
                         <td>{new Date(user.created_date).toLocaleDateString()}</td>
-                        <td>{user.creator?.first_name || "N/A"}</td>
-                        <td>{user.creator?.last_name || "N/A"}</td>
-                        <td>{user.creator?.stage_name || "N/A"}</td>
-                        <td>{(user.creator?.genres?.map(genre => genre.name) || []).join(', ') || 'N/A'}</td>
-                        <td>{(user.creator?.types?.map(type => type.name) || []).join(', ') || 'N/A'}</td>
+                        <td>{user.student?.first_name || "N/A"}</td>
+                        <td>{user.student?.last_name || "N/A"}</td>
+                        <td>{user.student?.stage_name || "N/A"}</td>
+                        <td>{(user.student?.genres?.map(genre => genre.name) || []).join(', ') || 'N/A'}</td>
+                        <td>{(user.student?.types?.map(type => type.name) || []).join(', ') || 'N/A'}</td>
                         <td>{user.status}</td>
                         <td><a href={user.profile_link}>View Profile</a></td>
                     </tr>

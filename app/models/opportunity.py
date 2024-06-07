@@ -28,15 +28,15 @@ class Opportunity(db.Model):
     target_audience = db.Column(db.String(255), nullable=True)
     budget = db.Column(db.DECIMAL(10,2), nullable=True)
     guidelines = db.Column(db.Text, nullable=True)
-    company_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('companies.id')), nullable=True)
+    parent_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('parents.id')), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.id')), nullable=False)
     genres = db.relationship('Genre', secondary=opportunity_genre_table, backref=db.backref('opportunities', lazy=True))
     types = db.relationship('Type', secondary=opportunity_type_table, backref=db.backref('opportunities', lazy=True))
     created_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    # Relationship to Company
-    company = db.relationship('Company', backref=db.backref('opportunities', lazy=True))
+    # Relationship to Parent
+    parent = db.relationship('Parent', backref=db.backref('opportunities', lazy=True))
 
     # Many-to-Many Relationship with Media
     opp_media = db.relationship('Media', secondary=opp_media_table, backref=db.backref('opportunities', lazy='dynamic'))

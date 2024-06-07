@@ -19,7 +19,7 @@ export const UPDATE_OPPORTUNITY_GENRES_TYPES_SUCCESS = 'opportunities/updateOppo
 export const UPDATE_OPPORTUNITY_GENRES_TYPES_FAILURE = 'opportunities/updateOpportunityGenresTypesFailure';
 
 
-//*====> Action Creators <====
+//*====> Action Students <====
 const fetchOpportunitiesRequest = () => ({
     type: FETCH_OPPORTUNITIES_REQUEST,
   });

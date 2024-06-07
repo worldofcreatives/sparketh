@@ -3,7 +3,7 @@ const SET_ALL_USERS = 'users/setAllUsers';
 const UPDATE_USER_STATUS = 'users/updateUserStatus';
 const SET_CURRENT_USER = 'users/setCurrentUser';
 
-// Action Creators
+// Action Students
 const setAllUsers = (users) => ({
   type: SET_ALL_USERS,
   users,

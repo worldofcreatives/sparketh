@@ -19,7 +19,7 @@ export const FETCH_ALL_SUBMISSIONS_SUCCESS = 'submissions/fetchAllSubmissionsSuc
 export const FETCH_ALL_SUBMISSIONS_FAILURE = 'submissions/fetchAllSubmissionsFailure';
 
 
-//*====> Action Creators <====
+//*====> Action Students <====
 const createSubmissionRequest = () => ({
   type: CREATE_SUBMISSION_REQUEST,
 });
@@ -103,7 +103,7 @@ const fetchAllSubmissionsFailure = (error) => ({
 
 
 
-//*====> Thunk Action Creators <====
+//*====> Thunk Action Students <====
 
 // Create a new submission for a specific opportunity
 export const createNewSubmission = (formData, oppId) => async (dispatch) => {

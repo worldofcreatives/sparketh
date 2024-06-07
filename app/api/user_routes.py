@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
-from app.models import User, db, Creator
+from app.models import User, db, Student
 from sqlalchemy.exc import SQLAlchemyError
 
 user_routes = Blueprint('users', __name__)
@@ -48,7 +48,7 @@ def update_status_to_applied():
 @user_routes.route('/<int:user_id>/update-status', methods=['PUT'])
 @login_required
 def update_user_status(user_id):
-    if not current_user.is_company():
+    if not current_user.is_parent():
         return jsonify({'error': 'Unauthorized'}), 403
 
     data = request.get_json()
@@ -71,7 +71,7 @@ def update_user_status(user_id):
 @user_routes.route('/all', methods=['GET'])
 @login_required
 def get_all_users():
-    if not current_user.is_company():
+    if not current_user.is_parent():
         return jsonify({"error": "Unauthorized access"}), 403
 
     users = User.query.all()
@@ -86,37 +86,37 @@ def get_all_users():
             "profile_link": f"/user/{user.id}",  # Assuming profile link is structured like this
         }
 
-        # Fetch creator information if exists
-        creator = Creator.query.filter_by(user_id=user.id).first()
-        if creator:
-            creator_data = creator.to_dict()
-            # Extract and include only the relevant creator information
+        # Fetch student information if exists
+        student = Student.query.filter_by(user_id=user.id).first()
+        if student:
+            student_data = student.to_dict()
+            # Extract and include only the relevant student information
             user_data.update({
-                "creator": {
-                    "first_name": creator_data["first_name"],
-                    "last_name": creator_data["last_name"],
-                    "stage_name": creator_data["stage_name"],
-                    "profile_pic": creator_data["profile_pic"],
-                    "bio": creator_data["bio"],
-                    "phone": creator_data["phone"],
-                    "address_1": creator_data["address_1"],
-                    "address_2": creator_data["address_2"],
-                    "city": creator_data["city"],
-                    "state": creator_data["state"],
-                    "postal_code": creator_data["postal_code"],
-                    "portfolio_url": creator_data["portfolio_url"],
-                    "previous_projects": creator_data["previous_projects"],
-                    "instagram": creator_data["instagram"],
-                    "twitter": creator_data["twitter"],
-                    "facebook": creator_data["facebook"],
-                    "youtube": creator_data["youtube"],
-                    "other_social_media": creator_data["other_social_media"],
-                    "reference_name": creator_data["reference_name"],
-                    "reference_email": creator_data["reference_email"],
-                    "reference_phone": creator_data["reference_phone"],
-                    "reference_relationship": creator_data["reference_relationship"],
-                    "genres": creator_data["genres"],
-                    "types": creator_data["types"]
+                "student": {
+                    "first_name": student_data["first_name"],
+                    "last_name": student_data["last_name"],
+                    "stage_name": student_data["stage_name"],
+                    "profile_pic": student_data["profile_pic"],
+                    "bio": student_data["bio"],
+                    "phone": student_data["phone"],
+                    "address_1": student_data["address_1"],
+                    "address_2": student_data["address_2"],
+                    "city": student_data["city"],
+                    "state": student_data["state"],
+                    "postal_code": student_data["postal_code"],
+                    "portfolio_url": student_data["portfolio_url"],
+                    "previous_projects": student_data["previous_projects"],
+                    "instagram": student_data["instagram"],
+                    "twitter": student_data["twitter"],
+                    "facebook": student_data["facebook"],
+                    "youtube": student_data["youtube"],
+                    "other_social_media": student_data["other_social_media"],
+                    "reference_name": student_data["reference_name"],
+                    "reference_email": student_data["reference_email"],
+                    "reference_phone": student_data["reference_phone"],
+                    "reference_relationship": student_data["reference_relationship"],
+                    "genres": student_data["genres"],
+                    "types": student_data["types"]
                 }
             })
 
@@ -124,7 +124,7 @@ def get_all_users():
 
     return jsonify(users_list)
 
-#    Query for a user by id and returns that user in a dictionary, including creator info if available
+#    Query for a user by id and returns that user in a dictionary, including student info if available
 @user_routes.route('/<int:id>')
 @login_required
 def get_user(id):
@@ -134,14 +134,14 @@ def get_user(id):
 
     user_dict = user.to_dict()
 
-    # Check if the user has associated creator information and include it
-    creator = Creator.query.filter_by(user_id=id).first()
-    if creator:
-        # If you have a to_dict method for Creator, you can just call it
-        creator_dict = creator.to_dict()
-        user_dict["creator"] = creator_dict
+    # Check if the user has associated student information and include it
+    student = Student.query.filter_by(user_id=id).first()
+    if student:
+        # If you have a to_dict method for Student, you can just call it
+        student_dict = student.to_dict()
+        user_dict["student"] = student_dict
     else:
-        # Optionally handle the case where the user has no creator information
-        user_dict["creator"] = "No creator information available"
+        # Optionally handle the case where the user has no student information
+        user_dict["student"] = "No student information available"
 
     return jsonify(user_dict), 200

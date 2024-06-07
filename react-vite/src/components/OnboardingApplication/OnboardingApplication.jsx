@@ -69,33 +69,33 @@ const OnboardingApplication = () => {
       if (user && user.status !== "Pre-Apply") {
         navigate('/profile'); // Redirect if status is not Pre-Apply
       } else {
-        if (userProfile && userProfile.type === 'Creator') {
-          const { creator } = userProfile;
+        if (userProfile && userProfile.type === 'Student') {
+          const { student } = userProfile;
           setProfileData({
-            bio: creator.bio || '',
-            first_name: creator.first_name || '',
-            last_name: creator.last_name || '',
-            stage_name: creator.stage_name || '',
-            phone: creator.phone || '',
-            address_1: creator.address_1 || '',
-            address_2: creator.address_2 || '',
-            city: creator.city || '',
-            state: creator.state || '',
-            postal_code: creator.postal_code || '',
-            portfolio_url: creator.portfolio_url || '',
-            previous_projects: creator.previous_projects || '',
-            instagram: creator.instagram || '',
-            twitter: creator.twitter || '',
-            facebook: creator.facebook || '',
-            youtube: creator.youtube || '',
-            other_social_media: creator.other_social_media || '',
-            reference_name: creator.reference_name || '',
-            reference_email: creator.reference_email || '',
-            reference_phone: creator.reference_phone || '',
-            reference_relationship: creator.reference_relationship || '',
+            bio: student.bio || '',
+            first_name: student.first_name || '',
+            last_name: student.last_name || '',
+            stage_name: student.stage_name || '',
+            phone: student.phone || '',
+            address_1: student.address_1 || '',
+            address_2: student.address_2 || '',
+            city: student.city || '',
+            state: student.state || '',
+            postal_code: student.postal_code || '',
+            portfolio_url: student.portfolio_url || '',
+            previous_projects: student.previous_projects || '',
+            instagram: student.instagram || '',
+            twitter: student.twitter || '',
+            facebook: student.facebook || '',
+            youtube: student.youtube || '',
+            other_social_media: student.other_social_media || '',
+            reference_name: student.reference_name || '',
+            reference_email: student.reference_email || '',
+            reference_phone: student.reference_phone || '',
+            reference_relationship: student.reference_relationship || '',
           });
-          setSelectedGenres(creator.genres.map(genre => genre.id));
-          setSelectedTypes(creator.types.map(type => type.id));
+          setSelectedGenres(student.genres.map(genre => genre.id));
+          setSelectedTypes(student.types.map(type => type.id));
         }
       }
     });
@@ -449,33 +449,33 @@ export default OnboardingApplication;
 //       if (user && user.status !== "Pre-Apply") {
 //         navigate('/profile'); // Redirect if status is not Pre-Apply
 //       } else {
-//         if (userProfile && userProfile.type === 'Creator') {
-//           const { creator } = userProfile;
+//         if (userProfile && userProfile.type === 'Student') {
+//           const { student } = userProfile;
 //           setProfileData({
-//             bio: creator.bio || '',
-//             first_name: creator.first_name || '',
-//             last_name: creator.last_name || '',
-//             stage_name: creator.stage_name || '',
-//             phone: creator.phone || '',
-//             address_1: creator.address_1 || '',
-//             address_2: creator.address_2 || '',
-//             city: creator.city || '',
-//             state: creator.state || '',
-//             postal_code: creator.postal_code || '',
-//             portfolio_url: creator.portfolio_url || '',
-//             previous_projects: creator.previous_projects || '',
-//             instagram: creator.instagram || '',
-//             twitter: creator.twitter || '',
-//             facebook: creator.facebook || '',
-//             youtube: creator.youtube || '',
-//             other_social_media: creator.other_social_media || '',
-//             reference_name: creator.reference_name || '',
-//             reference_email: creator.reference_email || '',
-//             reference_phone: creator.reference_phone || '',
-//             reference_relationship: creator.reference_relationship || '',
+//             bio: student.bio || '',
+//             first_name: student.first_name || '',
+//             last_name: student.last_name || '',
+//             stage_name: student.stage_name || '',
+//             phone: student.phone || '',
+//             address_1: student.address_1 || '',
+//             address_2: student.address_2 || '',
+//             city: student.city || '',
+//             state: student.state || '',
+//             postal_code: student.postal_code || '',
+//             portfolio_url: student.portfolio_url || '',
+//             previous_projects: student.previous_projects || '',
+//             instagram: student.instagram || '',
+//             twitter: student.twitter || '',
+//             facebook: student.facebook || '',
+//             youtube: student.youtube || '',
+//             other_social_media: student.other_social_media || '',
+//             reference_name: student.reference_name || '',
+//             reference_email: student.reference_email || '',
+//             reference_phone: student.reference_phone || '',
+//             reference_relationship: student.reference_relationship || '',
 //           });
-//           setSelectedGenres(creator.genres.map(genre => genre.id));
-//           setSelectedTypes(creator.types.map(type => type.id));
+//           setSelectedGenres(student.genres.map(genre => genre.id));
+//           setSelectedTypes(student.types.map(type => type.id));
 //         }
 //       }
 //     });

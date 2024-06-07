@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, render_template
 from flask_login import login_required, current_user
 from datetime import datetime
-from app.models import db, Opportunity, Submission, Feedback, Company, Creator, Genre, Type
+from app.models import db, Opportunity, Submission, Feedback, Parent, Student, Genre, Type
 from app.forms.opportunity_form import OpportunityForm
 from app.forms.submission_form import SubmissionForm
 from app.forms.feedback_form import FeedbackForm
@@ -37,11 +37,11 @@ def get_opportunity(id):
 @login_required
 def create_opportunity():
 
-    # Ensure the current user is a company
-    if not current_user.is_company():
+    # Ensure the current user is a parent
+    if not current_user.is_parent():
         return jsonify({"error": "Unauthorized"}), 403
 
-    # company = Company.query.filter_by(user_id=current_user.id).first()
+    # parent = Parent.query.filter_by(user_id=current_user.id).first()
 
     form = OpportunityForm()
     form["csrf_token"].data = request.cookies["csrf_token"]
@@ -52,7 +52,7 @@ def create_opportunity():
             target_audience=form.target_audience.data,
             budget=form.budget.data,
             guidelines=form.guidelines.data,
-            # company_id=company.id,
+            # parent_id=parent.id,
             user_id=current_user.id
         )
         try:
@@ -75,9 +75,9 @@ def update_opportunity(id):
     if not opportunity:
         return jsonify({"error": "Opportunity not found"}), 404
 
-    # company = Company.query.filter_by(user_id=current_user.id).first()
-    # if not company:
-    #     return jsonify({"error": "Unauthorized - User is not associated with any company"}), 403
+    # parent = Parent.query.filter_by(user_id=current_user.id).first()
+    # if not parent:
+    #     return jsonify({"error": "Unauthorized - User is not associated with any parent"}), 403
 
     if opportunity.user_id != current_user.id:
         return jsonify({"error": "Unauthorized"}), 403
@@ -110,9 +110,9 @@ def delete_opportunity(id):
     if not opportunity:
         return jsonify({"error": "Opportunity not found"}), 404
 
-    # company = Company.query.filter_by(user_id=current_user.id).first()
-    # if not company:
-    #     return jsonify({"error": "Unauthorized - User is not associated with any company"}), 403
+    # parent = Parent.query.filter_by(user_id=current_user.id).first()
+    # if not parent:
+    #     return jsonify({"error": "Unauthorized - User is not associated with any parent"}), 403
 
     if opportunity.user_id != current_user.id:
         return jsonify({"error": "Unauthorized"}), 403
@@ -179,7 +179,7 @@ def create_submission(id):
             submission_limit_reached = True
         if Submission.query.filter_by(user_id=current_user.id, opportunity_id=opportunity.id).count() >= 3:
             submission_limit_per_opportunity_reached = True
-    elif current_user.status == 'Major7eague' or current_user.type == 'Company':
+    elif current_user.status == 'Major7eague' or current_user.type == 'Parent':
         submission_limit_reached = False
         submission_limit_per_opportunity_reached = False
     else:
@@ -279,13 +279,13 @@ def get_submissions_for_opportunity(id):
     if not opportunity:
         return jsonify({"error": "Opportunity not found"}), 404
 
-    # # Query for the company associated with the current user
-    # company = Company.query.filter_by(user_id=current_user.id).first()
-    # if not company:
-    #     return jsonify({"error": "Access denied. User is not associated with any company."}), 403
+    # # Query for the parent associated with the current user
+    # parent = Parent.query.filter_by(user_id=current_user.id).first()
+    # if not parent:
+    #     return jsonify({"error": "Access denied. User is not associated with any parent."}), 403
 
     # # Ensure the current user is authorized to view submissions for the opportunity
-    # if opportunity.company_id != company.id:
+    # if opportunity.parent_id != parent.id:
     #     return jsonify({"error": "Access denied. User did not create this opportunity."}), 403
 
     # Ensure the current user is authorized to view submissions for the opportunity
@@ -310,12 +310,12 @@ def get_specific_submission(opp_id, sub_id):
     if not opportunity:
         return jsonify({"error": "Opportunity not found"}), 404
 
-    # creator = Creator.query.filter_by(user_id=current_user.id).first()
-    # if creator and submission.creator_id == creator.id:
+    # student = Student.query.filter_by(user_id=current_user.id).first()
+    # if student and submission.student_id == student.id:
     #     return jsonify(submission.to_dict()), 200
 
-    # company = Company.query.filter_by(user_id=current_user.id).first()
-    # if company and opportunity.company_id == company.id:
+    # parent = Parent.query.filter_by(user_id=current_user.id).first()
+    # if parent and opportunity.parent_id == parent.id:
     #     return jsonify(submission.to_dict()), 200
 
     if opportunity.user_id == current_user.id:
@@ -336,9 +336,9 @@ def update_submission_status(opp_id, sub_id):
     if submission.opportunity_id != opp_id:
         return jsonify({"error": "Submission does not belong to the given opportunity"}), 400
 
-    # company = Company.query.filter_by(user_id=current_user.id).first()
-    # if not company:
-    #     return jsonify({"error": "Unauthorized to update submission status - User is not associated with any company"}), 403
+    # parent = Parent.query.filter_by(user_id=current_user.id).first()
+    # if not parent:
+    #     return jsonify({"error": "Unauthorized to update submission status - User is not associated with any parent"}), 403
 
     opportunity = Opportunity.query.get(opp_id)
     if not opportunity or current_user.id != opportunity.user_id:
@@ -372,14 +372,14 @@ def delete_submission(opp_id, sub_id):
     if not opportunity:
         return jsonify({"error": "Opportunity not found"}), 404
 
-    # creator = Creator.query.filter_by(user_id=current_user.id).first()
-    # if creator and submission.creator_id == creator.id:
+    # student = Student.query.filter_by(user_id=current_user.id).first()
+    # if student and submission.student_id == student.id:
     #     db.session.delete(submission)
     #     db.session.commit()
     #     return jsonify({"message": "Submission successfully deleted"}), 200
 
-    # company = Company.query.filter_by(user_id=current_user.id).first()
-    # if company and opportunity.company_id == company.id:
+    # parent = Parent.query.filter_by(user_id=current_user.id).first()
+    # if parent and opportunity.parent_id == parent.id:
     #     db.session.delete(submission)
     #     db.session.commit()
     #     return jsonify({"message": "Submission successfully deleted"}), 200
@@ -404,12 +404,12 @@ def submit_feedback(opp_id, sub_id):
     if not submission:
         return jsonify({'error': 'Submission not found or does not belong to the specified opportunity'}), 404
 
-    creator = Creator.query.filter_by(user_id=current_user.id).first()
-    if creator and submission.creator_id == creator.id:
+    student = Student.query.filter_by(user_id=current_user.id).first()
+    if student and submission.student_id == student.id:
         pass
     else:
-        company = Company.query.filter_by(user_id=current_user.id).first()
-        if not company or company.id != submission.opportunity.company_id:
+        parent = Parent.query.filter_by(user_id=current_user.id).first()
+        if not parent or parent.id != submission.opportunity.parent_id:
             return jsonify({'error': 'You are unauthorized'}), 403
 
     if form.validate_on_submit():
@@ -438,11 +438,11 @@ def list_feedback_for_submission(opp_id, sub_id):
     if not submission:
         return jsonify({'error': 'Submission not found or does not belong to the specified opportunity'}), 404
 
-    is_creator = submission.creator_id == current_user.id
-    company = Company.query.filter_by(user_id=current_user.id).first()
-    is_company_associated = company and company.id == submission.opportunity.company_id
+    is_student = submission.student_id == current_user.id
+    parent = Parent.query.filter_by(user_id=current_user.id).first()
+    is_parent_associated = parent and parent.id == submission.opportunity.parent_id
 
-    if not is_creator and not is_company_associated:
+    if not is_student and not is_parent_associated:
         return jsonify({'error': 'Unauthorized access to feedback'}), 403
 
     feedback_list = Feedback.query.filter_by(submission_id=sub_id).all()

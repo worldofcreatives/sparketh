@@ -27,8 +27,8 @@
 "/Users/dev/Documents/packtune/app/forms/signup_form.py", "Python", 33, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 8, 48
 "/Users/dev/Documents/packtune/app/forms/submission_form.py", "Python", 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 15
 "/Users/dev/Documents/packtune/app/models/__init__.py", "Python", 29, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 7, 38
-"/Users/dev/Documents/packtune/app/models/company.py", "Python", 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 28
-"/Users/dev/Documents/packtune/app/models/creator.py", "Python", 74, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 7, 83
+"/Users/dev/Documents/packtune/app/models/parent.py", "Python", 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 28
+"/Users/dev/Documents/packtune/app/models/student.py", "Python", 74, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 7, 83
 "/Users/dev/Documents/packtune/app/models/db.py", "Python", 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5, 16
 "/Users/dev/Documents/packtune/app/models/feedback.py", "Python", 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 7, 32
 "/Users/dev/Documents/packtune/app/models/genre.py", "Python", 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 17
@@ -38,8 +38,8 @@
 "/Users/dev/Documents/packtune/app/models/type.py", "Python", 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 17
 "/Users/dev/Documents/packtune/app/models/user.py", "Python", 65, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 12, 78
 "/Users/dev/Documents/packtune/app/seeds/__init__.py", "Python", 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 8, 49
-"/Users/dev/Documents/packtune/app/seeds/companies.py", "Python", 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 6, 41
-"/Users/dev/Documents/packtune/app/seeds/creators.py", "Python", 98, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 6, 106
+"/Users/dev/Documents/packtune/app/seeds/parents.py", "Python", 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 6, 41
+"/Users/dev/Documents/packtune/app/seeds/students.py", "Python", 98, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 6, 106
 "/Users/dev/Documents/packtune/app/seeds/genres.py", "Python", 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 22
 "/Users/dev/Documents/packtune/app/seeds/opportunities.py", "Python", 122, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 137
 "/Users/dev/Documents/packtune/app/seeds/types.py", "Python", 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 21
@@ -181,9 +181,9 @@
 "/Users/dev/Documents/packtune/react-vite/src/components/Waveform/Waveform.css", "CSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
 "/Users/dev/Documents/packtune/react-vite/src/components/Waveform/Waveform.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 2, 11, 53
 "/Users/dev/Documents/packtune/react-vite/src/components/Waveform/index.js", "JavaScript", 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 4
-"/Users/dev/Documents/packtune/react-vite/src/components/WithCompanyGuard/WithCompanyGuard.css", "CSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
-"/Users/dev/Documents/packtune/react-vite/src/components/WithCompanyGuard/WithCompanyGuard.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 4, 18
-"/Users/dev/Documents/packtune/react-vite/src/components/WithCompanyGuard/index.js", "JavaScript", 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 4
+"/Users/dev/Documents/packtune/react-vite/src/components/WithParentGuard/WithParentGuard.css", "CSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"/Users/dev/Documents/packtune/react-vite/src/components/WithParentGuard/WithParentGuard.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 4, 18
+"/Users/dev/Documents/packtune/react-vite/src/components/WithParentGuard/index.js", "JavaScript", 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 4
 "/Users/dev/Documents/packtune/react-vite/src/context/Modal.css", "CSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 0, 0, 2, 24
 "/Users/dev/Documents/packtune/react-vite/src/context/Modal.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 45, 6, 9, 60
 "/Users/dev/Documents/packtune/react-vite/src/index.css", "CSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 125, 0, 6, 45, 176

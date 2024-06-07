@@ -1,27 +1,27 @@
 from .db import db, environment, SCHEMA, add_prefix_for_prod
 from datetime import datetime
 
-# Association table for Creators and Genres
-user_genre_table = db.Table('creator_genres',
-    db.Column('creator_id', db.Integer, db.ForeignKey('creators.id'), primary_key=True),
+# Association table for Students and Genres
+user_genre_table = db.Table('student_genres',
+    db.Column('student_id', db.Integer, db.ForeignKey('students.id'), primary_key=True),
     db.Column('genre_id', db.Integer, db.ForeignKey('genres.id'), primary_key=True)
 )
 
-# Association table for Creators and Types
-user_type_table = db.Table('creator_types',
-    db.Column('creator_id', db.Integer, db.ForeignKey('creators.id'), primary_key=True),
+# Association table for Students and Types
+user_type_table = db.Table('student_types',
+    db.Column('student_id', db.Integer, db.ForeignKey('students.id'), primary_key=True),
     db.Column('type_id', db.Integer, db.ForeignKey('types.id'), primary_key=True)
 )
 
-class Creator(db.Model):
-    __tablename__ = 'creators'
+class Student(db.Model):
+    __tablename__ = 'students'
 
     if environment == "production":
         __table_args__ = {'schema': SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.id')), nullable=False, unique=True)
-    company_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('companies.id')), nullable=True)
+    parent_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('parents.id')), nullable=True)
     first_name = db.Column(db.String(255), nullable=True)
     last_name = db.Column(db.String(255), nullable=True)
     stage_name = db.Column(db.String(255), nullable=True)
@@ -44,8 +44,8 @@ class Creator(db.Model):
     reference_email = db.Column(db.String(255), nullable=True)
     reference_phone = db.Column(db.String(20), nullable=True)
     reference_relationship = db.Column(db.String(100), nullable=True)
-    genres = db.relationship('Genre', secondary=user_genre_table, backref=db.backref('creators', lazy=True))
-    types = db.relationship('Type', secondary=user_type_table, backref=db.backref('creators', lazy=True))
+    genres = db.relationship('Genre', secondary=user_genre_table, backref=db.backref('students', lazy=True))
+    types = db.relationship('Type', secondary=user_type_table, backref=db.backref('students', lazy=True))
     created_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -53,7 +53,7 @@ class Creator(db.Model):
         return {
             'id': self.id,
             'user_id': self.user_id,
-            'company_id': self.company_id,
+            'parent_id': self.parent_id,
             'first_name': self.first_name,
             'last_name': self.last_name,
             'stage_name': self.stage_name,

@@ -6,7 +6,7 @@ export const FETCH_FEEDBACK_REQUEST = 'feedback/fetchFeedbackRequest';
 export const FETCH_FEEDBACK_SUCCESS = 'feedback/fetchFeedbackSuccess';
 export const FETCH_FEEDBACK_FAILURE = 'feedback/fetchFeedbackFailure';
 
-//*====> Action Creators <====
+//*====> Action Students <====
 const createFeedbackRequest = () => ({
   type: CREATE_FEEDBACK_REQUEST,
 });
@@ -35,7 +35,7 @@ const fetchFeedbackFailure = (error) => ({
 });
 
 
-//*====> Thunk Action Creators <====
+//*====> Thunk Action Students <====
 
 // Create feedback for a submission
 export const createFeedbackForSubmission = (oppId, subId, feedbackData) => async (dispatch) => {

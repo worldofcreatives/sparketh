@@ -4,7 +4,7 @@ from datetime import datetime
 
 def seed_opportunities():
     opportunity1 = Opportunity(
-        company_id=1,
+        parent_id=1,
         user_id=1,
         name='Music for Commercial',
         description='Seeking original music to feature in a national commercial.',
@@ -16,7 +16,7 @@ def seed_opportunities():
     )
 
     opportunity2 = Opportunity(
-        company_id=1,
+        parent_id=1,
         user_id=1,
         name='Theme Song for Podcast',
         description='Looking for a catchy theme song for our new tech podcast.',
@@ -28,7 +28,7 @@ def seed_opportunities():
     )
 
     opportunity3 = Opportunity(
-        company_id=1,
+        parent_id=1,
         user_id=1,
         name='Artwork for Digital Game',
         description='Seeking captivating artwork to integrate into our upcoming digital game.',
@@ -40,7 +40,7 @@ def seed_opportunities():
     )
 
     opportunity4 = Opportunity(
-        company_id=1,
+        parent_id=1,
         user_id=1,
         name='Copywriter for Ad Campaign',
         description='In need of a creative copywriter for our new ad campaign.',
@@ -52,7 +52,7 @@ def seed_opportunities():
     )
 
     opportunity5 = Opportunity(
-        company_id=1,
+        parent_id=1,
         user_id=1,
         name='Chef for Culinary Workshop',
         description='Looking for a chef to lead a series of culinary workshops.',
@@ -64,7 +64,7 @@ def seed_opportunities():
     )
 
     opportunity6 = Opportunity(
-        company_id=1,
+        parent_id=1,
         user_id=1,
         name='Developer for Mobile App',
         description='Seeking a skilled developer to create a mobile application for our startup.',
@@ -76,7 +76,7 @@ def seed_opportunities():
     )
 
     opportunity7 = Opportunity(
-        company_id=1,
+        parent_id=1,
         user_id=1,
         name="Illustrator for Children's Book",
         description="Looking for an illustrator to bring to life a series of children's books.",
@@ -88,7 +88,7 @@ def seed_opportunities():
     )
 
     opportunity8 = Opportunity(
-        company_id=1,
+        parent_id=1,
         user_id=1,
         name="Photographer for Event",
         description="In need of a professional photographer for a corporate event.",
@@ -100,7 +100,7 @@ def seed_opportunities():
     )
 
     opportunity9 = Opportunity(
-        company_id=1,
+        parent_id=1,
         user_id=1,
         name="Social Media Manager",
         description="Seeking a social media manager to increase our brand's online presence.",
@@ -112,7 +112,7 @@ def seed_opportunities():
     )
 
     opportunity10 = Opportunity(
-        company_id=1,
+        parent_id=1,
         user_id=1,
         name="Voice Actor for Animated Series",
         description="Looking for talented voice actors for our new animated series.",

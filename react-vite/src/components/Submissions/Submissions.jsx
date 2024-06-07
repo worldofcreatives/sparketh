@@ -6,14 +6,14 @@ import SubmissionItem from '../SubmissionItem';
 import MusicPlayer from '../MusicPlayer/MusicPlayer';
 import './Submissions.css';
 import Waveform from '../Waveform';
-import WithCompanyGuard from '../WithCompanyGuard/WithCompanyGuard';
+import WithParentGuard from '../WithParentGuard/WithParentGuard';
 
 const Submissions = () => {
   const { oppId } = useParams();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.session);
   const { submissions, loading, error } = useSelector((state) => state.submissions);
-  const isCompany = user && user.type === 'Company';
+  const isParent = user && user.type === 'Parent';
   const [currentSong, setCurrentSong] = useState({ url: '', name: '' });
   const [currentStatusFilter, setCurrentStatusFilter] = useState('');
   const navigate = useNavigate();
@@ -31,8 +31,8 @@ const Submissions = () => {
 
 
   useEffect(() => {
-    if (isCompany || user) dispatch(fetchSubmissionsForOpportunity(oppId));
-  }, [dispatch, oppId, isCompany, user]);
+    if (isParent || user) dispatch(fetchSubmissionsForOpportunity(oppId));
+  }, [dispatch, oppId, isParent, user]);
 
   const playSong = (songUrl, songName, submissionId) => {
     if (currentSong.url === songUrl && playingSubmissionId === submissionId) {
@@ -285,4 +285,4 @@ const getButtonClass = (status) => {
 
 };
 
-export default WithCompanyGuard(Submissions); // Wrap the component with the HOC
+export default WithParentGuard(Submissions); // Wrap the component with the HOC

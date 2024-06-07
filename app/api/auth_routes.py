@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, render_template
-from app.models import User, db, Creator, Company
-from app.forms import LoginForm, CreatorSignUpForm, CompanySignUpForm
+from app.models import User, db, Student, Parent
+from app.forms import LoginForm, StudentSignUpForm, ParentSignUpForm
 from app.forms.password_reset_request_form import PasswordResetRequestForm
 from app.forms.password_reset_form import PasswordResetForm
 from flask_login import current_user, login_user, logout_user, login_required
@@ -52,7 +52,7 @@ def logout():
 # @auth_routes.route('/signup', methods=['POST'])
 # def sign_up():
 #     """
-#     Creates a new user, sets them as a creator, and logs them in.
+#     Creates a new user, sets them as a student, and logs them in.
 #     """
 #     form = SignUpForm()
 #     form['csrf_token'].data = request.cookies['csrf_token']
@@ -62,17 +62,17 @@ def logout():
 #             username=form.data['username'],
 #             email=form.data['email'],
 #             password=form.data['password'],
-#             type='Creator',
+#             type='Student',
 #             status='Pre-Apply'
 #         )
 #         db.session.add(user)
 #         db.session.commit()
 
-#         # Create and add new creator linked to the user
-#         creator = Creator(
+#         # Create and add new student linked to the user
+#         student = Student(
 #             user_id=user.id,
 #         )
-#         db.session.add(creator)
+#         db.session.add(student)
 #         db.session.commit()
 
 #         # Log the user in
@@ -86,9 +86,9 @@ def logout():
 #         return jsonify({'errors': form.errors}), 401
 
 
-@auth_routes.route('/signup/company', methods=['POST'])
-def signup_company():
-    form = CompanySignUpForm()
+@auth_routes.route('/signup/parent', methods=['POST'])
+def signup_parent():
+    form = ParentSignUpForm()
     form['csrf_token'].data = request.cookies['csrf_token']
 
     if form.validate_on_submit():
@@ -99,26 +99,26 @@ def signup_company():
             email=form.data['email'],
             hashed_password=hashed_password,
             salt=salt,
-            type='Company',
+            type='Parent',
             status='Accepted'
         )
         db.session.add(user)
         db.session.commit()
 
-        company = Company(user_id=user.id, name=user.username)
-        db.session.add(company)
+        parent = Parent(user_id=user.id, name=user.username)
+        db.session.add(parent)
         db.session.commit()
 
         return user.to_dict()
     return {'errors': form.errors}, 401
 
-@auth_routes.route('/signup/creator', methods=['POST'])
+@auth_routes.route('/signup/student', methods=['POST'])
 @login_required
-def signup_creator():
-    if not current_user.is_company():
-        return {'errors': 'Only companies can sign up creators'}, 403
+def signup_student():
+    if not current_user.is_parent():
+        return {'errors': 'Only parents can sign up students'}, 403
 
-    form = CreatorSignUpForm()
+    form = StudentSignUpForm()
     form['csrf_token'].data = request.cookies['csrf_token']
 
     if form.validate_on_submit():
@@ -129,14 +129,14 @@ def signup_creator():
             email=None,
             hashed_password=hashed_password,
             salt=salt,
-            type='Creator',
+            type='Student',
             status='Pre-Apply'
         )
         db.session.add(user)
         db.session.commit()
 
-        creator = Creator(user_id=user.id, company_id=current_user.company.id)
-        db.session.add(creator)
+        student = Student(user_id=user.id, parent_id=current_user.parent.id)
+        db.session.add(student)
         db.session.commit()
 
         return user.to_dict()
@@ -158,12 +158,12 @@ def signup_creator():
 #         db.session.add(user)
 #         db.session.commit()
 
-#         if user.type == 'Company':
-#             company = Company(user_id=user.id, name=form.data['username'])
-#             db.session.add(company)
-#         elif user.type == 'Creator':
-#             creator = Creator(user_id=user.id, company_id=request.json.get('company_id'))
-#             db.session.add(creator)
+#         if user.type == 'Parent':
+#             parent = Parent(user_id=user.id, name=form.data['username'])
+#             db.session.add(parent)
+#         elif user.type == 'Student':
+#             student = Student(user_id=user.id, parent_id=request.json.get('parent_id'))
+#             db.session.add(student)
 
 #         db.session.commit()
 #         return user.to_dict()
@@ -186,10 +186,10 @@ def update_status():
 def update_user_status(user_id):
     """
     Updates the specified user's status to 'Accepted' or 'Denied'.
-    Only accessible by users with the type 'Company'.
+    Only accessible by users with the type 'Parent'.
     """
-    if current_user.type != 'Company':
-        return {'errors': ['Unauthorized. Only companies can perform this action.']}, 403
+    if current_user.type != 'Parent':
+        return {'errors': ['Unauthorized. Only parents can perform this action.']}, 403
 
     data = request.get_json()
     status = data.get('status')
@@ -249,7 +249,7 @@ def reset_password(token):
 
 
 # from flask import Blueprint, request, jsonify
-# from app.models import User, db, Creator
+# from app.models import User, db, Student
 # from app.forms import LoginForm
 # from app.forms import SignUpForm
 # from flask_login import current_user, login_user, logout_user, login_required
@@ -291,7 +291,7 @@ def reset_password(token):
 # @auth_routes.route('/signup', methods=['POST'])
 # def sign_up():
 #     """
-#     Creates a new user, sets them as a creator, and logs them in.
+#     Creates a new user, sets them as a student, and logs them in.
 #     """
 #     form = SignUpForm()
 #     form['csrf_token'].data = request.cookies['csrf_token']
@@ -301,17 +301,17 @@ def reset_password(token):
 #             username=form.data['username'],
 #             email=form.data['email'],
 #             password=form.data['password'],
-#             type='Creator',
+#             type='Student',
 #             status='Pre-Apply'
 #         )
 #         db.session.add(user)
 #         db.session.commit()
 
-#         # Create and add new creator linked to the user
-#         creator = Creator(
+#         # Create and add new student linked to the user
+#         student = Student(
 #             user_id=user.id,
 #         )
-#         db.session.add(creator)
+#         db.session.add(student)
 #         db.session.commit()
 
 #         # Log the user in
@@ -341,10 +341,10 @@ def reset_password(token):
 # def update_user_status(user_id):
 #     """
 #     Updates the specified user's status to 'Accepted' or 'Denied'.
-#     Only accessible by users with the type 'Company'.
+#     Only accessible by users with the type 'Parent'.
 #     """
-#     if current_user.type != 'Company':
-#         return {'errors': ['Unauthorized. Only companies can perform this action.']}, 403
+#     if current_user.type != 'Parent':
+#         return {'errors': ['Unauthorized. Only parents can perform this action.']}, 403
 
 #     data = request.get_json()
 #     status = data.get('status')

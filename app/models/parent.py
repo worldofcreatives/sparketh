@@ -1,8 +1,8 @@
 from .db import db, environment, SCHEMA, add_prefix_for_prod
 from datetime import datetime
 
-class Company(db.Model):
-    __tablename__ = 'companies'
+class Parent(db.Model):
+    __tablename__ = 'parents'
 
     if environment == "production":
         __table_args__ = {'schema': SCHEMA}
@@ -15,7 +15,7 @@ class Company(db.Model):
     created_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    creators = db.relationship('Creator', backref='company', lazy=True)
+    students = db.relationship('Student', backref='parent', lazy=True)
 
     def to_dict(self):
         return {
@@ -26,5 +26,5 @@ class Company(db.Model):
             'logo': self.logo,
             'created_date': self.created_date.isoformat(),
             'updated_date': self.updated_date.isoformat(),
-            'creators': [creator.to_dict() for creator in self.creators]
+            'students': [student.to_dict() for student in self.students]
         }

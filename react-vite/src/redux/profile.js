@@ -4,7 +4,7 @@ const UPDATE_USER_PROFILE = 'profile/updateUserProfile';
 const UPDATE_GENRES_TYPES = 'profile/updateGenresTypes';
 
 
-// Action Creators
+// Action Students
 const setUserProfile = (profile) => ({
   type: SET_USER_PROFILE,
   profile,
@@ -83,8 +83,8 @@ const profileReducer = (state = initialState, action) => {
         ...state,
         userProfile: {
           ...state.userProfile,
-          creator: {
-            ...state.userProfile.creator,
+          student: {
+            ...state.userProfile.student,
             genres: action.payload.genres,
             types: action.payload.types,
           },

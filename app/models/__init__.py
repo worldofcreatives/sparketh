@@ -27,8 +27,8 @@ if environment == "production":
 
 # Models
 from .user import User
-from .creator import Creator
-from .company import Company
+from .student import Student
+from .parent import Parent
 from .opportunity import Opportunity
 from .media import Media
 from .submission import Submission

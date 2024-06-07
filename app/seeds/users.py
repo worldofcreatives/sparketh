@@ -1,4 +1,4 @@
-from app.models import db, User, Company, Creator, environment, SCHEMA
+from app.models import db, User, Parent, Student, environment, SCHEMA
 from werkzeug.security import generate_password_hash
 from sqlalchemy.sql import text
 import os
@@ -10,61 +10,61 @@ def seed_users():
             'username': 'Demo',
             'email': 'demo@aa.io',
             'password': 'password',
-            'type': 'Company',
+            'type': 'Parent',
             'status': 'Accepted'
         },
         {
             'username': 'marnie',
             'email': 'marnie@aa.io',
             'password': 'password',
-            'type': 'Creator',
+            'type': 'Student',
             'status': 'Pre-Apply',
-            'company_id': 1
+            'parent_id': 1
         },
         {
             'username': 'bobbie',
             'email': 'bobbie@aa.io',
             'password': 'password',
-            'type': 'Creator',
+            'type': 'Student',
             'status': 'Pre-Apply',
-            'company_id': 1
+            'parent_id': 1
         },
         {
             'username': 'alice',
             'email': 'alice@example.com',
             'password': 'password',
-            'type': 'Company',
+            'type': 'Parent',
             'status': 'Pre-Apply'
         },
         {
             'username': 'charlie',
             'email': 'charlie@example.com',
             'password': 'password',
-            'type': 'Company',
+            'type': 'Parent',
             'status': 'Pre-Apply'
         },
         {
             'username': 'dana',
             'email': 'dana@example.com',
             'password': 'password',
-            'type': 'Creator',
+            'type': 'Student',
             'status': 'Pre-Apply',
-            'company_id': 4
+            'parent_id': 4
         },
         {
             'username': 'evan',
             'email': 'evan@example.com',
             'password': 'password',
-            'type': 'Company',
+            'type': 'Parent',
             'status': 'Pre-Apply'
         },
         {
             'username': 'fiona',
             'email': 'fiona@example.com',
             'password': 'password',
-            'type': 'Creator',
+            'type': 'Student',
             'status': 'Pre-Apply',
-            'company_id': 7
+            'parent_id': 7
         }
     ]
 
@@ -83,14 +83,14 @@ def seed_users():
             )
             user.save()  # Using the save method to validate and commit
 
-            if user.type == 'Company':
-                company = Company(user_id=user.id, name=user.username)
-                db.session.add(company)
+            if user.type == 'Parent':
+                parent = Parent(user_id=user.id, name=user.username)
+                db.session.add(parent)
                 db.session.commit()
 
-            elif user.type == 'Creator':
-                creator = Creator(user_id=user.id, company_id=user_data.get('company_id'))
-                db.session.add(creator)
+            elif user.type == 'Student':
+                student = Student(user_id=user.id, parent_id=user_data.get('parent_id'))
+                db.session.add(student)
                 db.session.commit()
 
 def undo_users():
