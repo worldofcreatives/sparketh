@@ -22,6 +22,7 @@ class Creator(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.id')), nullable=False, unique=True)
+    company_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('companies.id')), nullable=True)
     first_name = db.Column(db.String(255), nullable=True)
     last_name = db.Column(db.String(255), nullable=True)
     stage_name = db.Column(db.String(255), nullable=True)
@@ -53,6 +54,7 @@ class Creator(db.Model):
         return {
             'id': self.id,
             'user_id': self.user_id,
+            'company_id': self.company_id,
             'first_name': self.first_name,
             'last_name': self.last_name,
             'stage_name': self.stage_name,

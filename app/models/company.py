@@ -15,6 +15,8 @@ class Company(db.Model):
     created_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+    creators = db.relationship('Creator', backref='company', lazy=True)
+
     def to_dict(self):
         return {
             'id': self.id,
@@ -24,4 +26,5 @@ class Company(db.Model):
             'logo': self.logo,
             'created_date': self.created_date.isoformat(),
             'updated_date': self.updated_date.isoformat(),
+            'creators': [creator.to_dict() for creator in self.creators]
         }

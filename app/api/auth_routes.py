@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, render_template
-from app.models import User, db, Creator
+from app.models import User, db, Creator, Company
 from app.forms import LoginForm, SignUpForm
 from app.forms.password_reset_request_form import PasswordResetRequestForm
 from app.forms.password_reset_form import PasswordResetForm
@@ -45,41 +45,67 @@ def logout():
     logout_user()
     return {'message': 'User logged out'}
 
+# @auth_routes.route('/signup', methods=['POST'])
+# def sign_up():
+#     """
+#     Creates a new user, sets them as a creator, and logs them in.
+#     """
+#     form = SignUpForm()
+#     form['csrf_token'].data = request.cookies['csrf_token']
+#     if form.validate_on_submit():
+#         # Create and add new user
+#         user = User(
+#             username=form.data['username'],
+#             email=form.data['email'],
+#             password=form.data['password'],
+#             type='Creator',
+#             status='Pre-Apply'
+#         )
+#         db.session.add(user)
+#         db.session.commit()
+
+#         # Create and add new creator linked to the user
+#         creator = Creator(
+#             user_id=user.id,
+#         )
+#         db.session.add(creator)
+#         db.session.commit()
+
+#         # Log the user in
+#         login_user(user)
+
+#         # Send welcome email
+#         send_email(user.email, 'Welcome to 7packs', 'Thank you for signing up!')
+
+#         return jsonify(user.to_dict()), 201
+#     else:
+#         return jsonify({'errors': form.errors}), 401
+
 @auth_routes.route('/signup', methods=['POST'])
-def sign_up():
-    """
-    Creates a new user, sets them as a creator, and logs them in.
-    """
+def signup():
     form = SignUpForm()
     form['csrf_token'].data = request.cookies['csrf_token']
+
     if form.validate_on_submit():
-        # Create and add new user
         user = User(
             username=form.data['username'],
             email=form.data['email'],
             password=form.data['password'],
-            type='Creator',
-            status='Pre-Apply'
+            type=form.data['user_type']
         )
         db.session.add(user)
         db.session.commit()
 
-        # Create and add new creator linked to the user
-        creator = Creator(
-            user_id=user.id,
-        )
-        db.session.add(creator)
+        if user.type == 'Company':
+            company = Company(user_id=user.id, name=form.data['username'])
+            db.session.add(company)
+        elif user.type == 'Creator':
+            creator = Creator(user_id=user.id, company_id=request.json.get('company_id'))
+            db.session.add(creator)
+
         db.session.commit()
-
-        # Log the user in
-        login_user(user)
-
-        # Send welcome email
-        send_email(user.email, 'Welcome to 7packs', 'Thank you for signing up!')
-
-        return jsonify(user.to_dict()), 201
-    else:
-        return jsonify({'errors': form.errors}), 401
+        return user.to_dict()
+    return {'errors': form.errors}, 401
 
 @auth_routes.route('/update_status', methods=['PUT'])
 @login_required
