@@ -1,6 +1,5 @@
 from .db import db, environment, SCHEMA, add_prefix_for_prod
 from datetime import datetime
-from sqlalchemy import JSON
 
 # Association table for Creators and Genres
 user_genre_table = db.Table('creator_genres',

@@ -1,5 +1,6 @@
 from .login_form import LoginForm
-from .signup_form import SignUpForm
+from .signup_form import CompanySignUpForm
+from .creator_signup_form import CreatorSignUpForm
 from .feedback_form import FeedbackForm
 from .media_form import MediaForm
 from .opportunity_form import OpportunityForm

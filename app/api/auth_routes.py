@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, render_template
 from app.models import User, db, Creator, Company
-from app.forms import LoginForm, SignUpForm
+from app.forms import LoginForm, CreatorSignUpForm, CompanySignUpForm
 from app.forms.password_reset_request_form import PasswordResetRequestForm
 from app.forms.password_reset_form import PasswordResetForm
 from flask_login import current_user, login_user, logout_user, login_required
@@ -8,6 +8,9 @@ from app.utils.email_utils import send_email, send_password_reset_email
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 import os
 from app.config import Config
+import binascii
+from werkzeug.security import generate_password_hash
+
 
 auth_routes = Blueprint('auth', __name__)
 
@@ -29,12 +32,13 @@ def login():
     form = LoginForm()
     form['csrf_token'].data = request.cookies['csrf_token']
     if form.validate_on_submit():
-        user = User.query.filter(User.email == form.data['email']).first()
+        identifier = form.data['identifier']
+        user = User.query.filter((User.email == identifier) | (User.username == identifier)).first()
         if user and user.check_password(form.data['password']):
             login_user(user)
             return user.to_dict()
         else:
-            return {'errors': ['Invalid email or password.']}, 401
+            return {'errors': ['Invalid email/username or password.']}, 401
     return form.errors, 401
 
 @auth_routes.route('/logout')
@@ -81,31 +85,89 @@ def logout():
 #     else:
 #         return jsonify({'errors': form.errors}), 401
 
-@auth_routes.route('/signup', methods=['POST'])
-def signup():
-    form = SignUpForm()
+
+@auth_routes.route('/signup/company', methods=['POST'])
+def signup_company():
+    form = CompanySignUpForm()
     form['csrf_token'].data = request.cookies['csrf_token']
 
     if form.validate_on_submit():
+        salt = binascii.hexlify(os.urandom(16)).decode()
+        hashed_password = generate_password_hash(form.data['password'] + salt)
         user = User(
             username=form.data['username'],
             email=form.data['email'],
-            password=form.data['password'],
-            type=form.data['user_type']
+            hashed_password=hashed_password,
+            salt=salt,
+            type='Company',
+            status='Accepted'
         )
         db.session.add(user)
         db.session.commit()
 
-        if user.type == 'Company':
-            company = Company(user_id=user.id, name=form.data['username'])
-            db.session.add(company)
-        elif user.type == 'Creator':
-            creator = Creator(user_id=user.id, company_id=request.json.get('company_id'))
-            db.session.add(creator)
-
+        company = Company(user_id=user.id, name=user.username)
+        db.session.add(company)
         db.session.commit()
+
         return user.to_dict()
     return {'errors': form.errors}, 401
+
+@auth_routes.route('/signup/creator', methods=['POST'])
+@login_required
+def signup_creator():
+    if not current_user.is_company():
+        return {'errors': 'Only companies can sign up creators'}, 403
+
+    form = CreatorSignUpForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
+
+    if form.validate_on_submit():
+        salt = binascii.hexlify(os.urandom(16)).decode()
+        hashed_password = generate_password_hash(form.data['password'] + salt)
+        user = User(
+            username=form.data['username'],
+            email=None,
+            hashed_password=hashed_password,
+            salt=salt,
+            type='Creator',
+            status='Pre-Apply'
+        )
+        db.session.add(user)
+        db.session.commit()
+
+        creator = Creator(user_id=user.id, company_id=current_user.company.id)
+        db.session.add(creator)
+        db.session.commit()
+
+        return user.to_dict()
+    return {'errors': form.errors}, 401
+
+
+# @auth_routes.route('/signup', methods=['POST'])
+# def signup():
+#     form = SignUpForm()
+#     form['csrf_token'].data = request.cookies['csrf_token']
+
+#     if form.validate_on_submit():
+#         user = User(
+#             username=form.data['username'],
+#             email=form.data['email'],
+#             password=form.data['password'],
+#             type=form.data['user_type']
+#         )
+#         db.session.add(user)
+#         db.session.commit()
+
+#         if user.type == 'Company':
+#             company = Company(user_id=user.id, name=form.data['username'])
+#             db.session.add(company)
+#         elif user.type == 'Creator':
+#             creator = Creator(user_id=user.id, company_id=request.json.get('company_id'))
+#             db.session.add(creator)
+
+#         db.session.commit()
+#         return user.to_dict()
+#     return {'errors': form.errors}, 401
 
 @auth_routes.route('/update_status', methods=['PUT'])
 @login_required
