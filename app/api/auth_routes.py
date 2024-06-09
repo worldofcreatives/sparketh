@@ -49,6 +49,7 @@ def logout():
     logout_user()
     return {'message': 'User logged out'}
 
+# Sign up a parent
 
 @auth_routes.route('/signup/parent', methods=['POST'])
 def signup_parent():
@@ -63,18 +64,20 @@ def signup_parent():
             email=form.data['email'],
             hashed_password=hashed_password,
             salt=salt,
-            type='Parent',
-            status='Accepted'
+            type='parent',
+            status='active'
         )
         db.session.add(user)
         db.session.commit()
 
-        parent = Parent(user_id=user.id, name=user.username)
+        parent = Parent(user_id=user.id)
         db.session.add(parent)
         db.session.commit()
 
         return user.to_dict()
     return {'errors': form.errors}, 401
+
+# Sign up a student, but you must be a parent to do so
 
 @auth_routes.route('/signup/student', methods=['POST'])
 @login_required
@@ -93,53 +96,18 @@ def signup_student():
             email=None,
             hashed_password=hashed_password,
             salt=salt,
-            type='Student',
-            status='Pre-Apply'
+            type='student',
+            status='active'
         )
         db.session.add(user)
         db.session.commit()
 
-        student = Student(user_id=user.id, parent_id=current_user.parent.id)
+        student = Student(user_id=user.id, parent_id=current_user.id)
         db.session.add(student)
         db.session.commit()
 
         return user.to_dict()
     return {'errors': form.errors}, 401
-
-@auth_routes.route('/update_status', methods=['PUT'])
-@login_required
-def update_status():
-    """
-    Updates the current user's status to 'Applied'.
-    """
-    if current_user.status == 'Pre-Apply':
-        current_user.status = 'Applied'
-        db.session.commit()
-        return {'status': 'Updated', 'user': current_user.to_dict()}
-    return {'status': 'No Change', 'user': current_user.to_dict()}
-
-@auth_routes.route('/update_status/<int:user_id>', methods=['PUT'])
-@login_required
-def update_user_status(user_id):
-    """
-    Updates the specified user's status to 'Accepted' or 'Denied'.
-    Only accessible by users with the type 'Parent'.
-    """
-    if current_user.type != 'Parent':
-        return {'errors': ['Unauthorized. Only parents can perform this action.']}, 403
-
-    data = request.get_json()
-    status = data.get('status')
-    if status not in ['Accepted', 'Denied', 'Applied', 'Pre-Apply', 'Premium Monthly', 'Premium Annual']:
-        return {'errors': ['Invalid status.']}, 400
-
-    user = User.query.get(user_id)
-    if not user:
-        return {'errors': ['User not found.']}, 404
-
-    user.status = status
-    db.session.commit()
-    return {'status': 'Updated', 'user': user.to_dict()}
 
 @auth_routes.route('/unauthorized')
 def unauthorized():
@@ -147,39 +115,3 @@ def unauthorized():
     Returns unauthorized JSON when flask-login authentication fails
     """
     return {'errors': {'message': 'Unauthorized'}}, 401
-
-@auth_routes.route('/password_reset_request', methods=['POST'])
-def password_reset_request():
-    """
-    Sends a password reset email to the user.
-    """
-    form = PasswordResetRequestForm()
-    form['csrf_token'].data = request.cookies['csrf_token']
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.data['email']).first()
-        if user:
-            token = s.dumps(user.email, salt='password-reset-salt')
-            reset_url = f"{request.host_url}reset_password/{token}"
-            send_email(user.email, 'Password Reset Request', f'Click the link to reset your password: {reset_url}')
-        return {'message': 'If an account with that email exists, a password reset email has been sent.'}, 200
-    return jsonify({'errors': form.errors}), 401
-
-@auth_routes.route('/reset_password/<token>', methods=['POST'])
-def reset_password(token):
-    """
-    Resets the user's password using the token.
-    """
-    try:
-        email = s.loads(token, salt='password-reset-salt', max_age=3600)
-    except SignatureExpired:
-        return {'errors': {'message': 'The token is expired.'}}, 400
-
-    form = PasswordResetForm()
-    form['csrf_token'].data = request.cookies['csrf_token']
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=email).first()
-        if user:
-            user.password = form.data['password']
-            db.session.commit()
-            return {'message': 'Your password has been reset successfully.'}, 200
-    return jsonify({'errors': form.errors}), 401

@@ -41,7 +41,7 @@ class User(db.Model, UserMixin):
         return check_password_hash(self.hashed_password, password + self.salt)
 
     def is_parent(self):
-        return self.type == 'Parent'
+        return self.type == 'parent'
 
     @property
     def status(self):

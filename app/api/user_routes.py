@@ -9,12 +9,13 @@ user_routes = Blueprint('users', __name__)
 @user_routes.route('/register', methods=['POST'])
 def register():
     form = ParentSignUpForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
     if form.validate_on_submit():
         new_user = User(
             username=form.username.data,
             email=form.email.data,
             password=form.password.data,
-            type='Parent'
+            type='parent'
         )
         db.session.add(new_user)
         db.session.commit()
@@ -28,12 +29,13 @@ def register():
 @user_routes.route('/parent/<int:parent_id>/register-kid', methods=['POST'])
 def register_kid(parent_id):
     form = StudentSignUpForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
     if form.validate_on_submit():
         parent = Parent.query.get_or_404(parent_id)
         new_user = User(
             username=form.username.data,
             password=form.password.data,
-            type='Student'
+            type='student'
         )
         db.session.add(new_user)
         db.session.commit()

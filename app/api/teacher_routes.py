@@ -1,11 +1,11 @@
-# teacher_routes.py
-
 from flask import Blueprint, request, jsonify
 from app.models import db, Teacher, User
 from app.forms import TeacherSignUpForm, LoginForm
 from flask_login import login_user, logout_user, login_required, current_user
 
 teacher_routes = Blueprint('teachers', __name__)
+
+# Register a teacher
 
 @teacher_routes.route('/register', methods=['POST'])
 def register_teacher():
@@ -39,6 +39,8 @@ def register_teacher():
         return jsonify(teacher.to_dict()), 201
     return jsonify(form.errors), 400
 
+# Login a teacher
+
 @teacher_routes.route('/login', methods=['POST'])
 def login_teacher():
     form = LoginForm()
@@ -49,6 +51,8 @@ def login_teacher():
             return jsonify(user.to_dict()), 200
     return jsonify({"error": "Invalid credentials"}), 400
 
+# Get teacher profile
+
 @teacher_routes.route('/profile', methods=['GET'])
 @login_required
 def get_teacher_profile():
@@ -57,6 +61,8 @@ def get_teacher_profile():
         if teacher:
             return jsonify(teacher.to_dict()), 200
     return jsonify({"error": "Unauthorized access"}), 401
+
+# Update teacher profile
 
 @teacher_routes.route('/profile', methods=['PUT'])
 @login_required
@@ -80,6 +86,8 @@ def update_teacher_profile():
                 return jsonify(teacher.to_dict()), 200
         return jsonify(form.errors), 400
     return jsonify({"error": "Unauthorized access"}), 401
+
+# Logout a teacher
 
 @teacher_routes.route('/logout', methods=['POST'])
 @login_required

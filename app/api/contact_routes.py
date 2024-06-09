@@ -26,7 +26,7 @@ def contact():
     print(email_body)
 
     try:
-        send_email('7packs.com@gmail.com', f'Contact Us Form: {subject}', email_body)
+        send_email('info@sparketh.com', f'Contact Us Form: {subject}', email_body)
         print("Email function called")
         return jsonify({'message': 'Message sent successfully!'}), 200
     except Exception as e:
