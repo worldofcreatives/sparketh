@@ -37,8 +37,6 @@ class Student(db.Model):
             'id': self.id,
             'user_id': self.user_id,
             'parent_id': self.parent_id,
-            'first_name': self.first_name,
-            'last_name': self.last_name,
             'profile_pic': self.profile_pic,
             'bio': self.bio,
             'date_of_birth': self.date_of_birth.isoformat(),

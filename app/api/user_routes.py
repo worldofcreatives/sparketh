@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from app.models import db, User, Parent, Student
 from app.forms import LoginForm, ParentSignUpForm, StudentSignUpForm, ParentProfileForm, StudentProfileForm
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user, current_user, login_required
 
 user_routes = Blueprint('users', __name__)
 
@@ -22,16 +22,27 @@ def register():
         new_parent = Parent(user_id=new_user.id)
         db.session.add(new_parent)
         db.session.commit()
+
+        # Log the user in
+        login_user(new_user)
+
         return jsonify(new_user.to_dict()), 201
     return jsonify({'errors': form.errors}), 400
 
 # Parents can register their kids
 @user_routes.route('/parent/<int:parent_id>/register-kid', methods=['POST'])
+@login_required
 def register_kid(parent_id):
     form = StudentSignUpForm()
     form['csrf_token'].data = request.cookies['csrf_token']
+
+    parent = Parent.query.get_or_404(parent_id)
+
+    # Check if the current user is an admin or the parent
+    if current_user.type != 'admin' and current_user.id != parent.user_id:
+        return jsonify({'errors': 'Unauthorized access'}), 403
+
     if form.validate_on_submit():
-        parent = Parent.query.get_or_404(parent_id)
         new_user = User(
             username=form.username.data,
             password=form.password.data,
@@ -46,71 +57,79 @@ def register_kid(parent_id):
         db.session.add(new_student)
         db.session.commit()
         return jsonify(new_user.to_dict()), 201
+
     return jsonify({'errors': form.errors}), 400
 
-# Parent login
+
+# Parent login, and only works with parent accounts
 @user_routes.route('/login/parent', methods=['POST'])
 def login_parent():
     form = LoginForm()
     form['csrf_token'].data = request.cookies['csrf_token']
     if form.validate_on_submit():
         user = User.query.filter((User.email == form.identifier.data) | (User.username == form.identifier.data)).first()
-        login_user(user)
-        return jsonify(user.to_dict())
+        if user and user.type == 'parent' and user.check_password(form.data['password']):
+            login_user(user)
+            return jsonify(user.to_dict())
+        else:
+            return jsonify({'errors': ['Invalid email/username or password, or not a parent account.']}), 401
     return jsonify({'errors': form.errors}), 400
 
-# Student login
+# Student login, and only works with student accounts
 @user_routes.route('/login/student', methods=['POST'])
 def login_student():
     form = LoginForm()
     form['csrf_token'].data = request.cookies['csrf_token']
     if form.validate_on_submit():
         user = User.query.filter(User.username == form.identifier.data).first()
-        login_user(user)
-        return jsonify(user.to_dict())
+        if user and user.type == 'student' and user.check_password(form.data['password']):
+            login_user(user)
+            return jsonify(user.to_dict())
+        else:
+            return jsonify({'errors': ['Invalid username or password, or not a student account.']}), 401
     return jsonify({'errors': form.errors}), 400
 
-# Parents can add profile info
-@user_routes.route('/parent/<int:parent_id>/profile', methods=['POST'])
-def add_parent_profile(parent_id):
-    form = ParentProfileForm()
-    form['csrf_token'].data = request.cookies['csrf_token']
-    if form.validate_on_submit():
-        parent = Parent.query.get_or_404(parent_id)
-        parent.profile_pic = form.profile_pic.data
-        parent.first_name = form.first_name.data
-        parent.last_name = form.last_name.data
-        parent.address_1 = form.address_1.data
-        parent.address_2 = form.address_2.data
-        parent.city = form.city.data
-        parent.state = form.state.data
-        parent.zip_code = form.zip_code.data
-        parent.stripe_customer_id = form.stripe_customer_id.data
-        parent.stripe_subscription_id = form.stripe_subscription_id.data
-        db.session.commit()
-        return jsonify(parent.to_dict())
-    return jsonify({'errors': form.errors}), 400
-
-# Parents can update profile info
+# Parents can update profile info (only for the data in the payload)
 @user_routes.route('/parent/<int:parent_id>/profile', methods=['PUT'])
+@login_required
 def update_parent_profile(parent_id):
     form = ParentProfileForm()
     form['csrf_token'].data = request.cookies['csrf_token']
+
+    parent = Parent.query.get_or_404(parent_id)
+
+    # Check if the current user is an admin or the parent
+    if current_user.type != 'admin' and current_user.id != parent.user_id:
+        return jsonify({'errors': 'Unauthorized access'}), 403
+
     if form.validate_on_submit():
-        parent = Parent.query.get_or_404(parent_id)
-        parent.profile_pic = form.profile_pic.data
-        parent.first_name = form.first_name.data
-        parent.last_name = form.last_name.data
-        parent.address_1 = form.address_1.data
-        parent.address_2 = form.address_2.data
-        parent.city = form.city.data
-        parent.state = form.state.data
-        parent.zip_code = form.zip_code.data
-        parent.stripe_customer_id = form.stripe_customer_id.data
-        parent.stripe_subscription_id = form.stripe_subscription_id.data
+        # Update only the fields sent in the form
+        if form.profile_pic.data:
+            parent.profile_pic = form.profile_pic.data
+        if form.first_name.data:
+            parent.first_name = form.first_name.data
+        if form.last_name.data:
+            parent.last_name = form.last_name.data
+        if form.address_1.data:
+            parent.address_1 = form.address_1.data
+        if form.address_2.data:
+            parent.address_2 = form.address_2.data
+        if form.city.data:
+            parent.city = form.city.data
+        if form.state.data:
+            parent.state = form.state.data
+        if form.zip_code.data:
+            parent.zip_code = form.zip_code.data
+        if form.stripe_customer_id.data:
+            parent.stripe_customer_id = form.stripe_customer_id.data
+        if form.stripe_subscription_id.data:
+            parent.stripe_subscription_id = form.stripe_subscription_id.data
+
         db.session.commit()
-        return jsonify(parent.to_dict())
+        return jsonify(parent.to_dict()), 200
+
     return jsonify({'errors': form.errors}), 400
+
 
 # Students can add profile info
 @user_routes.route('/student/<int:student_id>/profile', methods=['POST'])
