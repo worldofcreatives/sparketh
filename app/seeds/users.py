@@ -20,10 +20,10 @@ def seed_users():
             'status': 'active'
         },
         {
-            'username': 'child1',
+            'username': 'student1',
             'email': None,
             'password': 'password',
-            'type': 'child',
+            'type': 'student',
             'status': 'active'
         }
     ]

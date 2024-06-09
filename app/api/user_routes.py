@@ -39,11 +39,11 @@ def register_kid(parent_id):
         )
         db.session.add(new_user)
         db.session.commit()
-        new_child = Student(
+        new_student = Student(
             user_id=new_user.id,
             parent_id=parent_id,
         )
-        db.session.add(new_child)
+        db.session.add(new_student)
         db.session.commit()
         return jsonify(new_user.to_dict()), 201
     return jsonify({'errors': form.errors}), 400
@@ -147,20 +147,20 @@ def update_student_profile(student_id):
 def activate_parent_and_kids(parent_id):
     parent = Parent.query.get_or_404(parent_id)
     parent.user.status = 'active'
-    for child in parent.children:
-        child.user.status = 'active'
+    for student in parent.students:
+        student.user.status = 'active'
     db.session.commit()
-    return jsonify({'parent_status': 'active', 'children_status': 'active'}), 200
+    return jsonify({'parent_status': 'active', 'students_status': 'active'}), 200
 
 # When a parent's status is set to "inactive" their kid's accounts status is set to "inactive"
 @user_routes.route('/parent/<int:parent_id>/status/inactive', methods=['PUT'])
 def deactivate_parent_and_kids(parent_id):
     parent = Parent.query.get_or_404(parent_id)
     parent.user.status = 'inactive'
-    for child in parent.children:
-        child.user.status = 'inactive'
+    for student in parent.students:
+        student.user.status = 'inactive'
     db.session.commit()
-    return jsonify({'parent_status': 'inactive', 'children_status': 'inactive'}), 200
+    return jsonify({'parent_status': 'inactive', 'students_status': 'inactive'}), 200
 
 # A route that gets the current user's profile information
 @user_routes.route('/profile', methods=['GET'])
