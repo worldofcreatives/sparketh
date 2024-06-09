@@ -5,6 +5,12 @@ from .students import seed_students, undo_students
 from .opportunities import seed_opportunities, undo_opportunities
 from .genres import seed_genres, undo_genres
 from .types import seed_types, undo_types
+from .artworks import seed_art, undo_art
+from .children import seed_children, undo_children
+from .courses import seed_courses, undo_courses
+from .lessons import seed_lessons, undo_lessons
+from .teachers import seed_teachers, undo_teachers
+
 
 from app.models.db import db, environment, SCHEMA
 
@@ -22,6 +28,11 @@ def seed():
         # the schema name (see comment in users.py undo_users function).
         # Make sure to add all your other model's undo functions below
         undo_opportunities()
+        undo_lessons()
+        undo_courses()
+        undo_art()
+        undo_teachers()
+        undo_children()
         undo_students()
         undo_parents()
         undo_users()
@@ -32,6 +43,11 @@ def seed():
     seed_users()
     seed_parents()
     seed_students()
+    seed_children()
+    seed_teachers()
+    seed_art()
+    seed_courses()
+    seed_lessons()
     seed_opportunities()
 
 
@@ -40,6 +56,11 @@ def seed():
 @seed_commands.command('undo')
 def undo():
     undo_opportunities()
+    undo_lessons()
+    undo_courses()
+    undo_art()
+    undo_teachers()
+    undo_children()
     undo_students()
     undo_parents()
     undo_users()

@@ -1,6 +1,5 @@
 from .db import db, environment, SCHEMA, add_prefix_for_prod
 from datetime import datetime
-from . import opp_media_table
 from .submission import Submission
 from sqlalchemy import JSON
 
@@ -38,8 +37,6 @@ class Opportunity(db.Model):
     # Relationship to Parent
     parent = db.relationship('Parent', backref=db.backref('opportunities', lazy=True))
 
-    # Many-to-Many Relationship with Media
-    opp_media = db.relationship('Media', secondary=opp_media_table, backref=db.backref('opportunities', lazy='dynamic'))
 
     def validate_genres(self):
         if not all(genre in VALID_GENRES for genre in self.genres):

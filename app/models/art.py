@@ -1,3 +1,5 @@
+# art.py
+
 from .db import db, environment, SCHEMA
 from datetime import datetime
 
@@ -11,7 +13,7 @@ class Art(db.Model):
     name = db.Column(db.String(100), nullable=False)
     type = db.Column(db.String(50), nullable=False)  # gallery, course, and/or portfolio
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    course_id = db.Column(db.Integer, db.ForeignKey('courses.id'), nullable=True)
+    course_id = db.Column(db.Integer, db.ForeignKey('courses.id'), nullable=True)  # Optional
     media_url = db.Column(db.String(255), nullable=False)
     created_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)

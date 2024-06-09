@@ -1,70 +1,32 @@
-from app.models import db, User, Parent, Student, environment, SCHEMA
+# user_seeder.py
+
+from app.models import db, User
 from werkzeug.security import generate_password_hash
-from sqlalchemy.sql import text
 import os
 import binascii
 
 def seed_users():
     users = [
         {
-            'username': 'Demo',
-            'email': 'demo@aa.io',
+            'username': 'parent1',
+            'email': 'parent1@example.com',
             'password': 'password',
-            'type': 'Parent',
-            'status': 'Accepted'
+            'type': 'parent',
+            'status': 'active'
         },
         {
-            'username': 'marnie',
-            'email': 'marnie@aa.io',
+            'username': 'teacher1',
+            'email': 'teacher1@example.com',
             'password': 'password',
-            'type': 'Student',
-            'status': 'Pre-Apply',
-            'parent_id': 1
+            'type': 'teacher',
+            'status': 'active'
         },
         {
-            'username': 'bobbie',
-            'email': 'bobbie@aa.io',
+            'username': 'child1',
+            'email': None,
             'password': 'password',
-            'type': 'Student',
-            'status': 'Pre-Apply',
-            'parent_id': 1
-        },
-        {
-            'username': 'alice',
-            'email': 'alice@example.com',
-            'password': 'password',
-            'type': 'Parent',
-            'status': 'Pre-Apply'
-        },
-        {
-            'username': 'charlie',
-            'email': 'charlie@example.com',
-            'password': 'password',
-            'type': 'Parent',
-            'status': 'Pre-Apply'
-        },
-        {
-            'username': 'dana',
-            'email': 'dana@example.com',
-            'password': 'password',
-            'type': 'Student',
-            'status': 'Pre-Apply',
-            'parent_id': 4
-        },
-        {
-            'username': 'evan',
-            'email': 'evan@example.com',
-            'password': 'password',
-            'type': 'Parent',
-            'status': 'Pre-Apply'
-        },
-        {
-            'username': 'fiona',
-            'email': 'fiona@example.com',
-            'password': 'password',
-            'type': 'Student',
-            'status': 'Pre-Apply',
-            'parent_id': 7
+            'type': 'child',
+            'status': 'active'
         }
     ]
 
@@ -81,22 +43,9 @@ def seed_users():
                 type=user_data['type'],
                 status=user_data['status']
             )
-            user.save()  # Using the save method to validate and commit
-
-            if user.type == 'Parent':
-                parent = Parent(user_id=user.id, name=user.username)
-                db.session.add(parent)
-                db.session.commit()
-
-            elif user.type == 'Student':
-                student = Student(user_id=user.id, parent_id=user_data.get('parent_id'))
-                db.session.add(student)
-                db.session.commit()
+            db.session.add(user)
+    db.session.commit()
 
 def undo_users():
-    if environment == "production":
-        db.session.execute(f"TRUNCATE table {SCHEMA}.users RESTART IDENTITY CASCADE;")
-    else:
-        db.session.execute(text("DELETE FROM users"))
-
+    db.session.execute('TRUNCATE TABLE users RESTART IDENTITY CASCADE;')
     db.session.commit()

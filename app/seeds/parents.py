@@ -1,40 +1,31 @@
-from app.models import db, Parent, environment, SCHEMA
-from sqlalchemy.sql import text
+# parent_seeder.py
+
+from app.models import db, Parent
 
 def seed_parents():
-    # Example parents
     parents = [
         {
             'user_id': 1,
-            'name': 'Demo Corp',
-            'bio': 'A demo parent for demonstration purposes.',
-            'logo': 'path/to/demo/logo.png',
-        },
-        {
-            'user_id': 5,
-            'name': 'Tech Innovations',
-            'bio': 'Innovating the future of technology.',
-            'logo': 'path/to/tech/innovations/logo.png',
+            'profile_pic': 'path/to/profile_pic.jpg',
+            'first_name': 'John',
+            'last_name': 'Doe',
+            'address_1': '123 Main St',
+            'address_2': '',
+            'city': 'Columbus',
+            'state': 'OH',
+            'zip_code': '43085',
+            'stripe_customer_id': 'cus_123456789',
+            'stripe_subscription_id': 'sub_123456789'
         }
     ]
 
     for parent_data in parents:
         existing_parent = Parent.query.filter_by(user_id=parent_data['user_id']).first()
         if not existing_parent:
-            parent = Parent(
-                user_id=parent_data['user_id'],
-                name=parent_data['name'],
-                bio=parent_data['bio'],
-                logo=parent_data['logo']
-            )
+            parent = Parent(**parent_data)
             db.session.add(parent)
-
     db.session.commit()
 
 def undo_parents():
-    if environment == "production":
-        db.session.execute(f"TRUNCATE table {SCHEMA}.parents RESTART IDENTITY CASCADE;")
-    else:
-        db.session.execute(text("DELETE FROM parents"))
-
+    db.session.execute('TRUNCATE TABLE parents RESTART IDENTITY CASCADE;')
     db.session.commit()

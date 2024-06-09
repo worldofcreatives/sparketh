@@ -1,3 +1,5 @@
+# course.py
+
 from .db import db, environment, SCHEMA
 from datetime import datetime
 
@@ -23,6 +25,9 @@ class Course(db.Model):
     created_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+    # Relationship to Art
+    student_work = db.relationship('Art', backref='course', lazy=True)
+
     def to_dict(self):
         return {
             'id': self.id,
@@ -39,5 +44,6 @@ class Course(db.Model):
             'terms': self.terms,
             'files': self.files,
             'created_date': self.created_date.isoformat(),
-            'updated_date': self.updated_date.isoformat()
+            'updated_date': self.updated_date.isoformat(),
+            'student_work': [art.to_dict() for art in self.student_work]
         }
