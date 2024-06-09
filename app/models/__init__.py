@@ -5,10 +5,6 @@ from .db import environment, SCHEMA, add_prefix_for_prod
 from .user import User
 from .student import Student
 from .parent import Parent
-from .opportunity import Opportunity
-from .media import Media
-from .submission import Submission
-from .genre import Genre
 from .type import Type
 from .art import Art
 from .course import Course

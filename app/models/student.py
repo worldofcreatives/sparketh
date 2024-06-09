@@ -1,18 +1,6 @@
 from .db import db, environment, SCHEMA, add_prefix_for_prod
 from datetime import datetime
 
-# Association table for Students and Genres
-user_genre_table = db.Table('student_genres',
-    db.Column('student_id', db.Integer, db.ForeignKey('students.id'), primary_key=True),
-    db.Column('genre_id', db.Integer, db.ForeignKey('genres.id'), primary_key=True)
-)
-
-# Association table for Students and Types
-user_type_table = db.Table('student_types',
-    db.Column('student_id', db.Integer, db.ForeignKey('students.id'), primary_key=True),
-    db.Column('type_id', db.Integer, db.ForeignKey('types.id'), primary_key=True)
-)
-
 class Student(db.Model):
     __tablename__ = 'students'
 
@@ -44,8 +32,6 @@ class Student(db.Model):
     reference_email = db.Column(db.String(255), nullable=True)
     reference_phone = db.Column(db.String(20), nullable=True)
     reference_relationship = db.Column(db.String(100), nullable=True)
-    genres = db.relationship('Genre', secondary=user_genre_table, backref=db.backref('students', lazy=True))
-    types = db.relationship('Type', secondary=user_type_table, backref=db.backref('students', lazy=True))
     created_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -76,8 +62,6 @@ class Student(db.Model):
             'reference_email': self.reference_email,
             'reference_phone': self.reference_phone,
             'reference_relationship': self.reference_relationship,
-            'genres': [genre.to_dict() for genre in self.genres],
-            'types': [type_.to_dict() for type_ in self.types],
             'created_date': self.created_date.isoformat(),
             'updated_date': self.updated_date.isoformat(),
         }

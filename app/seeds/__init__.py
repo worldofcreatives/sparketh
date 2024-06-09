@@ -2,8 +2,6 @@ from flask.cli import AppGroup
 from .users import seed_users, undo_users
 from .parents import seed_parents, undo_parents
 from .students import seed_students, undo_students
-from .opportunities import seed_opportunities, undo_opportunities
-from .genres import seed_genres, undo_genres
 from .types import seed_types, undo_types
 from .artworks import seed_art, undo_art
 from .children import seed_children, undo_children
@@ -28,7 +26,6 @@ def seed():
         # command, which will  truncate all tables prefixed with
         # the schema name (see comment in users.py undo_users function).
         # Make sure to add all your other model's undo functions below
-        undo_opportunities()
         undo_lessons()
         undo_courses()
         undo_art()
@@ -39,8 +36,6 @@ def seed():
         undo_users()
         undo_subjects()
         undo_types()
-        undo_genres()
-    seed_genres()
     seed_types()
     seed_subjects()
     seed_users()
@@ -51,14 +46,12 @@ def seed():
     seed_art()
     seed_courses()
     seed_lessons()
-    seed_opportunities()
 
 
 
 # Creates the `flask seed undo` command
 @seed_commands.command('undo')
 def undo():
-    undo_opportunities()
     undo_lessons()
     undo_courses()
     undo_art()
@@ -69,5 +62,4 @@ def undo():
     undo_users()
     undo_subjects()
     undo_types()
-    undo_genres()
     # Add other undo functions here
