@@ -49,66 +49,6 @@ def logout():
     logout_user()
     return {'message': 'User logged out'}
 
-# Sign up a parent
-
-@auth_routes.route('/signup/parent', methods=['POST'])
-def signup_parent():
-    form = ParentSignUpForm()
-    form['csrf_token'].data = request.cookies['csrf_token']
-
-    if form.validate_on_submit():
-        salt = binascii.hexlify(os.urandom(16)).decode()
-        hashed_password = generate_password_hash(form.data['password'] + salt)
-        user = User(
-            username=form.data['username'],
-            email=form.data['email'],
-            hashed_password=hashed_password,
-            salt=salt,
-            type='parent',
-            status='active'
-        )
-        db.session.add(user)
-        db.session.commit()
-
-        parent = Parent(user_id=user.id)
-        db.session.add(parent)
-        db.session.commit()
-
-        return user.to_dict()
-    return {'errors': form.errors}, 401
-
-# Sign up a student, but you must be a parent to do so
-
-@auth_routes.route('/signup/student', methods=['POST'])
-@login_required
-def signup_student():
-    if not current_user.is_parent():
-        return {'errors': 'Only parents can sign up students'}, 403
-
-    form = StudentSignUpForm()
-    form['csrf_token'].data = request.cookies['csrf_token']
-
-    if form.validate_on_submit():
-        salt = binascii.hexlify(os.urandom(16)).decode()
-        hashed_password = generate_password_hash(form.data['password'] + salt)
-        user = User(
-            username=form.data['username'],
-            email=None,
-            hashed_password=hashed_password,
-            salt=salt,
-            type='student',
-            status='active'
-        )
-        db.session.add(user)
-        db.session.commit()
-
-        student = Student(user_id=user.id, parent_id=current_user.id)
-        db.session.add(student)
-        db.session.commit()
-
-        return user.to_dict()
-    return {'errors': form.errors}, 401
-
 @auth_routes.route('/unauthorized')
 def unauthorized():
     """

@@ -52,6 +52,7 @@ def register_kid(parent_id):
 @user_routes.route('/login/parent', methods=['POST'])
 def login_parent():
     form = LoginForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
     if form.validate_on_submit():
         user = User.query.filter((User.email == form.identifier.data) | (User.username == form.identifier.data)).first()
         login_user(user)
@@ -62,6 +63,7 @@ def login_parent():
 @user_routes.route('/login/student', methods=['POST'])
 def login_student():
     form = LoginForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
     if form.validate_on_submit():
         user = User.query.filter(User.username == form.identifier.data).first()
         login_user(user)
@@ -72,6 +74,7 @@ def login_student():
 @user_routes.route('/parent/<int:parent_id>/profile', methods=['POST'])
 def add_parent_profile(parent_id):
     form = ParentProfileForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
     if form.validate_on_submit():
         parent = Parent.query.get_or_404(parent_id)
         parent.profile_pic = form.profile_pic.data
@@ -92,6 +95,7 @@ def add_parent_profile(parent_id):
 @user_routes.route('/parent/<int:parent_id>/profile', methods=['PUT'])
 def update_parent_profile(parent_id):
     form = ParentProfileForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
     if form.validate_on_submit():
         parent = Parent.query.get_or_404(parent_id)
         parent.profile_pic = form.profile_pic.data
@@ -112,6 +116,7 @@ def update_parent_profile(parent_id):
 @user_routes.route('/student/<int:student_id>/profile', methods=['POST'])
 def add_student_profile(student_id):
     form = StudentProfileForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
     if form.validate_on_submit():
         student = Student.query.get_or_404(student_id)
         student.name = form.name.data
@@ -126,6 +131,7 @@ def add_student_profile(student_id):
 @user_routes.route('/student/<int:student_id>/profile', methods=['PUT'])
 def update_student_profile(student_id):
     form = StudentProfileForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
     if form.validate_on_submit():
         student = Student.query.get_or_404(student_id)
         student.name = form.name.data
