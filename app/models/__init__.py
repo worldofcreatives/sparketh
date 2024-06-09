@@ -9,6 +9,5 @@ from .type import Type
 from .art import Art
 from .course import Course
 from .lesson import Lesson
-from .child import Child
 from .teacher import Teacher
 from .subject import Subject

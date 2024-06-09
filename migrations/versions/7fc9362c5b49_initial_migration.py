@@ -1,8 +1,8 @@
 """Initial migration
 
-Revision ID: 4d82fbb99630
+Revision ID: 7fc9362c5b49
 Revises: 
-Create Date: 2024-06-09 11:53:57.746377
+Create Date: 2024-06-09 13:49:57.575485
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '4d82fbb99630'
+revision = '7fc9362c5b49'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -86,23 +86,6 @@ def upgrade():
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('user_id')
     )
-    op.create_table('children',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(length=50), nullable=False),
-    sa.Column('profile_pic', sa.String(length=255), nullable=True),
-    sa.Column('bio', sa.Text(), nullable=True),
-    sa.Column('date_of_birth', sa.Date(), nullable=False),
-    sa.Column('skill_level', sa.String(length=20), nullable=True),
-    sa.Column('progress', sa.JSON(), nullable=True),
-    sa.Column('parent_id', sa.Integer(), nullable=False),
-    sa.Column('created_date', sa.DateTime(), nullable=False),
-    sa.Column('updated_date', sa.DateTime(), nullable=False),
-    sa.ForeignKeyConstraint(['parent_id'], ['parents.id'], ),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('user_id')
-    )
     op.create_table('courses',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('title', sa.String(length=100), nullable=False),
@@ -126,28 +109,11 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('parent_id', sa.Integer(), nullable=True),
-    sa.Column('first_name', sa.String(length=255), nullable=True),
-    sa.Column('last_name', sa.String(length=255), nullable=True),
-    sa.Column('stage_name', sa.String(length=255), nullable=True),
     sa.Column('profile_pic', sa.String(length=255), nullable=True),
     sa.Column('bio', sa.Text(), nullable=True),
-    sa.Column('phone', sa.String(length=20), nullable=True),
-    sa.Column('address_1', sa.String(length=255), nullable=True),
-    sa.Column('address_2', sa.String(length=255), nullable=True),
-    sa.Column('city', sa.String(length=100), nullable=True),
-    sa.Column('state', sa.String(length=100), nullable=True),
-    sa.Column('postal_code', sa.String(length=20), nullable=True),
-    sa.Column('portfolio_url', sa.String(length=255), nullable=True),
-    sa.Column('previous_projects', sa.Text(), nullable=True),
-    sa.Column('instagram', sa.String(length=255), nullable=True),
-    sa.Column('twitter', sa.String(length=255), nullable=True),
-    sa.Column('facebook', sa.String(length=255), nullable=True),
-    sa.Column('youtube', sa.String(length=255), nullable=True),
-    sa.Column('other_social_media', sa.Text(), nullable=True),
-    sa.Column('reference_name', sa.String(length=255), nullable=True),
-    sa.Column('reference_email', sa.String(length=255), nullable=True),
-    sa.Column('reference_phone', sa.String(length=20), nullable=True),
-    sa.Column('reference_relationship', sa.String(length=100), nullable=True),
+    sa.Column('date_of_birth', sa.Date(), nullable=True),
+    sa.Column('skill_level', sa.String(length=20), nullable=True),
+    sa.Column('progress', sa.JSON(), nullable=True),
     sa.Column('created_date', sa.DateTime(), nullable=False),
     sa.Column('updated_date', sa.DateTime(), nullable=False),
     sa.ForeignKeyConstraint(['parent_id'], ['parents.id'], ),
@@ -167,20 +133,6 @@ def upgrade():
     sa.ForeignKeyConstraint(['course_id'], ['courses.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('child_subjects',
-    sa.Column('child_id', sa.Integer(), nullable=False),
-    sa.Column('subject_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['child_id'], ['children.id'], ),
-    sa.ForeignKeyConstraint(['subject_id'], ['subjects.id'], ),
-    sa.PrimaryKeyConstraint('child_id', 'subject_id')
-    )
-    op.create_table('child_types',
-    sa.Column('child_id', sa.Integer(), nullable=False),
-    sa.Column('type_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['child_id'], ['children.id'], ),
-    sa.ForeignKeyConstraint(['type_id'], ['types.id'], ),
-    sa.PrimaryKeyConstraint('child_id', 'type_id')
     )
     op.create_table('course_subjects',
     sa.Column('course_id', sa.Integer(), nullable=False),
@@ -206,20 +158,33 @@ def upgrade():
     sa.ForeignKeyConstraint(['course_id'], ['courses.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('student_subjects',
+    sa.Column('student_id', sa.Integer(), nullable=False),
+    sa.Column('subject_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['student_id'], ['students.id'], ),
+    sa.ForeignKeyConstraint(['subject_id'], ['subjects.id'], ),
+    sa.PrimaryKeyConstraint('student_id', 'subject_id')
+    )
+    op.create_table('student_types',
+    sa.Column('student_id', sa.Integer(), nullable=False),
+    sa.Column('type_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['student_id'], ['students.id'], ),
+    sa.ForeignKeyConstraint(['type_id'], ['types.id'], ),
+    sa.PrimaryKeyConstraint('student_id', 'type_id')
+    )
     # ### end Alembic commands ###
 
 
 def downgrade():
     # ### commands auto generated by Alembic - please adjust! ###
+    op.drop_table('student_types')
+    op.drop_table('student_subjects')
     op.drop_table('lessons')
     op.drop_table('course_types')
     op.drop_table('course_subjects')
-    op.drop_table('child_types')
-    op.drop_table('child_subjects')
     op.drop_table('artworks')
     op.drop_table('students')
     op.drop_table('courses')
-    op.drop_table('children')
     op.drop_table('teachers')
     op.drop_table('parents')
     op.drop_table('users')

@@ -4,7 +4,6 @@ from .parents import seed_parents, undo_parents
 from .students import seed_students, undo_students
 from .types import seed_types, undo_types
 from .artworks import seed_art, undo_art
-from .children import seed_children, undo_children
 from .courses import seed_courses, undo_courses
 from .lessons import seed_lessons, undo_lessons
 from .teachers import seed_teachers, undo_teachers
@@ -30,7 +29,6 @@ def seed():
         undo_courses()
         undo_art()
         undo_teachers()
-        undo_children()
         undo_students()
         undo_parents()
         undo_users()
@@ -41,7 +39,6 @@ def seed():
     seed_users()
     seed_parents()
     seed_students()
-    seed_children()
     seed_teachers()
     seed_art()
     seed_courses()
@@ -56,7 +53,6 @@ def undo():
     undo_courses()
     undo_art()
     undo_teachers()
-    undo_children()
     undo_students()
     undo_parents()
     undo_users()

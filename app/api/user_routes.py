@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app.models import db, User, Parent, Child
+from app.models import db, User, Parent, Student
 from app.forms import LoginForm, ParentSignUpForm, StudentSignUpForm, ParentProfileForm, StudentProfileForm
 from flask_login import login_user, logout_user, current_user
 
@@ -39,10 +39,9 @@ def register_kid(parent_id):
         )
         db.session.add(new_user)
         db.session.commit()
-        new_child = Child(
+        new_child = Student(
             user_id=new_user.id,
             parent_id=parent_id,
-            name=form.username.data
         )
         db.session.add(new_child)
         db.session.commit()
@@ -114,7 +113,7 @@ def update_parent_profile(parent_id):
 def add_student_profile(student_id):
     form = StudentProfileForm()
     if form.validate_on_submit():
-        student = Child.query.get_or_404(student_id)
+        student = Student.query.get_or_404(student_id)
         student.name = form.name.data
         student.date_of_birth = form.date_of_birth.data
         student.skill_level = form.skill_level.data
@@ -128,7 +127,7 @@ def add_student_profile(student_id):
 def update_student_profile(student_id):
     form = StudentProfileForm()
     if form.validate_on_submit():
-        student = Child.query.get_or_404(student_id)
+        student = Student.query.get_or_404(student_id)
         student.name = form.name.data
         student.date_of_birth = form.date_of_birth.data
         student.skill_level = form.skill_level.data

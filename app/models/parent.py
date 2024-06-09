@@ -19,7 +19,7 @@ class Parent(db.Model):
     zip_code = db.Column(db.String(20), nullable=True)
     stripe_customer_id = db.Column(db.String(50), nullable=True)
     stripe_subscription_id = db.Column(db.String(50), nullable=True)
-    children = db.relationship('Child', backref='parent', lazy=True)
+    children = db.relationship('Student', backref='parent', lazy=True)
     created_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
 
