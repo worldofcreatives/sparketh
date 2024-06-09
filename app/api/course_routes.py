@@ -1,51 +1,92 @@
 from flask import Blueprint, request, jsonify
-from app.models import db, Course, Lesson
-from app.forms import CourseForm, LessonForm
+from app.models import db, Course, Type, Subject
+from app.forms import CourseForm
+from flask_login import current_user
+import isodate
+from datetime import timedelta
 
 course_routes = Blueprint('courses', __name__)
+
+# Utility function to convert ISO 8601 duration to timedelta
+def parse_duration(duration):
+    try:
+        return isodate.parse_duration(duration)
+    except isodate.ISO8601Error:
+        return None
 
 # Create a course
 @course_routes.route('/', methods=['POST'])
 def create_course():
     form = CourseForm()
+    print("🔥🔥🔥 FORM DATA:", form.data)
+    form['csrf_token'].data = request.cookies['csrf_token']
     if form.validate_on_submit():
+        length = parse_duration(form.length.data)
+        if length is None:
+            return jsonify({'errors': 'Invalid duration format for length'}), 400
+
+        # Parse materials and files directly from request JSON
+        materials = request.json.get('materials', [])
+        files = request.json.get('files', [])
+
         new_course = Course(
             title=form.title.data,
             description=form.description.data,
-            subject=form.subject.data,
             skill_level=form.skill_level.data,
             type=form.type.data,
             instructor_id=form.instructor_id.data,
-            materials=form.materials.data,
-            length=form.length.data,
+            materials=materials,
+            length=length,
             intro_video=form.intro_video.data,
             tips=form.tips.data,
             terms=form.terms.data,
-            files=form.files.data
+            files=files
         )
+
+        print("🔥🔥🔥 NEW_COURSE:", new_course)
+
+        # Handle types and subjects relationships
+        if form.types.data:
+            new_course.types = [Type.query.get(type_id) for type_id in form.types.data]
+        if form.subjects.data:
+            new_course.subjects = [Subject.query.get(subject_id) for subject_id in form.subjects.data]
+
         db.session.add(new_course)
         db.session.commit()
         return jsonify(new_course.to_dict()), 201
     return jsonify({'errors': form.errors}), 400
 
+
+
 # Edit a course
 @course_routes.route('/<int:course_id>', methods=['PUT'])
 def edit_course(course_id):
     form = CourseForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
     if form.validate_on_submit():
         course = Course.query.get_or_404(course_id)
+        length = parse_duration(form.length.data)
+        if length is None:
+            return jsonify({'errors': 'Invalid duration format for length'}), 400
+
         course.title = form.title.data
         course.description = form.description.data
-        course.subject = form.subject.data
         course.skill_level = form.skill_level.data
         course.type = form.type.data
         course.instructor_id = form.instructor_id.data
         course.materials = form.materials.data
-        course.length = form.length.data
+        course.length = length
         course.intro_video = form.intro_video.data
         course.tips = form.tips.data
         course.terms = form.terms.data
         course.files = form.files.data
+
+        # Handle types and subjects relationships
+        if form.types.data:
+            course.types = [Type.query.get(type_id) for type_id in form.types.data]
+        if form.subjects.data:
+            course.subjects = [Subject.query.get(subject_id) for subject_id in form.subjects.data]
+
         db.session.commit()
         return jsonify(course.to_dict())
     return jsonify({'errors': form.errors}), 400
@@ -61,3 +102,36 @@ def get_all_courses():
 def get_course_details(course_id):
     course = Course.query.get_or_404(course_id)
     return jsonify(course.to_dict())
+
+# Add a lesson to a specific course
+@course_routes.route('/<int:course_id>/lessons', methods=['POST'])
+def add_lesson(course_id):
+    form = LessonForm()
+    if form.validate_on_submit():
+        new_lesson = Lesson(
+            title=form.title.data,
+            course_id=course_id,
+            url=form.url.data
+        )
+        db.session.add(new_lesson)
+        db.session.commit()
+        return jsonify(new_lesson.to_dict()), 201
+    return jsonify({'errors': form.errors}), 400
+
+# Edit a lesson to a specific course
+@course_routes.route('/<int:course_id>/lessons/<int:lesson_id>', methods=['PUT'])
+def edit_lesson(course_id, lesson_id):
+    form = LessonForm()
+    if form.validate_on_submit():
+        lesson = Lesson.query.get_or_404(lesson_id)
+        lesson.title = form.title.data
+        lesson.url = form.url.data
+        db.session.commit()
+        return jsonify(lesson.to_dict())
+    return jsonify({'errors': form.errors}), 400
+
+# Get all lessons of a specific course
+@course_routes.route('/<int:course_id>/lessons', methods=['GET'])
+def get_all_lessons(course_id):
+    lessons = Lesson.query.filter_by(course_id=course_id).all()
+    return jsonify([lesson.to_dict() for lesson in lessons])

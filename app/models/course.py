@@ -22,7 +22,6 @@ class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
-    subject = db.Column(db.String(50), nullable=False)
     skill_level = db.Column(db.String(20), nullable=False)
     type = db.Column(db.String(20), nullable=False)
     instructor_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), nullable=False)
@@ -40,25 +39,20 @@ class Course(db.Model):
     # Relationship to Art
     student_work = db.relationship('Art', backref='course', lazy=True)
 
-    # def validate_types(self):
-    #     if not all(type_ in VALID_TYPES for type_ in self.types):
-    #         raise ValueError("One or more types are invalid")
-
     def to_dict(self):
         return {
             'id': self.id,
             'title': self.title,
             'description': self.description,
-            'subject': self.subject,
             'skill_level': self.skill_level,
             'type': self.type,
             'instructor_id': self.instructor_id,
-            'materials': self.materials,
+            'materials': self.materials if self.materials else [],
             'length': str(self.length),
             'intro_video': self.intro_video,
             'tips': self.tips,
             'terms': self.terms,
-            'files': self.files,
+            'files': self.files if self.files else [],
             'created_date': self.created_date.isoformat(),
             'updated_date': self.updated_date.isoformat(),
             'student_work': [art.to_dict() for art in self.student_work],

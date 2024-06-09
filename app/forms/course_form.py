@@ -1,17 +1,22 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, SelectField, IntegerField, FileField
-from wtforms.validators import DataRequired, Length, Optional
+from wtforms import StringField, TextAreaField, IntegerField, SelectMultipleField
+from wtforms.validators import DataRequired
+from app.models import Type, Subject
 
 class CourseForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired(), Length(max=100)])
-    description = TextAreaField('Description', validators=[DataRequired()])
-    subject = StringField('Subject', validators=[DataRequired(), Length(max=50)])
-    skill_level = StringField('Skill Level', validators=[DataRequired(), Length(max=20)])
-    type = StringField('Type', validators=[DataRequired(), Length(max=20)])
-    instructor_id = IntegerField('Instructor ID', validators=[DataRequired()])
-    materials = TextAreaField('Materials', validators=[Optional()])
-    length = StringField('Length', validators=[DataRequired()])
-    intro_video = StringField('Intro Video', validators=[DataRequired(), Length(max=255)])
-    tips = TextAreaField('Tips', validators=[Optional()])
-    terms = TextAreaField('Terms', validators=[Optional()])
-    files = TextAreaField('Files', validators=[Optional()])
+    title = StringField('title', validators=[DataRequired()])
+    description = TextAreaField('description', validators=[DataRequired()])
+    skill_level = StringField('skill_level', validators=[DataRequired()])
+    type = StringField('type', validators=[DataRequired()])
+    instructor_id = IntegerField('instructor_id', validators=[DataRequired()])
+    length = StringField('length', validators=[DataRequired()])
+    intro_video = StringField('intro_video', validators=[DataRequired()])
+    tips = TextAreaField('tips')
+    terms = TextAreaField('terms')
+    types = SelectMultipleField('types', coerce=int)
+    subjects = SelectMultipleField('subjects', coerce=int)
+
+    def __init__(self, *args, **kwargs):
+        super(CourseForm, self).__init__(*args, **kwargs)
+        self.types.choices = [(type_.id, type_.name) for type_ in Type.query.all()]
+        self.subjects.choices = [(subject.id, subject.name) for subject in Subject.query.all()]

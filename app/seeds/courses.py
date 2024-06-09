@@ -6,7 +6,6 @@ def seed_courses():
         {
             'title': 'Drawing 101',
             'description': 'Introduction to drawing',
-            'subject': 'Art',
             'skill_level': 'Beginner',
             'type': 'Art',
             'instructor_id': 2,
