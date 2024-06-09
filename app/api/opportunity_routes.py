@@ -372,18 +372,6 @@ def delete_submission(opp_id, sub_id):
     if not opportunity:
         return jsonify({"error": "Opportunity not found"}), 404
 
-    # student = Student.query.filter_by(user_id=current_user.id).first()
-    # if student and submission.student_id == student.id:
-    #     db.session.delete(submission)
-    #     db.session.commit()
-    #     return jsonify({"message": "Submission successfully deleted"}), 200
-
-    # parent = Parent.query.filter_by(user_id=current_user.id).first()
-    # if parent and opportunity.parent_id == parent.id:
-    #     db.session.delete(submission)
-    #     db.session.commit()
-    #     return jsonify({"message": "Submission successfully deleted"}), 200
-
     if opportunity.user_id == current_user.id:
         db.session.delete(submission)
         db.session.commit()

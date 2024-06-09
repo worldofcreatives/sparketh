@@ -4,7 +4,6 @@ from flask_login import UserMixin
 from datetime import datetime
 import os
 import binascii
-from app.utils.email_utils import send_email
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
@@ -51,22 +50,7 @@ class User(db.Model, UserMixin):
     @status.setter
     def status(self, new_status):
         if new_status != self._status:
-            self.send_status_change_email(new_status, self._status)
             self._status = new_status
-
-    def send_status_change_email(self, new_status, old_status):
-        if new_status == 'Applied':
-            send_email(self.email, 'Application Received', 'Thank you for applying!')
-        elif new_status == 'Accepted':
-            # Check if the old status is not Premium Monthly or Premium Annual
-            if old_status not in ['Premium Monthly', 'Premium Annual']:
-                send_email(self.email, 'Application Accepted', 'Congratulations, your application has been accepted!')
-        elif new_status == 'Denied':
-            send_email(self.email, 'Application Denied', 'We regret to inform you that your application has been denied.')
-        elif new_status == 'Premium Monthly':
-            send_email(self.email, 'Subscription Upgraded', 'You have successfully upgraded to a Premium Monthly subscription.')
-        elif new_status == 'Premium Annual':
-            send_email(self.email, 'Subscription Upgraded', 'You have successfully upgraded to a Premium Annual subscription.')
 
     def to_dict(self):
         data = {
@@ -75,7 +59,7 @@ class User(db.Model, UserMixin):
             'type': self.type,
             'status': self.status,
             'created_date': self.created_date.isoformat(),
-            'updated_date': self.updated_date.isoformat(),
+            'updated_date': self.updated_date.isoformat()
         }
         if self.type == 'Student':
             data['parent_id'] = self.student.parent_id if self.student else None

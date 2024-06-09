@@ -71,3 +71,21 @@ class ProfileForm(FlaskForm):
             del self.reference_phone
             del self.reference_relationship
             del self.stage_name
+
+class ParentProfileForm(FlaskForm):
+    profile_pic = FileField('Profile Picture', validators=[FileAllowed(['jpg', 'jpeg', 'png', 'gif']), Optional()])
+    first_name = StringField('First Name', validators=[Optional(), Length(max=50)])
+    last_name = StringField('Last Name', validators=[Optional(), Length(max=50)])
+    address_1 = StringField('Address 1', validators=[Optional(), Length(max=100)])
+    address_2 = StringField('Address 2', validators=[Optional(), Length(max=100)])
+    city = StringField('City', validators=[Optional(), Length(max=50)])
+    state = StringField('State', validators=[Optional(), Length(max=50)])
+    zip_code = StringField('Zip Code', validators=[Optional(), Length(max=20)])
+    stripe_customer_id = StringField('Stripe Customer ID', validators=[Optional(), Length(max=50)])
+    stripe_subscription_id = StringField('Stripe Subscription ID', validators=[Optional(), Length(max=50)])
+
+class StudentProfileForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired(), Length(max=50)])
+    date_of_birth = StringField('Date of Birth', validators=[DataRequired()])
+    skill_level = StringField('Skill Level', validators=[Optional(), Length(max=20)])
+    progress = TextAreaField('Progress', validators=[Optional()])

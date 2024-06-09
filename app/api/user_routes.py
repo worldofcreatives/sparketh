@@ -1,147 +1,163 @@
-from flask import Blueprint, jsonify, request
-from flask_login import login_required, current_user
-from app.models import User, db, Student
-from sqlalchemy.exc import SQLAlchemyError
+from flask import Blueprint, request, jsonify
+from app.models import db, User, Parent, Child
+from app.forms import LoginForm, ParentSignUpForm, StudentSignUpForm, ParentProfileForm, StudentProfileForm
+from flask_login import login_user, logout_user, current_user
 
 user_routes = Blueprint('users', __name__)
 
-
-@user_routes.route('')
-@login_required
-def users():
-    """
-    Query for all users and returns them in a list of user dictionaries
-    """
-    users = User.query.all()
-    return {'users': [user.to_dict() for user in users]}
-
-
-# @user_routes.route('/<int:id>')
-# @login_required
-# def user(id):
-#     """
-#     Query for a user by id and returns that user in a dictionary
-#     """
-#     user = User.query.get(id)
-#     return user.to_dict()
-
-#  Update the status of the logged-in user to "Applied"
-
-@user_routes.route('/update_status/applied', methods=['PUT'])
-@login_required
-def update_status_to_applied():
-    try:
-        # Assuming current_user gives you the user object of the logged-in user
-        user = User.query.get(current_user.id)
-        if user:
-            user.status = "Applied"
-            db.session.commit()
-            return jsonify(user.to_dict()), 200
-        else:
-            return jsonify({"error": "User not found"}), 404
-    except SQLAlchemyError as e:
-        db.session.rollback()
-        return jsonify({"error": str(e)}), 500
-
-#   Update the status of a user by id
-
-@user_routes.route('/<int:user_id>/update-status', methods=['PUT'])
-@login_required
-def update_user_status(user_id):
-    if not current_user.is_parent():
-        return jsonify({'error': 'Unauthorized'}), 403
-
-    data = request.get_json()
-    new_status = data.get('status')
-    if not new_status:
-        return jsonify({'error': 'Missing status'}), 400
-
-    user = User.query.get(user_id)
-    if not user:
-        return jsonify({'error': 'User not found'}), 404
-
-    user.status = new_status
-    try:
+# Register a new user as a parent
+@user_routes.route('/register', methods=['POST'])
+def register():
+    form = ParentSignUpForm()
+    if form.validate_on_submit():
+        new_user = User(
+            username=form.username.data,
+            email=form.email.data,
+            password=form.password.data,
+            type='Parent'
+        )
+        db.session.add(new_user)
         db.session.commit()
-        return jsonify(user.to_dict()), 200
-    except SQLAlchemyError as e:
-        db.session.rollback()
-        return jsonify({'error': 'Could not update user status', 'details': str(e)}), 500
+        new_parent = Parent(user_id=new_user.id)
+        db.session.add(new_parent)
+        db.session.commit()
+        return jsonify(new_user.to_dict()), 201
+    return jsonify({'errors': form.errors}), 400
 
-@user_routes.route('/all', methods=['GET'])
-@login_required
-def get_all_users():
-    if not current_user.is_parent():
-        return jsonify({"error": "Unauthorized access"}), 403
+# Parents can register their kids
+@user_routes.route('/parent/<int:parent_id>/register-kid', methods=['POST'])
+def register_kid(parent_id):
+    form = StudentSignUpForm()
+    if form.validate_on_submit():
+        parent = Parent.query.get_or_404(parent_id)
+        new_user = User(
+            username=form.username.data,
+            password=form.password.data,
+            type='Student'
+        )
+        db.session.add(new_user)
+        db.session.commit()
+        new_child = Child(
+            user_id=new_user.id,
+            parent_id=parent_id,
+            name=form.username.data
+        )
+        db.session.add(new_child)
+        db.session.commit()
+        return jsonify(new_user.to_dict()), 201
+    return jsonify({'errors': form.errors}), 400
 
-    users = User.query.all()
-    users_list = []
-    for user in users:
-        user_data = {
-            "email": user.email,
-            "username": user.username,
-            "status": user.status,
-            "type": user.type,
-            "created_date": user.created_date,
-            "profile_link": f"/user/{user.id}",  # Assuming profile link is structured like this
-        }
+# Parent login
+@user_routes.route('/login/parent', methods=['POST'])
+def login_parent():
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter((User.email == form.identifier.data) | (User.username == form.identifier.data)).first()
+        login_user(user)
+        return jsonify(user.to_dict())
+    return jsonify({'errors': form.errors}), 400
 
-        # Fetch student information if exists
-        student = Student.query.filter_by(user_id=user.id).first()
-        if student:
-            student_data = student.to_dict()
-            # Extract and include only the relevant student information
-            user_data.update({
-                "student": {
-                    "first_name": student_data["first_name"],
-                    "last_name": student_data["last_name"],
-                    "stage_name": student_data["stage_name"],
-                    "profile_pic": student_data["profile_pic"],
-                    "bio": student_data["bio"],
-                    "phone": student_data["phone"],
-                    "address_1": student_data["address_1"],
-                    "address_2": student_data["address_2"],
-                    "city": student_data["city"],
-                    "state": student_data["state"],
-                    "postal_code": student_data["postal_code"],
-                    "portfolio_url": student_data["portfolio_url"],
-                    "previous_projects": student_data["previous_projects"],
-                    "instagram": student_data["instagram"],
-                    "twitter": student_data["twitter"],
-                    "facebook": student_data["facebook"],
-                    "youtube": student_data["youtube"],
-                    "other_social_media": student_data["other_social_media"],
-                    "reference_name": student_data["reference_name"],
-                    "reference_email": student_data["reference_email"],
-                    "reference_phone": student_data["reference_phone"],
-                    "reference_relationship": student_data["reference_relationship"],
-                    "genres": student_data["genres"],
-                    "types": student_data["types"]
-                }
-            })
+# Student login
+@user_routes.route('/login/student', methods=['POST'])
+def login_student():
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter(User.username == form.identifier.data).first()
+        login_user(user)
+        return jsonify(user.to_dict())
+    return jsonify({'errors': form.errors}), 400
 
-        users_list.append(user_data)
+# Parents can add profile info
+@user_routes.route('/parent/<int:parent_id>/profile', methods=['POST'])
+def add_parent_profile(parent_id):
+    form = ParentProfileForm()
+    if form.validate_on_submit():
+        parent = Parent.query.get_or_404(parent_id)
+        parent.profile_pic = form.profile_pic.data
+        parent.first_name = form.first_name.data
+        parent.last_name = form.last_name.data
+        parent.address_1 = form.address_1.data
+        parent.address_2 = form.address_2.data
+        parent.city = form.city.data
+        parent.state = form.state.data
+        parent.zip_code = form.zip_code.data
+        parent.stripe_customer_id = form.stripe_customer_id.data
+        parent.stripe_subscription_id = form.stripe_subscription_id.data
+        db.session.commit()
+        return jsonify(parent.to_dict())
+    return jsonify({'errors': form.errors}), 400
 
-    return jsonify(users_list)
+# Parents can update profile info
+@user_routes.route('/parent/<int:parent_id>/profile', methods=['PUT'])
+def update_parent_profile(parent_id):
+    form = ParentProfileForm()
+    if form.validate_on_submit():
+        parent = Parent.query.get_or_404(parent_id)
+        parent.profile_pic = form.profile_pic.data
+        parent.first_name = form.first_name.data
+        parent.last_name = form.last_name.data
+        parent.address_1 = form.address_1.data
+        parent.address_2 = form.address_2.data
+        parent.city = form.city.data
+        parent.state = form.state.data
+        parent.zip_code = form.zip_code.data
+        parent.stripe_customer_id = form.stripe_customer_id.data
+        parent.stripe_subscription_id = form.stripe_subscription_id.data
+        db.session.commit()
+        return jsonify(parent.to_dict())
+    return jsonify({'errors': form.errors}), 400
 
-#    Query for a user by id and returns that user in a dictionary, including student info if available
-@user_routes.route('/<int:id>')
-@login_required
-def get_user(id):
-    user = User.query.get(id)
-    if not user:
-        return jsonify({"error": "User not found"}), 404
+# Students can add profile info
+@user_routes.route('/student/<int:student_id>/profile', methods=['POST'])
+def add_student_profile(student_id):
+    form = StudentProfileForm()
+    if form.validate_on_submit():
+        student = Child.query.get_or_404(student_id)
+        student.name = form.name.data
+        student.date_of_birth = form.date_of_birth.data
+        student.skill_level = form.skill_level.data
+        student.progress = form.progress.data
+        db.session.commit()
+        return jsonify(student.to_dict())
+    return jsonify({'errors': form.errors}), 400
 
-    user_dict = user.to_dict()
+# Students can update profile info
+@user_routes.route('/student/<int:student_id>/profile', methods=['PUT'])
+def update_student_profile(student_id):
+    form = StudentProfileForm()
+    if form.validate_on_submit():
+        student = Child.query.get_or_404(student_id)
+        student.name = form.name.data
+        student.date_of_birth = form.date_of_birth.data
+        student.skill_level = form.skill_level.data
+        student.progress = form.progress.data
+        db.session.commit()
+        return jsonify(student.to_dict())
+    return jsonify({'errors': form.errors}), 400
 
-    # Check if the user has associated student information and include it
-    student = Student.query.filter_by(user_id=id).first()
-    if student:
-        # If you have a to_dict method for Student, you can just call it
-        student_dict = student.to_dict()
-        user_dict["student"] = student_dict
-    else:
-        # Optionally handle the case where the user has no student information
-        user_dict["student"] = "No student information available"
+# When a parent's status is set to "active" their kid's accounts status is set to "active"
+@user_routes.route('/parent/<int:parent_id>/status/active', methods=['PUT'])
+def activate_parent_and_kids(parent_id):
+    parent = Parent.query.get_or_404(parent_id)
+    parent.user.status = 'active'
+    for child in parent.children:
+        child.user.status = 'active'
+    db.session.commit()
+    return jsonify({'parent_status': 'active', 'children_status': 'active'}), 200
 
-    return jsonify(user_dict), 200
+# When a parent's status is set to "inactive" their kid's accounts status is set to "inactive"
+@user_routes.route('/parent/<int:parent_id>/status/inactive', methods=['PUT'])
+def deactivate_parent_and_kids(parent_id):
+    parent = Parent.query.get_or_404(parent_id)
+    parent.user.status = 'inactive'
+    for child in parent.children:
+        child.user.status = 'inactive'
+    db.session.commit()
+    return jsonify({'parent_status': 'inactive', 'children_status': 'inactive'}), 200
+
+# A route that gets the current user's profile information
+@user_routes.route('/profile', methods=['GET'])
+def get_profile():
+    if current_user.is_authenticated:
+        return jsonify(current_user.to_dict())
+    return jsonify({'errors': 'Not authenticated'}), 401

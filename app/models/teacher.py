@@ -1,27 +1,31 @@
-from .db import db, environment, SCHEMA
+# teacher.py
+
+from .db import db, environment, SCHEMA, add_prefix_for_prod
 from datetime import datetime
 
-class Parent(db.Model):
-    __tablename__ = 'parents'
+class Teacher(db.Model):
+    __tablename__ = 'teachers'
 
     if environment == "production":
         __table_args__ = {'schema': SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, unique=True)
+    user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.id')), nullable=False, unique=True)
     profile_pic = db.Column(db.String(255), nullable=True)
-    first_name = db.Column(db.String(50), nullable=True)
-    last_name = db.Column(db.String(50), nullable=True)
-    address_1 = db.Column(db.String(100), nullable=True)
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    address_1 = db.Column(db.String(100), nullable=False)
     address_2 = db.Column(db.String(100), nullable=True)
-    city = db.Column(db.String(50), nullable=True)
-    state = db.Column(db.String(50), nullable=True)
-    zip_code = db.Column(db.String(20), nullable=True)
-    stripe_customer_id = db.Column(db.String(50), nullable=True)
-    stripe_subscription_id = db.Column(db.String(50), nullable=True)
-    children = db.relationship('Child', backref='parent', lazy=True)
+    city = db.Column(db.String(50), nullable=False)
+    state = db.Column(db.String(50), nullable=False)
+    zip_code = db.Column(db.String(20), nullable=False)
+    bio = db.Column(db.Text, nullable=True)
+    expertise = db.Column(db.Text, nullable=True)
     created_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relationship to User
+    user = db.relationship('User', backref=db.backref('teacher', uselist=False, lazy=True))
 
     def to_dict(self):
         return {
@@ -35,8 +39,8 @@ class Parent(db.Model):
             'city': self.city,
             'state': self.state,
             'zip_code': self.zip_code,
-            'stripe_customer_id': self.stripe_customer_id,
-            'stripe_subscription_id': self.stripe_subscription_id,
+            'bio': self.bio,
+            'expertise': self.expertise,
             'created_date': self.created_date.isoformat(),
             'updated_date': self.updated_date.isoformat()
         }

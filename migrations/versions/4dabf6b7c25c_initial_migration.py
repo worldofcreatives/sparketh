@@ -1,8 +1,8 @@
-"""empty message
+"""Initial migration
 
-Revision ID: d385720710af
+Revision ID: 4dabf6b7c25c
 Revises: 
-Create Date: 2024-06-07 19:34:48.708205
+Create Date: 2024-06-09 09:28:00.555876
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'd385720710af'
+revision = '4dabf6b7c25c'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -51,14 +51,74 @@ def upgrade():
     op.create_table('parents',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(length=255), nullable=True),
-    sa.Column('bio', sa.Text(), nullable=True),
-    sa.Column('logo', sa.String(length=255), nullable=True),
+    sa.Column('profile_pic', sa.String(length=255), nullable=True),
+    sa.Column('first_name', sa.String(length=50), nullable=True),
+    sa.Column('last_name', sa.String(length=50), nullable=True),
+    sa.Column('address_1', sa.String(length=100), nullable=True),
+    sa.Column('address_2', sa.String(length=100), nullable=True),
+    sa.Column('city', sa.String(length=50), nullable=True),
+    sa.Column('state', sa.String(length=50), nullable=True),
+    sa.Column('zip_code', sa.String(length=20), nullable=True),
+    sa.Column('stripe_customer_id', sa.String(length=50), nullable=True),
+    sa.Column('stripe_subscription_id', sa.String(length=50), nullable=True),
     sa.Column('created_date', sa.DateTime(), nullable=False),
     sa.Column('updated_date', sa.DateTime(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('user_id')
+    )
+    op.create_table('teachers',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('profile_pic', sa.String(length=255), nullable=True),
+    sa.Column('first_name', sa.String(length=50), nullable=False),
+    sa.Column('last_name', sa.String(length=50), nullable=False),
+    sa.Column('address_1', sa.String(length=100), nullable=False),
+    sa.Column('address_2', sa.String(length=100), nullable=True),
+    sa.Column('city', sa.String(length=50), nullable=False),
+    sa.Column('state', sa.String(length=50), nullable=False),
+    sa.Column('zip_code', sa.String(length=20), nullable=False),
+    sa.Column('bio', sa.Text(), nullable=True),
+    sa.Column('expertise', sa.Text(), nullable=True),
+    sa.Column('created_date', sa.DateTime(), nullable=False),
+    sa.Column('updated_date', sa.DateTime(), nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('user_id')
+    )
+    op.create_table('children',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=50), nullable=False),
+    sa.Column('date_of_birth', sa.Date(), nullable=False),
+    sa.Column('skill_level', sa.String(length=20), nullable=True),
+    sa.Column('progress', sa.JSON(), nullable=True),
+    sa.Column('parent_id', sa.Integer(), nullable=False),
+    sa.Column('created_date', sa.DateTime(), nullable=False),
+    sa.Column('updated_date', sa.DateTime(), nullable=False),
+    sa.ForeignKeyConstraint(['parent_id'], ['parents.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('user_id')
+    )
+    op.create_table('courses',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('title', sa.String(length=100), nullable=False),
+    sa.Column('description', sa.Text(), nullable=False),
+    sa.Column('subject', sa.String(length=50), nullable=False),
+    sa.Column('skill_level', sa.String(length=20), nullable=False),
+    sa.Column('type', sa.String(length=20), nullable=False),
+    sa.Column('instructor_id', sa.Integer(), nullable=False),
+    sa.Column('materials', sa.JSON(), nullable=True),
+    sa.Column('length', sa.Interval(), nullable=False),
+    sa.Column('intro_video', sa.String(length=255), nullable=False),
+    sa.Column('tips', sa.Text(), nullable=True),
+    sa.Column('terms', sa.Text(), nullable=True),
+    sa.Column('files', sa.JSON(), nullable=True),
+    sa.Column('created_date', sa.DateTime(), nullable=False),
+    sa.Column('updated_date', sa.DateTime(), nullable=False),
+    sa.ForeignKeyConstraint(['instructor_id'], ['teachers.id'], ),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('opportunities',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -107,6 +167,29 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('user_id')
+    )
+    op.create_table('artworks',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=100), nullable=False),
+    sa.Column('type', sa.String(length=50), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('course_id', sa.Integer(), nullable=True),
+    sa.Column('media_url', sa.String(length=255), nullable=False),
+    sa.Column('created_date', sa.DateTime(), nullable=False),
+    sa.Column('updated_date', sa.DateTime(), nullable=False),
+    sa.ForeignKeyConstraint(['course_id'], ['courses.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('lessons',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('title', sa.String(length=100), nullable=False),
+    sa.Column('course_id', sa.Integer(), nullable=False),
+    sa.Column('url', sa.String(length=255), nullable=False),
+    sa.Column('created_date', sa.DateTime(), nullable=False),
+    sa.Column('updated_date', sa.DateTime(), nullable=False),
+    sa.ForeignKeyConstraint(['course_id'], ['courses.id'], ),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('opportunity_genres',
     sa.Column('opportunity_id', sa.Integer(), nullable=False),
@@ -229,8 +312,13 @@ def downgrade():
     op.drop_table('student_genres')
     op.drop_table('opportunity_types')
     op.drop_table('opportunity_genres')
+    op.drop_table('lessons')
+    op.drop_table('artworks')
     op.drop_table('students')
     op.drop_table('opportunities')
+    op.drop_table('courses')
+    op.drop_table('children')
+    op.drop_table('teachers')
     op.drop_table('parents')
     op.drop_table('users')
     op.drop_table('types')

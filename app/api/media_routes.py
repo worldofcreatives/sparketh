@@ -55,37 +55,3 @@ def upload_media():
         return jsonify({"error": "Form validation failed", "form_errors": form.errors}), 400
 
 
-
-# from flask import Blueprint, request, jsonify
-# from werkzeug.utils import secure_filename
-# from flask_login import login_required, current_user
-# from app.models import db, Media
-# from app.forms.media_form import MediaForm
-# import os
-
-# media_routes = Blueprint('media', __name__)
-
-# @media_routes.route('/upload', methods=['POST'])
-# @login_required
-# def upload_media():
-#     form = MediaForm()
-#     form["csrf_token"].data = request.cookies["csrf_token"]
-#     if form.validate_on_submit():
-#         file = form.file.data
-#         filename = secure_filename(file.filename)
-#         filepath = os.path.join('path/to/save/media', filename)
-#         file.save(filepath)
-
-#         new_media = Media(
-#             name=form.name.data,
-#             file=filename,
-#             user_id=current_user.id
-#         )
-
-#         db.session.add(new_media)
-#         db.session.commit()
-
-#         return jsonify(new_media.to_dict()), 201
-#     return jsonify({"errors": form.errors}), 400
-
-
