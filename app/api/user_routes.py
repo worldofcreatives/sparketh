@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from app.models import db, User, Parent, Student
 from app.forms import LoginForm, ParentSignUpForm, StudentSignUpForm, ParentProfileForm, StudentProfileForm
+from datetime import date
 from flask_login import login_user, logout_user, current_user, login_required
 
 user_routes = Blueprint('users', __name__)
@@ -147,10 +148,12 @@ def add_student_profile(student_id):
         return jsonify({'errors': 'Unauthorized access'}), 403
 
     if form.validate_on_submit():
-        if form.name.data:
-            student.name = form.name.data
+        if form.bio.data:
+            student.bio = form.bio.data
         if form.date_of_birth.data:
-            student.date_of_birth = form.date_of_birth.data
+            # Assuming the date_of_birth data is a string in 'YYYY-MM-DD' format
+            year, month, day = map(int, form.date_of_birth.data.split('-'))
+            student.date_of_birth = date(year, month, day)
         if form.skill_level.data:
             student.skill_level = form.skill_level.data
         if form.progress.data:

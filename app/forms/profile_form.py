@@ -85,7 +85,7 @@ class ParentProfileForm(FlaskForm):
     stripe_subscription_id = StringField('Stripe Subscription ID', validators=[Optional(), Length(max=50)])
 
 class StudentProfileForm(FlaskForm):
-    name = StringField('Name', validators=[DataRequired(), Length(max=50)])
-    date_of_birth = StringField('Date of Birth', validators=[DataRequired()])
+    bio = TextAreaField('Bio', validators=[Optional()])
+    date_of_birth = StringField('Date of Birth', validators=[Optional()])
     skill_level = StringField('Skill Level', validators=[Optional(), Length(max=20)])
     progress = TextAreaField('Progress', validators=[Optional()])
