@@ -90,7 +90,7 @@ def login_student():
     return jsonify({'errors': form.errors}), 400
 
 # Parents can update profile info (only for the data in the payload)
-@user_routes.route('/parent/<int:parent_id>/profile', methods=['PUT'])
+@user_routes.route('/parent/<int:parent_id>/profile', methods=['POST'])
 @login_required
 def update_parent_profile(parent_id):
     form = ParentProfileForm()
@@ -131,35 +131,38 @@ def update_parent_profile(parent_id):
     return jsonify({'errors': form.errors}), 400
 
 
-# Students can add profile info
+# Students or their parent can update the student's profile info
 @user_routes.route('/student/<int:student_id>/profile', methods=['POST'])
+@login_required
 def add_student_profile(student_id):
     form = StudentProfileForm()
     form['csrf_token'].data = request.cookies['csrf_token']
+
+    # Fetch the student record
+    student = Student.query.get_or_404(student_id)
+    parent = Parent.query.get_or_404(student.parent_id)
+
+    # Check if the current user is an admin, the student themselves, or the parent of the student
+    if not (current_user.type == 'admin' or current_user.id == student.user_id or current_user.id == parent.user_id):
+        return jsonify({'errors': 'Unauthorized access'}), 403
+
     if form.validate_on_submit():
-        student = Student.query.get_or_404(student_id)
-        student.name = form.name.data
-        student.date_of_birth = form.date_of_birth.data
-        student.skill_level = form.skill_level.data
-        student.progress = form.progress.data
+        if form.name.data:
+            student.name = form.name.data
+        if form.date_of_birth.data:
+            student.date_of_birth = form.date_of_birth.data
+        if form.skill_level.data:
+            student.skill_level = form.skill_level.data
+        if form.progress.data:
+            student.progress = form.progress.data
+
         db.session.commit()
-        return jsonify(student.to_dict())
+        return jsonify(student.to_dict()), 200
+
     return jsonify({'errors': form.errors}), 400
 
-# Students can update profile info
-@user_routes.route('/student/<int:student_id>/profile', methods=['PUT'])
-def update_student_profile(student_id):
-    form = StudentProfileForm()
-    form['csrf_token'].data = request.cookies['csrf_token']
-    if form.validate_on_submit():
-        student = Student.query.get_or_404(student_id)
-        student.name = form.name.data
-        student.date_of_birth = form.date_of_birth.data
-        student.skill_level = form.skill_level.data
-        student.progress = form.progress.data
-        db.session.commit()
-        return jsonify(student.to_dict())
-    return jsonify({'errors': form.errors}), 400
+
+# ------------- Other routes, not tested ---------------
 
 # When a parent's status is set to "active" their kid's accounts status is set to "active"
 @user_routes.route('/parent/<int:parent_id>/status/active', methods=['PUT'])
