@@ -10,6 +10,8 @@ class Child(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, unique=True)
     name = db.Column(db.String(50), nullable=False)
+    profile_pic = db.Column(db.String(255), nullable=True)
+    bio = db.Column(db.Text, nullable=True)
     date_of_birth = db.Column(db.Date, nullable=False)
     skill_level = db.Column(db.String(20), nullable=True)
     progress = db.Column(db.JSON, nullable=True)
@@ -22,6 +24,8 @@ class Child(db.Model):
             'id': self.id,
             'user_id': self.user_id,
             'name': self.name,
+            'profile_pic': self.profile_pic,
+            'bio': self.bio,
             'date_of_birth': self.date_of_birth.isoformat(),
             'skill_level': self.skill_level,
             'progress': self.progress,

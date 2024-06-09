@@ -10,6 +10,8 @@ def seed_children():
             'name': 'Child One',
             'date_of_birth': date(2010, 1, 1),
             'skill_level': 'Beginner',
+            'profile_pic': 'url/profile.png',
+            'bio': 'Exploring creativity in every aspect.',
             'progress': '{}',
             'parent_id': 1  # Make sure this corresponds to an existing parent ID
         }
