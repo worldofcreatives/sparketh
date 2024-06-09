@@ -3,6 +3,18 @@
 from .db import db, environment, SCHEMA
 from datetime import datetime
 
+# Association table for Courses and Types
+course_type_table = db.Table('course_types',
+    db.Column('course_id', db.Integer, db.ForeignKey('courses.id'), primary_key=True),
+    db.Column('type_id', db.Integer, db.ForeignKey('types.id'), primary_key=True)
+)
+
+# Association table for Courses and Subjects
+course_subject_table = db.Table('course_subjects',
+    db.Column('course_id', db.Integer, db.ForeignKey('courses.id'), primary_key=True),
+    db.Column('subject_id', db.Integer, db.ForeignKey('subjects.id'), primary_key=True)
+)
+
 class Course(db.Model):
     __tablename__ = 'courses'
 
@@ -22,11 +34,17 @@ class Course(db.Model):
     tips = db.Column(db.Text, nullable=True)
     terms = db.Column(db.Text, nullable=True)
     files = db.Column(db.JSON, nullable=True)
+    types = db.relationship('Type', secondary=course_type_table, backref=db.backref('courses', lazy=True))
+    subjects = db.relationship('Subject', secondary=course_subject_table, backref=db.backref('courses', lazy=True))
     created_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # Relationship to Art
     student_work = db.relationship('Art', backref='course', lazy=True)
+
+    # def validate_types(self):
+    #     if not all(type_ in VALID_TYPES for type_ in self.types):
+    #         raise ValueError("One or more types are invalid")
 
     def to_dict(self):
         return {
@@ -45,5 +63,7 @@ class Course(db.Model):
             'files': self.files,
             'created_date': self.created_date.isoformat(),
             'updated_date': self.updated_date.isoformat(),
-            'student_work': [art.to_dict() for art in self.student_work]
+            'student_work': [art.to_dict() for art in self.student_work],
+            'types': [type_.to_dict() for type_ in self.types],
+            'subjects': [subject.to_dict() for subject in self.subjects]
         }

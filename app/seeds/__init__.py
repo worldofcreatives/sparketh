@@ -10,6 +10,7 @@ from .children import seed_children, undo_children
 from .courses import seed_courses, undo_courses
 from .lessons import seed_lessons, undo_lessons
 from .teachers import seed_teachers, undo_teachers
+from .subjects import seed_subjects, undo_subjects
 
 
 from app.models.db import db, environment, SCHEMA
@@ -36,10 +37,12 @@ def seed():
         undo_students()
         undo_parents()
         undo_users()
+        undo_subjects()
         undo_types()
         undo_genres()
     seed_genres()
     seed_types()
+    seed_subjects()
     seed_users()
     seed_parents()
     seed_students()
@@ -64,6 +67,7 @@ def undo():
     undo_students()
     undo_parents()
     undo_users()
+    undo_subjects()
     undo_types()
     undo_genres()
     # Add other undo functions here

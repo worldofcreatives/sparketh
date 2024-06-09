@@ -2,7 +2,7 @@ from app.models import db, Type, environment, SCHEMA
 from sqlalchemy.sql import text
 
 def seed_types():
-    types = ['Songwriter', 'Composer', 'Producer', 'Singer']
+    types = ['Activity', 'Challenge', 'Creative', 'Project', 'Technical']
 
     for type_name in types:
         existing_type = db.session.query(Type).filter_by(name=type_name).first()
