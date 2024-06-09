@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
-from app.models import db, Course, Type, Subject
-from app.forms import CourseForm
+from app.models import db, Course, Type, Subject, Lesson
+from app.forms import CourseForm, LessonForm
 from flask_login import current_user
 import isodate
 from datetime import timedelta
@@ -57,29 +57,39 @@ def create_course():
     return jsonify({'errors': form.errors}), 400
 
 
-
 # Edit a course
 @course_routes.route('/<int:course_id>', methods=['PUT'])
 def edit_course(course_id):
     form = CourseForm()
     form['csrf_token'].data = request.cookies['csrf_token']
-    if form.validate_on_submit():
+    if form.validate():
         course = Course.query.get_or_404(course_id)
-        length = parse_duration(form.length.data)
-        if length is None:
+        length = parse_duration(form.length.data) if form.length.data else None
+        if form.length.data and length is None:
             return jsonify({'errors': 'Invalid duration format for length'}), 400
 
-        course.title = form.title.data
-        course.description = form.description.data
-        course.skill_level = form.skill_level.data
-        course.type = form.type.data
-        course.instructor_id = form.instructor_id.data
-        course.materials = form.materials.data
-        course.length = length
-        course.intro_video = form.intro_video.data
-        course.tips = form.tips.data
-        course.terms = form.terms.data
-        course.files = form.files.data
+        if form.title.data:
+            course.title = form.title.data
+        if form.description.data:
+            course.description = form.description.data
+        if form.skill_level.data:
+            course.skill_level = form.skill_level.data
+        if form.type.data:
+            course.type = form.type.data
+        if form.instructor_id.data:
+            course.instructor_id = form.instructor_id.data
+        if 'materials' in request.json:
+            course.materials = request.json['materials']
+        if form.length.data:
+            course.length = length
+        if form.intro_video.data:
+            course.intro_video = form.intro_video.data
+        if form.tips.data:
+            course.tips = form.tips.data
+        if form.terms.data:
+            course.terms = form.terms.data
+        if 'files' in request.json:
+            course.files = request.json['files']
 
         # Handle types and subjects relationships
         if form.types.data:
@@ -90,6 +100,7 @@ def edit_course(course_id):
         db.session.commit()
         return jsonify(course.to_dict())
     return jsonify({'errors': form.errors}), 400
+
 
 # Get all courses
 @course_routes.route('/', methods=['GET'])
