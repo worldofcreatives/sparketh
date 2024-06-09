@@ -1,5 +1,3 @@
-# course_seeder.py
-
 from app.models import db, Course
 from datetime import datetime, timedelta
 

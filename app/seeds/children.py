@@ -1,5 +1,3 @@
-# child_seeder.py
-
 from app.models import db, Child
 from datetime import date
 

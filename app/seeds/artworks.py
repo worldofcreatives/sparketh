@@ -1,5 +1,3 @@
-# art_seeder.py
-
 from app.models import db, Art
 
 def seed_art():

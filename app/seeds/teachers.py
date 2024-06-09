@@ -1,5 +1,3 @@
-# teacher_seeder.py
-
 from app.models import db, Teacher
 
 def seed_teachers():

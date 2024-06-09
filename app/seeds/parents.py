@@ -1,5 +1,3 @@
-# parent_seeder.py
-
 from app.models import db, Parent
 
 def seed_parents():

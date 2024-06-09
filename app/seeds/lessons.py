@@ -1,5 +1,3 @@
-# lesson_seeder.py
-
 from app.models import db, Lesson
 
 def seed_lessons():
