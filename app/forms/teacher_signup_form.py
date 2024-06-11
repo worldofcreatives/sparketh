@@ -22,18 +22,18 @@ class TeacherSignUpForm(FlaskForm):
     ])
     password = PasswordField('password', validators=[
         DataRequired(),
-        Length(min=8, message="Password must be at least 8 characters.")
+        Length(min=7, message="Password must be at least 8 characters.")
     ])
     profile_pic = FileField('Profile Picture', validators=[
         FileAllowed(['jpg', 'jpeg', 'png', 'gif'], 'Images only!'),
         Optional()
     ])
-    first_name = StringField('First Name', validators=[DataRequired(), Length(max=50)])
-    last_name = StringField('Last Name', validators=[DataRequired(), Length(max=50)])
-    address_1 = StringField('Address 1', validators=[DataRequired(), Length(max=100)])
+    first_name = StringField('First Name', validators=[Optional(), Length(max=50)])
+    last_name = StringField('Last Name', validators=[Optional(), Length(max=50)])
+    address_1 = StringField('Address 1', validators=[Optional(), Length(max=100)])
     address_2 = StringField('Address 2', validators=[Optional(), Length(max=100)])
-    city = StringField('City', validators=[DataRequired(), Length(max=50)])
-    state = StringField('State', validators=[DataRequired(), Length(max=50)])
-    zip_code = StringField('Zip Code', validators=[DataRequired(), Length(max=20)])
+    city = StringField('City', validators=[Optional(), Length(max=50)])
+    state = StringField('State', validators=[Optional(), Length(max=50)])
+    zip_code = StringField('Zip Code', validators=[Optional(), Length(max=20)])
     bio = TextAreaField('Bio', validators=[Optional()])
     expertise = TextAreaField('Expertise', validators=[Optional()])

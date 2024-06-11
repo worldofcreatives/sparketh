@@ -1,8 +1,8 @@
 """Initial migration
 
-Revision ID: 77313fda329b
+Revision ID: 01045e6ea1ce
 Revises: 
-Create Date: 2024-06-09 17:03:12.243879
+Create Date: 2024-06-11 09:36:06.436490
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '77313fda329b'
+revision = '01045e6ea1ce'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -71,13 +71,13 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('profile_pic', sa.String(length=255), nullable=True),
-    sa.Column('first_name', sa.String(length=50), nullable=False),
-    sa.Column('last_name', sa.String(length=50), nullable=False),
-    sa.Column('address_1', sa.String(length=100), nullable=False),
+    sa.Column('first_name', sa.String(length=50), nullable=True),
+    sa.Column('last_name', sa.String(length=50), nullable=True),
+    sa.Column('address_1', sa.String(length=100), nullable=True),
     sa.Column('address_2', sa.String(length=100), nullable=True),
-    sa.Column('city', sa.String(length=50), nullable=False),
-    sa.Column('state', sa.String(length=50), nullable=False),
-    sa.Column('zip_code', sa.String(length=20), nullable=False),
+    sa.Column('city', sa.String(length=50), nullable=True),
+    sa.Column('state', sa.String(length=50), nullable=True),
+    sa.Column('zip_code', sa.String(length=20), nullable=True),
     sa.Column('bio', sa.Text(), nullable=True),
     sa.Column('expertise', sa.Text(), nullable=True),
     sa.Column('created_date', sa.DateTime(), nullable=False),
@@ -92,7 +92,7 @@ def upgrade():
     sa.Column('description', sa.Text(), nullable=False),
     sa.Column('skill_level', sa.String(length=20), nullable=False),
     sa.Column('type', sa.String(length=20), nullable=False),
-    sa.Column('instructor_id', sa.Integer(), nullable=False),
+    sa.Column('instructor_id', sa.Integer(), nullable=True),
     sa.Column('materials', sa.JSON(), nullable=True),
     sa.Column('length', sa.Interval(), nullable=False),
     sa.Column('intro_video', sa.String(length=255), nullable=False),

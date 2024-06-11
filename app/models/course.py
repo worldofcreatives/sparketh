@@ -24,7 +24,7 @@ class Course(db.Model):
     description = db.Column(db.Text, nullable=False)
     skill_level = db.Column(db.String(20), nullable=False)
     type = db.Column(db.String(20), nullable=False)
-    instructor_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), nullable=False)
+    instructor_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), nullable=True)
     materials = db.Column(db.JSON, nullable=True)
     length = db.Column(db.Interval, nullable=False)
     intro_video = db.Column(db.String(255), nullable=False)

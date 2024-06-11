@@ -10,6 +10,7 @@ teacher_routes = Blueprint('teachers', __name__)
 @teacher_routes.route('/register', methods=['POST'])
 def register_teacher():
     form = TeacherSignUpForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
     if form.validate_on_submit():
         user = User(
             email=form.email.data,
@@ -96,3 +97,10 @@ def logout_teacher():
         logout_user()
         return jsonify({"message": "Logged out successfully"}), 200
     return jsonify({"error": "Unauthorized access"}), 401
+
+# GET all teachers
+
+@teacher_routes.route('/', methods=['GET'])
+def get_all_teachers():
+    teachers = Teacher.query.all()
+    return jsonify([teacher.to_dict() for teacher in teachers]), 200
