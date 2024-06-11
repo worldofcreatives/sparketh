@@ -183,8 +183,25 @@ def edit_course(course_id):
 
 # Add a lesson to a specific course
 @course_routes.route('/<int:course_id>/lessons', methods=['POST'])
+@login_required
 def add_lesson(course_id):
+    if not current_user.is_authenticated:
+        return jsonify({'errors': 'User not authenticated'}), 401
+
+    if current_user.type != 'teacher':
+        return jsonify({'errors': 'Only teachers can add lessons'}), 403
+
+    teacher = Teacher.query.filter_by(user_id=current_user.id).first()
+    if not teacher:
+        return jsonify({'errors': 'Teacher not found'}), 404
+
+    course = Course.query.get_or_404(course_id)
+    if course.instructor_id != teacher.id:
+        return jsonify({'errors': 'You are not authorized to add lessons to this course'}), 403
+
     form = LessonForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
+    form.course_id.data = course_id
     if form.validate_on_submit():
         new_lesson = Lesson(
             title=form.title.data,
@@ -196,10 +213,28 @@ def add_lesson(course_id):
         return jsonify(new_lesson.to_dict()), 201
     return jsonify({'errors': form.errors}), 400
 
+
 # Edit a lesson to a specific course
 @course_routes.route('/<int:course_id>/lessons/<int:lesson_id>', methods=['PUT'])
+@login_required
 def edit_lesson(course_id, lesson_id):
+    if not current_user.is_authenticated:
+        return jsonify({'errors': 'User not authenticated'}), 401
+
+    if current_user.type != 'teacher':
+        return jsonify({'errors': 'Only teachers can edit lessons'}), 403
+
+    teacher = Teacher.query.filter_by(user_id=current_user.id).first()
+    if not teacher:
+        return jsonify({'errors': 'Teacher not found'}), 404
+
+    course = Course.query.get_or_404(course_id)
+    if course.instructor_id != teacher.id:
+        return jsonify({'errors': 'You are not authorized to edit lessons in this course'}), 403
+
     form = LessonForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
+    form.course_id.data = course_id
     if form.validate_on_submit():
         lesson = Lesson.query.get_or_404(lesson_id)
         lesson.title = form.title.data
@@ -207,6 +242,7 @@ def edit_lesson(course_id, lesson_id):
         db.session.commit()
         return jsonify(lesson.to_dict())
     return jsonify({'errors': form.errors}), 400
+
 
 # Get all courses
 @course_routes.route('/', methods=['GET'])

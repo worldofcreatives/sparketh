@@ -39,6 +39,9 @@ class Course(db.Model):
     # Relationship to Art
     student_work = db.relationship('Art', backref='course', lazy=True)
 
+    # Relationship to Lesson
+    lessons = db.relationship('Lesson', backref='course', lazy=True)
+
     def to_dict(self):
         return {
             'id': self.id,
@@ -56,6 +59,7 @@ class Course(db.Model):
             'created_date': self.created_date.isoformat(),
             'updated_date': self.updated_date.isoformat(),
             'student_work': [art.to_dict() for art in self.student_work],
+            'lessons': [lesson.to_dict() for lesson in self.lessons],
             'types': [type_.to_dict() for type_ in self.types],
             'subjects': [subject.to_dict() for subject in self.subjects]
         }
