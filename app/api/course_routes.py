@@ -124,12 +124,27 @@ def create_course():
     return jsonify({'errors': form.errors}), 400
 
 # Edit a course
+
 @course_routes.route('/<int:course_id>', methods=['PUT'])
+@login_required
 def edit_course(course_id):
+    if not current_user.is_authenticated:
+        return jsonify({'errors': 'User not authenticated'}), 401
+
+    if current_user.type != 'teacher':
+        return jsonify({'errors': 'Only teachers can edit courses'}), 403
+
+    teacher = Teacher.query.filter_by(user_id=current_user.id).first()
+    if not teacher:
+        return jsonify({'errors': 'Teacher not found'}), 404
+
+    course = Course.query.get_or_404(course_id)
+    if course.instructor_id != teacher.id:
+        return jsonify({'errors': 'You are not authorized to edit this course'}), 403
+
     form = CourseForm()
     form['csrf_token'].data = request.cookies['csrf_token']
     if form.validate():
-        course = Course.query.get_or_404(course_id)
         length = parse_duration(form.length.data) if form.length.data else None
         if form.length.data and length is None:
             return jsonify({'errors': 'Invalid duration format for length'}), 400
@@ -142,8 +157,6 @@ def edit_course(course_id):
             course.skill_level = form.skill_level.data
         if form.type.data:
             course.type = form.type.data
-        if form.instructor_id.data:
-            course.instructor_id = form.instructor_id.data
         if 'materials' in request.json:
             course.materials = request.json['materials']
         if form.length.data:
@@ -166,6 +179,7 @@ def edit_course(course_id):
         db.session.commit()
         return jsonify(course.to_dict())
     return jsonify({'errors': form.errors}), 400
+
 
 # Add a lesson to a specific course
 @course_routes.route('/<int:course_id>/lessons', methods=['POST'])
