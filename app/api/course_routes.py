@@ -232,16 +232,17 @@ def edit_lesson(course_id, lesson_id):
     if course.instructor_id != teacher.id:
         return jsonify({'errors': 'You are not authorized to edit lessons in this course'}), 403
 
-    form = LessonForm()
-    form['csrf_token'].data = request.cookies['csrf_token']
-    form.course_id.data = course_id
-    if form.validate_on_submit():
-        lesson = Lesson.query.get_or_404(lesson_id)
-        lesson.title = form.title.data
-        lesson.url = form.url.data
-        db.session.commit()
-        return jsonify(lesson.to_dict())
-    return jsonify({'errors': form.errors}), 400
+    lesson = Lesson.query.get_or_404(lesson_id)
+
+    # Update only the fields present in the payload
+    payload = request.get_json()
+    if 'title' in payload:
+        lesson.title = payload['title']
+    if 'url' in payload:
+        lesson.url = payload['url']
+
+    db.session.commit()
+    return jsonify(lesson.to_dict()), 200
 
 
 # Get all courses

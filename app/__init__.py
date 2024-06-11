@@ -10,7 +10,6 @@ from .api.art_routes import art_routes
 from .api.aws_routes import aws_routes
 from .api.contact_routes import contact_routes
 from .api.course_routes import course_routes
-from .api.lesson_routes import lesson_routes
 from .api.stripe_routes import stripe_routes
 from .api.teacher_routes import teacher_routes
 from .api.user_routes import user_routes
@@ -47,7 +46,6 @@ app.register_blueprint(stripe_routes, url_prefix="/api/stripe")
 app.register_blueprint(contact_routes, url_prefix="/api/contact")
 app.register_blueprint(art_routes, url_prefix="/api/art")
 app.register_blueprint(course_routes, url_prefix="/api/courses")
-app.register_blueprint(lesson_routes, url_prefix="/api/lessons")
 app.register_blueprint(teacher_routes, url_prefix="/api/teachers")
 db.init_app(app)
 Migrate(app, db)
