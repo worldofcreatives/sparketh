@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
-from app.models import db, Art
+from app.models import db, Art, Student
 from app.forms import ArtForm
+from flask_login import current_user, login_required
 from ..api.aws_helpers import get_unique_filename, upload_file_to_s3
 import os
 
@@ -19,10 +20,22 @@ def file_size_under_limit(file):
     return file_size <= MAX_FILE_SIZE
 
 # Upload art
-@art_routes.route('/', methods=['POST'])
+@art_routes.route('', methods=['POST'])
+@login_required
 def upload_art():
+
+    if current_user.type != 'student':
+        return jsonify({'errors': 'Only students can upload art'}), 403
+
+    # Find the student record associated with the current user
+    student = Student.query.filter_by(user_id=current_user.id).first()
+    if not student:
+        return jsonify({'errors': 'Student not found'}), 404
+
     form = ArtForm()
     form['csrf_token'].data = request.cookies['csrf_token']
+    form.user_id.data = student.user_id
+
 
     if form.validate_on_submit():
         file = request.files.get('file')
@@ -36,7 +49,7 @@ def upload_art():
                 new_art = Art(
                     name=form.name.data,
                     type=form.type.data,
-                    user_id=form.user_id.data,
+                    user_id=student.id,
                     course_id=form.course_id.data,
                     media_url=file_url_response["url"]
                 )

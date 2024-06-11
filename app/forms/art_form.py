@@ -7,7 +7,7 @@ class ArtForm(FlaskForm):
     name = StringField('name', validators=[DataRequired()])
     type = StringField('type', validators=[DataRequired()])  # gallery, course, and/or portfolio
     user_id = IntegerField('user_id', validators=[DataRequired()])
-    course_id = IntegerField('course_id', validators=[DataRequired()])
+    course_id = IntegerField('course_id', validators=[Optional()])
     # file field only allows images
     file = FileField('Images', validators=[
         FileAllowed(['jpg', 'png', 'jpeg', 'gif'], 'Images only!'),
