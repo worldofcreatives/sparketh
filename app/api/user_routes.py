@@ -164,9 +164,6 @@ def add_student_profile(student_id):
 
     return jsonify({'errors': form.errors}), 400
 
-
-# ------------- Other routes, not tested ---------------
-
 # When a parent's status is set to "active" their kid's accounts status is set to "active"
 @user_routes.route('/parent/<int:parent_id>/status/active', methods=['PUT'])
 def activate_parent_and_kids(parent_id):
