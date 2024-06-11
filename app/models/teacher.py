@@ -22,9 +22,6 @@ class Teacher(db.Model):
     created_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    # Relationship to User
-    user = db.relationship('User', backref=db.backref('teacher', uselist=False, lazy=True))
-
     def to_dict(self):
         return {
             'id': self.id,

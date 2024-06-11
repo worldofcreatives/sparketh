@@ -39,7 +39,7 @@ class Student(db.Model):
             'parent_id': self.parent_id,
             'profile_pic': self.profile_pic,
             'bio': self.bio,
-            'date_of_birth': self.date_of_birth.isoformat(),
+            'date_of_birth': self.date_of_birth.isoformat() if self.date_of_birth else None,
             'skill_level': self.skill_level,
             'progress': self.progress,
             'types': [type_.to_dict() for type_ in self.types],

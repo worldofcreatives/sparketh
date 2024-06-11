@@ -26,7 +26,9 @@ class User(db.Model, UserMixin):
     # Add relationship to Parent
     parent = db.relationship('Parent', backref='user', uselist=False, lazy=True)
     # Add relationship to Student
-    student = db.relationship('Student', backref='user', uselist=False, lazy=True)
+    student = db.relationship('Student', backref='user', lazy=True)
+    # Add relationship to Teacher
+    teacher = db.relationship('Teacher', backref='user', uselist=False, lazy=True)
 
     @property
     def password(self):
@@ -67,6 +69,12 @@ class User(db.Model, UserMixin):
             data['email'] = self.email
             data['stripe_customer_id'] = self.stripe_customer_id
             data['stripe_subscription_id'] = self.stripe_subscription_id
+            # Add students if the user is a parent
+            if self.type == 'parent' and self.parent:
+                data['students'] = [student.to_dict() for student in self.parent.student]
+            # Add teacher info if the user is a teacher
+            if self.type == 'teacher' and self.teacher:
+                data['teacher'] = self.teacher.to_dict()
         return data
 
     def validate_email(self):
