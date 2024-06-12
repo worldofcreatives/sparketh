@@ -63,7 +63,7 @@ class User(db.Model, UserMixin):
         }
 
         if self.type == 'student' and self.student:
-            data['parent_id'] = self.student.parent_id
+            data['profile'] = self.student.to_dict()
         else:
             data['email'] = self.email
             data['stripe_customer_id'] = self.stripe_customer_id

@@ -35,10 +35,10 @@ class Student(db.Model):
             'bio': self.bio,
             'date_of_birth': self.date_of_birth.isoformat() if self.date_of_birth else None,
             'skill_level': self.skill_level,
-            'types': [type_.to_dict() for type_ in self.types],
-            'subjects': [subject.to_dict() for subject in self.subjects],
-            'joined_courses': [course.to_dict() for course in self.joined_courses],
-            'completed_lessons': [lesson.to_dict() for lesson in self.completed_lessons],
+            'types': [type_.id for type_ in self.types],  # Only include type IDs
+            'subjects': [subject.id for subject in self.subjects],  # Only include subject IDs
+            'joined_courses': [course.id for course in self.joined_courses],  # Only include course IDs
+            'completed_lessons': [lesson.id for lesson in self.completed_lessons],  # Only include lesson IDs
             'course_progress': {course.id: {'progress': progress, 'completed': completed} for course, progress, completed in self.course_progress},
             'created_date': self.created_date.isoformat(),
             'updated_date': self.updated_date.isoformat()

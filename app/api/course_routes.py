@@ -226,11 +226,11 @@ def join_course(course_id):
     return jsonify(student.to_dict()), 200
 
 # Remove a course from a student's joined courses
-@course_routes.route('/unjoin/<int:course_id>', methods=['POST'])
+@course_routes.route('/withdraw/<int:course_id>', methods=['POST'])
 @login_required
 def unjoin_course(course_id):
     if current_user.type != 'student':
-        return jsonify({'errors': 'Only students can unjoin courses'}), 403
+        return jsonify({'errors': 'Only students can withdraw from courses'}), 403
 
     student = Student.query.filter_by(user_id=current_user.id).first()
     course = Course.query.get(course_id)
@@ -238,9 +238,13 @@ def unjoin_course(course_id):
     if not student or not course:
         return jsonify({'errors': 'Student or Course not found'}), 404
 
-    student.joined_courses.remove(course)
-    db.session.commit()
-    return jsonify(student.to_dict()), 200
+    if course in student.joined_courses:
+        student.joined_courses.remove(course)
+        db.session.commit()
+        return jsonify(student.to_dict()), 200
+    else:
+        return jsonify({'errors': 'Course not found in student\'s joined courses'}), 400
+
 
 # Toggle lesson completion for a student
 @course_routes.route('/<int:course_id>/toggle_lesson/<int:lesson_id>', methods=['POST'])

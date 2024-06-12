@@ -46,10 +46,10 @@ class Course(db.Model):
             'files': self.files if self.files else [],
             'created_date': self.created_date.isoformat(),
             'updated_date': self.updated_date.isoformat(),
-            'student_work': [art.to_dict() for art in self.student_work],
-            'lessons': [lesson.to_dict() for lesson in self.lessons],
-            'types': [type_.to_dict() for type_ in self.types],
-            'subjects': [subject.to_dict() for subject in self.subjects],
-            'students': [student.to_dict() for student in self.students],
+            'student_work': [art.id for art in self.student_work],  # Only include art IDs
+            'lessons': [lesson.id for lesson in self.lessons],  # Only include lesson IDs
+            'types': [type_.id for type_ in self.types],  # Only include type IDs
+            'subjects': [subject.id for subject in self.subjects],  # Only include subject IDs
+            'students': [student.id for student in self.students],  # Only include student IDs
             'students_progress': {student.id: {'progress': progress, 'completed': completed} for student, progress, completed in self.students_progress}
         }
