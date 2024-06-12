@@ -13,6 +13,8 @@ def parse_duration(duration):
     except isodate.ISO8601Error:
         return None
 
+# -------------COURSE ROUTES----------------
+
 # Create a course
 @course_routes.route('', methods=['POST'])
 @login_required
@@ -122,6 +124,7 @@ def edit_course(course_id):
         return jsonify(course.to_dict())
     return jsonify({'errors': form.errors}), 400
 
+#-------------LESSON ROUTES----------------
 
 # Add a lesson to a specific course
 @course_routes.route('/<int:course_id>/lessons', methods=['POST'])
@@ -206,7 +209,7 @@ def get_all_lessons(course_id):
     lessons = Lesson.query.filter_by(course_id=course_id).all()
     return jsonify([lesson.to_dict() for lesson in lessons])
 
-# -------------
+# -------------COURSE PROGRESS ROUTES----------------
 
 # Add a course to a student's joined courses
 @course_routes.route('/join/<int:course_id>', methods=['POST'])
