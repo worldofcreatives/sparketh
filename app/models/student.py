@@ -1,7 +1,7 @@
 # models/student.py
 from .db import db, environment, SCHEMA
 from datetime import datetime
-from .associations import student_course_table, student_lesson_table, student_type_table, student_subject_table, StudentCourseProgress
+from .associations import student_course_table, student_lesson_table, student_type_table, student_subject_table, StudentCourseProgress, student_track_table
 
 class Student(db.Model):
     __tablename__ = 'students'
@@ -22,6 +22,7 @@ class Student(db.Model):
     joined_courses = db.relationship('Course', secondary=student_course_table, backref=db.backref('students_joined', lazy=True))
     completed_lessons = db.relationship('Lesson', secondary=student_lesson_table, backref=db.backref('students_completed', lazy=True))
     course_progress = db.relationship('StudentCourseProgress', backref='student', lazy=True)
+    joined_tracks = db.relationship('Track', secondary=student_track_table, backref=db.backref('students', lazy=True))
     created_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -40,6 +41,7 @@ class Student(db.Model):
             'joined_courses': [course.id for course in self.joined_courses],  # Only include course IDs
             'completed_lessons': [lesson.id for lesson in self.completed_lessons],  # Only include lesson IDs
             'course_progress': {cp.course_id: {'progress': cp.progress, 'completed': cp.completed} for cp in self.course_progress},
+            'joined_tracks': [track.id for track in self.joined_tracks],  # Only include track IDs
             'created_date': self.created_date.isoformat(),
             'updated_date': self.updated_date.isoformat()
         }

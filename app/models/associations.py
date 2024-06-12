@@ -39,6 +39,20 @@ student_lesson_table = db.Table(
     db.Column('lesson_id', db.Integer, db.ForeignKey(add_prefix_for_prod('lessons.id')), primary_key=True)
 )
 
+# Association table for Track and Courses
+track_course_table = db.Table(
+    'track_courses',
+    db.Column('track_id', db.Integer, db.ForeignKey('tracks.id'), primary_key=True),
+    db.Column('course_id', db.Integer, db.ForeignKey('courses.id'), primary_key=True),
+    db.Column('order', db.Integer, nullable=False)
+)
+
+# Association table for Student and Tracks
+student_track_table = db.Table(
+    'student_tracks',
+    db.Column('student_id', db.Integer, db.ForeignKey(add_prefix_for_prod('students.id')), primary_key=True),
+    db.Column('track_id', db.Integer, db.ForeignKey(add_prefix_for_prod('tracks.id')), primary_key=True)
+)
 
 class StudentCourseProgress(db.Model):
     __tablename__ = 'student_course_progress'

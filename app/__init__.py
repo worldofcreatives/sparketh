@@ -14,6 +14,7 @@ from .api.stripe_routes import stripe_routes
 from .api.teacher_routes import teacher_routes
 from .api.user_routes import user_routes
 from .api.course_request_routes import course_request_routes
+from .api.track_routes import track_routes
 
 from .seeds import seed_commands
 
@@ -49,6 +50,7 @@ app.register_blueprint(art_routes, url_prefix="/api/art")
 app.register_blueprint(course_routes, url_prefix="/api/courses")
 app.register_blueprint(teacher_routes, url_prefix="/api/teachers")
 app.register_blueprint(course_request_routes, url_prefix="/api/course_requests")
+app.register_blueprint(track_routes, url_prefix="/api/tracks")
 db.init_app(app)
 Migrate(app, db)
 
