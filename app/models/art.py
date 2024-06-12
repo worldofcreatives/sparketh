@@ -13,6 +13,9 @@ class Art(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     course_id = db.Column(db.Integer, db.ForeignKey('courses.id'), nullable=True)  # Optional
     media_url = db.Column(db.String(255), nullable=False)
+    public = db.Column(db.Boolean, nullable=False, default=True)
+    open_to_feedback = db.Column(db.Boolean, nullable=False, default=False)
+    feedback = db.Column(db.JSON, nullable=True, default=[])
     created_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -24,6 +27,9 @@ class Art(db.Model):
             'user_id': self.user_id,
             'course_id': self.course_id,
             'media_url': self.media_url,
+            'public': self.public,
+            'open_to_feedback': self.open_to_feedback,
+            'feedback': self.feedback,
             'created_date': self.created_date.isoformat(),
             'updated_date': self.updated_date.isoformat()
         }
