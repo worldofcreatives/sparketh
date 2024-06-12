@@ -2,8 +2,9 @@
 from flask import Blueprint, request, jsonify
 from app.models import db, CommunityPost, PollOption, CommunityComment, User, CommunityPostLike, UserFollow
 from flask_login import current_user, login_required
-from datetime import datetime
 from .helper_functions import contains_inappropriate_content
+from sqlalchemy.sql import func
+from datetime import datetime, timedelta
 
 community_routes = Blueprint('community', __name__)
 
@@ -51,6 +52,41 @@ def create_community_post():
 
     return jsonify(new_post.to_dict()), 201
 
+# Edit a community post
+@community_routes.route('/posts/<int:post_id>', methods=['PUT'])
+@login_required
+def edit_community_post(post_id):
+    post = CommunityPost.query.get(post_id)
+    if not post:
+        return jsonify({'errors': 'Post not found'}), 404
+
+    if post.user_id != current_user.id:
+        return jsonify({'errors': 'You do not have permission to edit this post'}), 403
+
+    data = request.get_json()
+    post_type = data.get('post_type', post.post_type)
+    text = data.get('text', post.text)
+    image_url = data.get('image_url', post.image_url)
+    poll_options = data.get('poll_options', [])
+
+    # Check for inappropriate content
+    if contains_inappropriate_content(text):
+        return jsonify({'errors': 'Inappropriate content detected'}), 400
+
+    if post_type == 'poll':
+        for option_text in poll_options:
+            if contains_inappropriate_content(option_text):
+                return jsonify({'errors': 'Inappropriate content detected in poll options'}), 400
+
+    post.post_type = post_type
+    post.text = text
+    post.image_url = image_url
+    post.updated_date = datetime.utcnow()
+
+    db.session.commit()
+
+    return jsonify(post.to_dict()), 200
+
 # Delete a community post
 @community_routes.route('/posts/<int:post_id>', methods=['DELETE'])
 @login_required
@@ -67,20 +103,103 @@ def delete_community_post(post_id):
 
     return jsonify({'message': 'Post deleted successfully'}), 200
 
-# Get all community posts with pagination
+# Get all community posts with pagination, filtering, and sorting
 @community_routes.route('/posts', methods=['GET'])
 @login_required
 def get_community_posts():
+    """
+    sort_by: The field to sort by
+        • created_date: Sort by the date the post was created.
+        • updated_date: Sort by the date the post was last updated.
+        • likes: Sort by the number of likes the post has received.
+        • comments: Sort by the number of comments the post has received.
+
+    sort_order: The sorting order
+        • asc: Ascending order.
+        • desc: Descending order.
+
+    filter_type: Filter posts by type
+        • share_art: Filter posts that are of type “share art”.
+        • question: Filter posts that are of type “question”.
+        • poll: Filter posts that are of type “poll”.
+
+    filter_user: Filter posts by user ID
+        • user_id: Filter posts created by a specific user. Replace user_id with the actual ID of the user you want to filter by.
+
+    time_frame: Time frame for sorting likes/comments
+        • all_time: Consider all likes/comments regardless of the time they were made.
+        • last_30_days: Only consider likes/comments made in the last 30 days.
+        • last_week: Only consider likes/comments made in the last week.
+        • last_24_hours: Only consider likes/comments made in the last 24 hours.
+    """
     page = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 10, type=int)
-    posts_query = CommunityPost.query.order_by(CommunityPost.created_date.desc())
+    sort_by = request.args.get('sort_by', 'created_date')  # Default sorting by created_date
+    sort_order = request.args.get('sort_order', 'desc')  # Default sorting order is descending
+    filter_type = request.args.get('filter_type', None)  # Filter by post type
+    filter_user = request.args.get('filter_user', None)  # Filter by user ID
+    time_frame = request.args.get('time_frame', 'all_time')  # Time frame for sorting likes/comments
+
+    # Base query
+    posts_query = CommunityPost.query
+
+    # Apply filters
+    if filter_type:
+        posts_query = posts_query.filter_by(post_type=filter_type)
+    if filter_user:
+        posts_query = posts_query.filter_by(user_id=filter_user)
+
+    # Define the time frame for sorting
+    now = datetime.utcnow()
+    if time_frame == 'last_24_hours':
+        start_time = now - timedelta(hours=24)
+    elif time_frame == 'last_week':
+        start_time = now - timedelta(weeks=1)
+    elif time_frame == 'last_30_days':
+        start_time = now - timedelta(days=30)
+    else:
+        start_time = None
+
+    if start_time:
+        posts_query = posts_query.outerjoin(CommunityPostLike).outerjoin(CommunityComment)
+        posts_query = posts_query.group_by(CommunityPost.id)
+
+        if sort_by == 'likes':
+            posts_query = posts_query.add_columns(
+                func.count(CommunityPostLike.id).filter(CommunityPostLike.created_date >= start_time).label('like_count')
+            ).order_by(func.count(CommunityPostLike.id).filter(CommunityPostLike.created_date >= start_time).desc() if sort_order == 'desc' else func.count(CommunityPostLike.id).filter(CommunityPostLike.created_date >= start_time).asc())
+
+        elif sort_by == 'comments':
+            posts_query = posts_query.add_columns(
+                func.count(CommunityComment.id).filter(CommunityComment.created_date >= start_time).label('comment_count')
+            ).order_by(func.count(CommunityComment.id).filter(CommunityComment.created_date >= start_time).desc() if sort_order == 'desc' else func.count(CommunityComment.id).filter(CommunityComment.created_date >= start_time).asc())
+
+    else:
+        # Apply sorting
+        if sort_order == 'asc':
+            posts_query = posts_query.order_by(getattr(CommunityPost, sort_by).asc())
+        else:
+            posts_query = posts_query.order_by(getattr(CommunityPost, sort_by).desc())
+
+    # Pagination
     posts = posts_query.paginate(page, per_page, False)
+
     return jsonify({
         'posts': [post.to_dict() for post in posts.items],
         'total': posts.total,
         'pages': posts.pages,
         'current_page': posts.page
     }), 200
+
+# View a single community post
+@community_routes.route('/posts/<int:post_id>', methods=['GET'])
+@login_required
+def get_community_post(post_id):
+    post = CommunityPost.query.get(post_id)
+    if not post:
+        return jsonify({'errors': 'Post not found'}), 404
+
+    return jsonify(post.to_dict()), 200
 
 # ----------------- COMMUNITY POST ACTIONS -----------------
 # Like a community post
@@ -149,6 +268,47 @@ def comment_on_community_post(post_id):
     db.session.commit()
 
     return jsonify(new_comment.to_dict()), 201
+
+# Edit a community comment
+@community_routes.route('/comments/<int:comment_id>', methods=['PUT'])
+@login_required
+def edit_community_comment(comment_id):
+    comment = CommunityComment.query.get(comment_id)
+    if not comment:
+        return jsonify({'errors': 'Comment not found'}), 404
+
+    if comment.user_id != current_user.id:
+        return jsonify({'errors': 'You do not have permission to edit this comment'}), 403
+
+    data = request.get_json()
+    text = data.get('text', comment.text)
+
+    # Check for inappropriate content
+    if contains_inappropriate_content(text):
+        return jsonify({'errors': 'Inappropriate content detected'}), 400
+
+    comment.text = text
+    comment.updated_date = datetime.utcnow()
+
+    db.session.commit()
+
+    return jsonify(comment.to_dict()), 200
+
+# Delete a community comment
+@community_routes.route('/comments/<int:comment_id>', methods=['DELETE'])
+@login_required
+def delete_community_comment(comment_id):
+    comment = CommunityComment.query.get(comment_id)
+    if not comment:
+        return jsonify({'errors': 'Comment not found'}), 404
+
+    if comment.user_id != current_user.id:
+        return jsonify({'errors': 'You do not have permission to delete this comment'}), 403
+
+    db.session.delete(comment)
+    db.session.commit()
+
+    return jsonify({'message': 'Comment deleted successfully'}), 200
 
 # Follow a user
 @community_routes.route('/users/<int:followee_id>/follow', methods=['POST'])
