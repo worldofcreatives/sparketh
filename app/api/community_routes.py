@@ -141,7 +141,7 @@ def get_community_posts():
     time_frame = request.args.get('time_frame', 'all_time')  # Time frame for sorting likes/comments
 
     # Base query
-    posts_query = CommunityPost.query
+    posts_query = CommunityPost.query.filter_by(hidden=False)  # Exclude hidden posts
 
     # Apply filters
     if filter_type:
@@ -182,7 +182,7 @@ def get_community_posts():
             posts_query = posts_query.order_by(getattr(CommunityPost, sort_by).desc())
 
     # Pagination
-    posts = posts_query.paginate(page, per_page, False)
+    posts = posts_query.paginate(page=page, per_page=per_page)
 
     return jsonify({
         'posts': [post.to_dict() for post in posts.items],
@@ -198,6 +198,9 @@ def get_community_post(post_id):
     post = CommunityPost.query.get(post_id)
     if not post:
         return jsonify({'errors': 'Post not found'}), 404
+
+    if post.hidden and current_user.type not in ['teacher', 'parent']:
+        return jsonify({'errors': 'You do not have permission to view this post'}), 403
 
     return jsonify(post.to_dict()), 200
 
@@ -294,6 +297,25 @@ def edit_community_comment(comment_id):
 
     return jsonify(comment.to_dict()), 200
 
+# Vote on a poll option
+@community_routes.route('/posts/<int:post_id>/poll/vote', methods=['POST'])
+@login_required
+def vote_poll_option(post_id):
+    if current_user.banned:
+        return jsonify({'errors': 'Banned users cannot vote on polls'}), 403
+
+    data = request.get_json()
+    option_id = data.get('option_id')
+
+    poll_option = PollOption.query.filter_by(id=option_id, post_id=post_id).first()
+    if not poll_option:
+        return jsonify({'errors': 'Poll option not found'}), 404
+
+    poll_option.vote_count += 1
+    db.session.commit()
+
+    return jsonify(poll_option.to_dict()), 200
+
 # Delete a community comment
 @community_routes.route('/comments/<int:comment_id>', methods=['DELETE'])
 @login_required
@@ -324,7 +346,7 @@ def follow_user(followee_id):
     follow = UserFollow(follower_id=current_user.id, followee_id=followee.id)
     db.session.add(follow)
     db.session.commit()
-    return jsonify({'message': 'Followed successfully'}), 200
+    return jsonify({'message': 'Followed successfully', 'user': current_user.to_dict()}), 200
 
 # Unfollow a user
 @community_routes.route('/users/<int:followee_id>/unfollow', methods=['POST'])
@@ -336,7 +358,7 @@ def unfollow_user(followee_id):
 
     db.session.delete(follow)
     db.session.commit()
-    return jsonify({'message': 'Unfollowed successfully'}), 200
+    return jsonify({'message': 'Unfollowed successfully', 'user': current_user.to_dict()}), 200
 
 # ----------------- MOD ACTIONS -----------------
 # Hide/Unhide a post
@@ -388,21 +410,25 @@ def report_community_post(post_id):
 
     return jsonify({'message': 'Post reported and hidden for review'}), 200
 
-# Review and unhide a community post
-@community_routes.route('/posts/<int:post_id>/review', methods=['POST'])
+# Get all hidden community posts with pagination
+@community_routes.route('/hidden_posts', methods=['GET'])
 @login_required
-def review_community_post(post_id):
+def get_hidden_community_posts():
     if current_user.type not in ['teacher', 'parent']:
-        return jsonify({'errors': 'Only teachers or parents can review posts'}), 403
+        return jsonify({'errors': 'Only teachers or parents can view hidden posts'}), 403
 
-    post = CommunityPost.query.get(post_id)
-    if not post:
-        return jsonify({'errors': 'Post not found'}), 404
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 10, type=int)
 
-    data = request.get_json()
-    unhide = data.get('unhide', False)
+    # Base query
+    posts_query = CommunityPost.query.filter_by(hidden=True)
 
-    post.hidden = not unhide
-    db.session.commit()
+    # Pagination
+    posts = posts_query.paginate(page=page, per_page=per_page)
 
-    return jsonify(post.to_dict()), 200
+    return jsonify({
+        'posts': [post.to_dict() for post in posts.items],
+        'total': posts.total,
+        'pages': posts.pages,
+        'current_page': posts.page
+    }), 200

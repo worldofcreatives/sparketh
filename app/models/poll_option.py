@@ -10,12 +10,12 @@ class PollOption(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     post_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('community_posts.id')), nullable=False)
     text = db.Column(db.String(255), nullable=False)
-    votes = db.Column(db.Integer, nullable=False, default=0)
+    vote_count = db.Column(db.Integer, nullable=False, default=0)
 
     def to_dict(self):
         return {
             'id': self.id,
             'post_id': self.post_id,
             'text': self.text,
-            'votes': self.votes
+            'vote_count': self.vote_count
         }

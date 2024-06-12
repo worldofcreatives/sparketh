@@ -24,6 +24,9 @@ class User(db.Model, UserMixin):
     created_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+    # followers = db.relationship('UserFollow', foreign_keys='UserFollow.followee_id', backref='followee', lazy='dynamic')
+    # following = db.relationship('UserFollow', foreign_keys='UserFollow.follower_id', backref='follower', lazy='dynamic')
+
     # Add one-to-one relationships
     parent = db.relationship('Parent', uselist=False, backref='user')
     student = db.relationship('Student', uselist=False, backref='user')
@@ -61,7 +64,9 @@ class User(db.Model, UserMixin):
             'banned': self.banned,
             'status': self.status,
             'created_date': self.created_date.isoformat(),
-            'updated_date': self.updated_date.isoformat()
+            'updated_date': self.updated_date.isoformat(),
+            # 'followers_count': self.followers.count(),
+            # 'following_count': self.following.count()
         }
 
         if self.type == 'student' and self.student:
