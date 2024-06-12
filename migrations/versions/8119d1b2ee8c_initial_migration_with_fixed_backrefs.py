@@ -1,8 +1,8 @@
 """Initial migration with fixed backrefs
 
-Revision ID: 5cc6a09fa7e8
+Revision ID: 8119d1b2ee8c
 Revises: 
-Create Date: 2024-06-12 11:17:22.799399
+Create Date: 2024-06-12 11:30:40.018049
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '5cc6a09fa7e8'
+revision = '8119d1b2ee8c'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -228,7 +228,7 @@ def upgrade():
     op.create_table('track_courses',
     sa.Column('track_id', sa.Integer(), nullable=False),
     sa.Column('course_id', sa.Integer(), nullable=False),
-    sa.Column('order', sa.Integer(), nullable=False),
+    sa.Column('order', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['course_id'], ['courses.id'], ),
     sa.ForeignKeyConstraint(['track_id'], ['tracks.id'], ),
     sa.PrimaryKeyConstraint('track_id', 'course_id')

@@ -49,15 +49,23 @@ def add_course_to_track(track_id, course_id):
     if not track:
         return jsonify({'errors': 'Track not found'}), 404
 
-    if track.teacher_id != current_user.id:
+    teacher = Teacher.query.filter_by(user_id=current_user.id).first()
+    if not teacher:
+        return jsonify({'errors': 'Teacher not found'}), 404
+
+    if track.teacher_id != teacher.id:
         return jsonify({'errors': 'You are not the creator of this track'}), 403
 
     course = Course.query.get(course_id)
     if not course:
         return jsonify({'errors': 'Course not found'}), 404
 
+    # Check if the course is already in the track
+    existing_entry = db.session.query(track_course_table).filter_by(track_id=track_id, course_id=course_id).first()
+    if existing_entry:
+        return jsonify({'errors': 'Course already in track'}), 400
+
     order = len(track.courses) + 1
-    track.courses.append(course)
     db.session.execute(track_course_table.insert().values(track_id=track_id, course_id=course_id, order=order))
     db.session.commit()
 
@@ -74,7 +82,11 @@ def reorder_courses_in_track(track_id):
     if not track:
         return jsonify({'errors': 'Track not found'}), 404
 
-    if track.teacher_id != current_user.id:
+    teacher = Teacher.query.filter_by(user_id=current_user.id).first()
+    if not teacher:
+        return jsonify({'errors': 'Teacher not found'}), 404
+
+    if track.teacher_id != teacher.id:
         return jsonify({'errors': 'You are not the creator of this track'}), 403
 
     data = request.get_json()
@@ -89,6 +101,40 @@ def reorder_courses_in_track(track_id):
     db.session.commit()
 
     return jsonify(track.to_dict()), 200
+
+# Remove a course from a track
+@track_routes.route('/<int:track_id>/courses/<int:course_id>', methods=['DELETE'])
+@login_required
+def remove_course_from_track(track_id, course_id):
+    if current_user.type != 'teacher':
+        return jsonify({'errors': 'Only teachers can remove courses from tracks'}), 403
+
+    track = Track.query.get(track_id)
+    if not track:
+        return jsonify({'errors': 'Track not found'}), 404
+
+    teacher = Teacher.query.filter_by(user_id=current_user.id).first()
+    if not teacher:
+        return jsonify({'errors': 'Teacher not found'}), 404
+
+    if track.teacher_id != teacher.id:
+        return jsonify({'errors': 'You are not the creator of this track'}), 403
+
+    # Check if the course is in the track
+    course_in_track = db.session.query(track_course_table).filter_by(track_id=track_id, course_id=course_id).first()
+    if not course_in_track:
+        return jsonify({'errors': 'Course not in track'}), 404
+
+    # Remove the course from the track
+    db.session.execute(track_course_table.delete().where(
+        track_course_table.c.track_id == track_id,
+        track_course_table.c.course_id == course_id
+    ))
+    db.session.commit()
+
+    # Ensure the courses are returned in the correct order
+    updated_track = Track.query.get(track_id)
+    return jsonify(updated_track.to_dict()), 200
 
 # Student joins a track
 @track_routes.route('/<int:track_id>/join', methods=['POST'])
@@ -107,12 +153,12 @@ def join_track(track_id):
     db.session.commit()
     return jsonify(student.to_dict()), 200
 
-# Student unjoins a track
-@track_routes.route('/<int:track_id>/unjoin', methods=['POST'])
+# Student withdraws a track
+@track_routes.route('/<int:track_id>/withdraw', methods=['POST'])
 @login_required
-def unjoin_track(track_id):
+def withdraw_track(track_id):
     if current_user.type != 'student':
-        return jsonify({'errors': 'Only students can unjoin tracks'}), 403
+        return jsonify({'errors': 'Only students can withdraw tracks'}), 403
 
     student = Student.query.filter_by(user_id=current_user.id).first()
     track = Track.query.get(track_id)
@@ -120,9 +166,13 @@ def unjoin_track(track_id):
     if not student or not track:
         return jsonify({'errors': 'Student or Track not found'}), 404
 
-    student.joined_tracks.remove(track)
-    db.session.commit()
-    return jsonify(student.to_dict()), 200
+    # Check if the track exists in the student's joined tracks
+    if track in student.joined_tracks:
+        student.joined_tracks.remove(track)
+        db.session.commit()
+        return jsonify(student.to_dict()), 200
+    else:
+        return jsonify({'errors': 'Track not found in student\'s joined tracks'}), 404
 
 # Get all tracks
 @track_routes.route('', methods=['GET'])
@@ -152,7 +202,11 @@ def upload_files_for_track(track_id):
     if not track:
         return jsonify({'errors': 'Track not found'}), 404
 
-    if track.teacher_id != current_user.id:
+    teacher = Teacher.query.filter_by(user_id=current_user.id).first()
+    if not teacher:
+        return jsonify({'errors': 'Teacher not found'}), 404
+
+    if track.teacher_id != teacher.id:
         return jsonify({'errors': 'You are not the creator of this track'}), 403
 
     files = request.files.getlist('files')

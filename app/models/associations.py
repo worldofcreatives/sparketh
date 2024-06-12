@@ -44,7 +44,7 @@ track_course_table = db.Table(
     'track_courses',
     db.Column('track_id', db.Integer, db.ForeignKey('tracks.id'), primary_key=True),
     db.Column('course_id', db.Integer, db.ForeignKey('courses.id'), primary_key=True),
-    db.Column('order', db.Integer, nullable=False)
+    db.Column('order', db.Integer, nullable=True)
 )
 
 # Association table for Student and Tracks

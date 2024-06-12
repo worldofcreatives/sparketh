@@ -18,7 +18,7 @@ class Track(db.Model):
     downloadable_files = db.Column(db.JSON, nullable=True)
 
     teacher = db.relationship('Teacher', backref=db.backref('tracks', lazy=True))
-    courses = db.relationship('Course', secondary='track_courses', backref=db.backref('tracks', lazy=True))
+    courses = db.relationship('Course', secondary='track_courses', order_by='track_courses.c.order', backref=db.backref('tracks', lazy=True))
 
     def to_dict(self):
         return {
@@ -28,7 +28,7 @@ class Track(db.Model):
             'objectives': self.objectives,
             'outcomes': self.outcomes,
             'teacher_id': self.teacher_id,
-            'courses': [course.to_dict() for course in self.courses],
+            'courses': [course.id for course in self.courses],  # Only include course IDs
             'downloadable_files': self.downloadable_files,
             'created_date': self.created_date.isoformat(),
             'updated_date': self.updated_date.isoformat()
