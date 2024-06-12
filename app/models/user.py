@@ -17,6 +17,7 @@ class User(db.Model, UserMixin):
     hashed_password = db.Column(db.String(255), nullable=False)
     salt = db.Column(db.String(255), nullable=False)
     type = db.Column(db.String(50), default='parent', nullable=False)
+    banned = db.Column(db.Boolean, nullable=False, default=False)
     _status = db.Column("status", db.String(50), default='inactive', nullable=False)
     stripe_customer_id = db.Column(db.String(120), unique=True)
     stripe_subscription_id = db.Column(db.String(120), unique=True)
@@ -57,6 +58,7 @@ class User(db.Model, UserMixin):
             'id': self.id,
             'username': self.username,
             'type': self.type,
+            'banned': self.banned,
             'status': self.status,
             'created_date': self.created_date.isoformat(),
             'updated_date': self.updated_date.isoformat()
