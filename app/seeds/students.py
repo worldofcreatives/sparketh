@@ -12,7 +12,6 @@ def seed_students():
             'bio': 'Exploring creativity in every aspect.',
             'date_of_birth': date(2010, 1, 1),
             'skill_level': 'Beginner',
-            'progress': {},
             'created_date': datetime.utcnow(),
             'updated_date': datetime.utcnow(),
         },
@@ -23,7 +22,6 @@ def seed_students():
             'bio': 'Innovating art for the new age.',
             'date_of_birth': date(2008, 5, 20),
             'skill_level': 'Intermediate',
-            'progress': {},
             'created_date': datetime.utcnow(),
             'updated_date': datetime.utcnow(),
         },
@@ -40,7 +38,6 @@ def seed_students():
                 bio=student_data['bio'],
                 date_of_birth=student_data['date_of_birth'],
                 skill_level=student_data['skill_level'],
-                progress=student_data['progress'],
                 created_date=student_data['created_date'],
                 updated_date=student_data['updated_date']
             )

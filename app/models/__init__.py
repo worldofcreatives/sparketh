@@ -11,3 +11,4 @@ from .course import Course
 from .lesson import Lesson
 from .teacher import Teacher
 from .subject import Subject
+from .associations import course_type_table, course_subject_table, student_course_table, student_course_progress_table, student_lesson_table, student_type_table, student_subject_table

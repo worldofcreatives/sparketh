@@ -23,12 +23,10 @@ class User(db.Model, UserMixin):
     created_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    # Add relationship to Parent
-    parent = db.relationship('Parent', backref='user', uselist=False, lazy=True)
-    # Add relationship to Student
-    student = db.relationship('Student', backref='user', lazy=True)
-    # Add relationship to Teacher
-    teacher = db.relationship('Teacher', backref='user', uselist=False, lazy=True)
+    # Add one-to-one relationships
+    parent = db.relationship('Parent', uselist=False, backref='user')
+    student = db.relationship('Student', uselist=False, backref='user')
+    teacher = db.relationship('Teacher', uselist=False, backref='user')
 
     @property
     def password(self):
@@ -63,18 +61,20 @@ class User(db.Model, UserMixin):
             'created_date': self.created_date.isoformat(),
             'updated_date': self.updated_date.isoformat()
         }
-        if self.type == 'Student':
-            data['parent_id'] = self.student.parent_id if self.student else None
+
+        if self.type == 'student' and self.student:
+            data['parent_id'] = self.student.parent_id
         else:
             data['email'] = self.email
             data['stripe_customer_id'] = self.stripe_customer_id
             data['stripe_subscription_id'] = self.stripe_subscription_id
-            # Add students if the user is a parent
+
             if self.type == 'parent' and self.parent:
                 data['students'] = [student.to_dict() for student in self.parent.student]
-            # Add teacher info if the user is a teacher
+
             if self.type == 'teacher' and self.teacher:
                 data['teacher'] = self.teacher.to_dict()
+
         return data
 
     def validate_email(self):

@@ -1,17 +1,7 @@
+# models/course.py
 from .db import db, environment, SCHEMA
 from datetime import datetime
-
-# Association table for Courses and Types
-course_type_table = db.Table('course_types',
-    db.Column('course_id', db.Integer, db.ForeignKey('courses.id'), primary_key=True),
-    db.Column('type_id', db.Integer, db.ForeignKey('types.id'), primary_key=True)
-)
-
-# Association table for Courses and Subjects
-course_subject_table = db.Table('course_subjects',
-    db.Column('course_id', db.Integer, db.ForeignKey('courses.id'), primary_key=True),
-    db.Column('subject_id', db.Integer, db.ForeignKey('subjects.id'), primary_key=True)
-)
+from .associations import student_course_table, student_course_progress_table, course_type_table, course_subject_table
 
 class Course(db.Model):
     __tablename__ = 'courses'
@@ -35,12 +25,10 @@ class Course(db.Model):
     subjects = db.relationship('Subject', secondary=course_subject_table, backref=db.backref('courses', lazy=True))
     created_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
-
-    # Relationship to Art
     student_work = db.relationship('Art', backref='course', lazy=True)
-
-    # Relationship to Lesson
     lessons = db.relationship('Lesson', backref='course', lazy=True)
+    students = db.relationship('Student', secondary=student_course_table, backref=db.backref('courses_joined', lazy=True))
+    students_progress = db.relationship('Student', secondary=student_course_progress_table, backref=db.backref('courses_progress_detail', lazy=True))
 
     def to_dict(self):
         return {
@@ -61,5 +49,7 @@ class Course(db.Model):
             'student_work': [art.to_dict() for art in self.student_work],
             'lessons': [lesson.to_dict() for lesson in self.lessons],
             'types': [type_.to_dict() for type_ in self.types],
-            'subjects': [subject.to_dict() for subject in self.subjects]
+            'subjects': [subject.to_dict() for subject in self.subjects],
+            'students': [student.to_dict() for student in self.students],
+            'students_progress': {student.id: {'progress': progress, 'completed': completed} for student, progress, completed in self.students_progress}
         }

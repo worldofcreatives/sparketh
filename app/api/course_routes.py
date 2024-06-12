@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app.models import db, Course, Type, Subject, Teacher, Lesson
+from app.models import db, Course, Type, Subject, Teacher, Lesson, student_course_progress_table, Student
 from app.forms import CourseForm, LessonForm
 from flask_login import current_user, login_required
 import isodate
@@ -205,3 +205,91 @@ def get_course_details(course_id):
 def get_all_lessons(course_id):
     lessons = Lesson.query.filter_by(course_id=course_id).all()
     return jsonify([lesson.to_dict() for lesson in lessons])
+
+# -------------
+
+# Add a course to a student's joined courses
+@course_routes.route('/join/<int:course_id>', methods=['POST'])
+@login_required
+def join_course(course_id):
+    if current_user.type != 'student':
+        return jsonify({'errors': 'Only students can join courses'}), 403
+
+    student = Student.query.filter_by(user_id=current_user.id).first()
+    course = Course.query.get(course_id)
+
+    if not student or not course:
+        return jsonify({'errors': 'Student or Course not found'}), 404
+
+    student.joined_courses.append(course)
+    db.session.commit()
+    return jsonify(student.to_dict()), 200
+
+# Remove a course from a student's joined courses
+@course_routes.route('/unjoin/<int:course_id>', methods=['POST'])
+@login_required
+def unjoin_course(course_id):
+    if current_user.type != 'student':
+        return jsonify({'errors': 'Only students can unjoin courses'}), 403
+
+    student = Student.query.filter_by(user_id=current_user.id).first()
+    course = Course.query.get(course_id)
+
+    if not student or not course:
+        return jsonify({'errors': 'Student or Course not found'}), 404
+
+    student.joined_courses.remove(course)
+    db.session.commit()
+    return jsonify(student.to_dict()), 200
+
+# Toggle lesson completion for a student
+@course_routes.route('/<int:course_id>/toggle_lesson/<int:lesson_id>', methods=['POST'])
+@login_required
+def toggle_lesson_completion(course_id, lesson_id):
+    if current_user.type != 'student':
+        return jsonify({'errors': 'Only students can complete lessons'}), 403
+
+    student = Student.query.filter_by(user_id=current_user.id).first()
+    lesson = Lesson.query.get(lesson_id)
+
+    if not student or not lesson or lesson.course_id != course_id:
+        return jsonify({'errors': 'Student, Lesson, or Course not found'}), 404
+
+    if lesson in student.completed_lessons:
+        student.completed_lessons.remove(lesson)
+    else:
+        student.completed_lessons.append(lesson)
+
+    db.session.commit()
+    return jsonify(student.to_dict()), 200
+
+# Get progress of a student in a course
+@course_routes.route('/<int:course_id>/progress', methods=['GET'])
+@login_required
+def get_progress(course_id):
+    if current_user.type != 'student':
+        return jsonify({'errors': 'Only students can view progress'}), 403
+
+    student = Student.query.filter_by(user_id=current_user.id).first()
+    course = Course.query.get(course_id)
+
+    if not student or not course:
+        return jsonify({'errors': 'Student or Course not found'}), 404
+
+    total_lessons = len(course.lessons)
+    completed_lessons = len([lesson for lesson in student.completed_lessons if lesson.course_id == course_id])
+    progress = (completed_lessons / total_lessons) * 100 if total_lessons > 0 else 0
+
+    student_course_progress = db.session.query(student_course_progress_table).filter_by(student_id=student.id, course_id=course_id).first()
+    if student_course_progress:
+        db.session.execute(student_course_progress_table.update().where(
+            student_course_progress_table.c.student_id == student.id,
+            student_course_progress_table.c.course_id == course_id
+        ).values(progress=progress, completed=(progress == 100.0)))
+    else:
+        db.session.execute(student_course_progress_table.insert().values(
+            student_id=student.id, course_id=course_id, progress=progress, completed=(progress == 100.0)))
+
+    db.session.commit()
+
+    return jsonify({'progress': progress}), 200
