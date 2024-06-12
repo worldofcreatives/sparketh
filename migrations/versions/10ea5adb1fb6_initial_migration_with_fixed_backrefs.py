@@ -1,8 +1,8 @@
 """Initial migration with fixed backrefs
 
-Revision ID: 92dc74641e54
+Revision ID: 10ea5adb1fb6
 Revises: 
-Create Date: 2024-06-11 23:37:26.477524
+Create Date: 2024-06-12 00:26:31.634552
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '92dc74641e54'
+revision = '10ea5adb1fb6'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -127,10 +127,28 @@ def upgrade():
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('course_id', sa.Integer(), nullable=True),
     sa.Column('media_url', sa.String(length=255), nullable=False),
+    sa.Column('public', sa.Boolean(), nullable=False),
+    sa.Column('open_to_feedback', sa.Boolean(), nullable=False),
+    sa.Column('feedback', sa.JSON(), nullable=True),
     sa.Column('created_date', sa.DateTime(), nullable=False),
     sa.Column('updated_date', sa.DateTime(), nullable=False),
     sa.ForeignKeyConstraint(['course_id'], ['courses.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('course_requests',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('title', sa.String(length=100), nullable=False),
+    sa.Column('description', sa.Text(), nullable=True),
+    sa.Column('requested_by', sa.Integer(), nullable=False),
+    sa.Column('upvotes', sa.Integer(), nullable=False),
+    sa.Column('downvotes', sa.Integer(), nullable=False),
+    sa.Column('status', sa.String(length=20), nullable=False),
+    sa.Column('opted_by', sa.Integer(), nullable=True),
+    sa.Column('created_date', sa.DateTime(), nullable=False),
+    sa.Column('updated_date', sa.DateTime(), nullable=False),
+    sa.ForeignKeyConstraint(['opted_by'], ['teachers.id'], ),
+    sa.ForeignKeyConstraint(['requested_by'], ['students.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('course_subjects',
@@ -207,6 +225,7 @@ def downgrade():
     op.drop_table('lessons')
     op.drop_table('course_types')
     op.drop_table('course_subjects')
+    op.drop_table('course_requests')
     op.drop_table('artworks')
     op.drop_table('students')
     op.drop_table('courses')
