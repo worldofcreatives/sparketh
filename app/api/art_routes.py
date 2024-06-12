@@ -4,6 +4,7 @@ from app.forms import ArtForm
 from flask_login import current_user, login_required
 from ..api.aws_helpers import get_unique_filename, upload_file_to_s3
 import os
+from .helper_functions import award_points
 
 art_routes = Blueprint('art', __name__)
 
@@ -55,6 +56,8 @@ def upload_art():
                 )
                 db.session.add(new_art)
                 db.session.commit()
+                # Award points for uploading art
+                award_points(student, 20)
                 return jsonify(new_art.to_dict()), 201
             else:
                 error_message = file_url_response.get("errors", "Unknown error during file upload.")

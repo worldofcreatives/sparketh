@@ -1,17 +1,10 @@
 from flask import Blueprint, request, jsonify
-from app.models import db, Course, Type, Subject, Teacher, Lesson, student_course_progress_table, Student
+from app.models import db, Course, Type, Subject, Teacher, Lesson, Student, StudentCourseProgress
 from app.forms import CourseForm, LessonForm
 from flask_login import current_user, login_required
-import isodate
+from .helper_functions import parse_duration, award_points
 
 course_routes = Blueprint('courses', __name__)
-
-# Utility function to convert ISO 8601 duration to timedelta
-def parse_duration(duration):
-    try:
-        return isodate.parse_duration(duration)
-    except isodate.ISO8601Error:
-        return None
 
 # -------------COURSE ROUTES----------------
 
@@ -264,8 +257,12 @@ def toggle_lesson_completion(course_id, lesson_id):
 
     if lesson in student.completed_lessons:
         student.completed_lessons.remove(lesson)
+        # Deduct points if lesson is marked incomplete
+        award_points(student, -10)
     else:
         student.completed_lessons.append(lesson)
+        # Award points if lesson is marked complete
+        award_points(student, 10)
 
     db.session.commit()
     return jsonify(student.to_dict()), 200
@@ -287,15 +284,22 @@ def get_progress(course_id):
     completed_lessons = len([lesson for lesson in student.completed_lessons if lesson.course_id == course_id])
     progress = (completed_lessons / total_lessons) * 100 if total_lessons > 0 else 0
 
-    student_course_progress = db.session.query(student_course_progress_table).filter_by(student_id=student.id, course_id=course_id).first()
+    student_course_progress = StudentCourseProgress.query.filter_by(student_id=student.id, course_id=course_id).first()
     if student_course_progress:
-        db.session.execute(student_course_progress_table.update().where(
-            student_course_progress_table.c.student_id == student.id,
-            student_course_progress_table.c.course_id == course_id
-        ).values(progress=progress, completed=(progress == 100.0)))
+        student_course_progress.progress = progress
+        student_course_progress.completed = (progress == 100.0)
     else:
-        db.session.execute(student_course_progress_table.insert().values(
-            student_id=student.id, course_id=course_id, progress=progress, completed=(progress == 100.0)))
+        new_progress = StudentCourseProgress(
+            student_id=student.id,
+            course_id=course_id,
+            progress=progress,
+            completed=(progress == 100.0)
+        )
+        db.session.add(new_progress)
+
+    # Award points for completing a course
+    if progress == 100.0:
+        award_points(student, 50)
 
     db.session.commit()
 

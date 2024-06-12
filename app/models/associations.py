@@ -1,5 +1,5 @@
 # models/associations.py
-from .db import db, add_prefix_for_prod
+from .db import db, environment, SCHEMA, add_prefix_for_prod
 
 # Association table for Courses and Types
 course_type_table = db.Table('course_types',
@@ -39,11 +39,24 @@ student_lesson_table = db.Table(
     db.Column('lesson_id', db.Integer, db.ForeignKey(add_prefix_for_prod('lessons.id')), primary_key=True)
 )
 
-# Association table for Student and Courses (progress)
-student_course_progress_table = db.Table(
-    'student_course_progress',
-    db.Column('student_id', db.Integer, db.ForeignKey(add_prefix_for_prod('students.id')), primary_key=True),
-    db.Column('course_id', db.Integer, db.ForeignKey(add_prefix_for_prod('courses.id')), primary_key=True),
-    db.Column('progress', db.Float, nullable=False, default=0.0),
-    db.Column('completed', db.Boolean, nullable=False, default=False)
-)
+
+class StudentCourseProgress(db.Model):
+    __tablename__ = 'student_course_progress'
+
+    if environment == "production":
+        __table_args__ = {'schema': SCHEMA}
+
+    student_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('students.id')), primary_key=True)
+    course_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('courses.id')), primary_key=True)
+    progress = db.Column(db.Float, nullable=False, default=0.0)
+    completed = db.Column(db.Boolean, nullable=False, default=False)
+
+
+# # Association table for Student and Courses (progress)
+# student_course_progress_table = db.Table(
+#     'student_course_progress',
+#     db.Column('student_id', db.Integer, db.ForeignKey(add_prefix_for_prod('students.id')), primary_key=True),
+#     db.Column('course_id', db.Integer, db.ForeignKey(add_prefix_for_prod('courses.id')), primary_key=True),
+#     db.Column('progress', db.Float, nullable=False, default=0.0),
+#     db.Column('completed', db.Boolean, nullable=False, default=False)
+# )

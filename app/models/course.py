@@ -1,7 +1,7 @@
 # models/course.py
 from .db import db, environment, SCHEMA
 from datetime import datetime
-from .associations import student_course_table, student_course_progress_table, course_type_table, course_subject_table
+from .associations import student_course_table, course_type_table, course_subject_table, StudentCourseProgress
 
 class Course(db.Model):
     __tablename__ = 'courses'
@@ -28,7 +28,7 @@ class Course(db.Model):
     student_work = db.relationship('Art', backref='course', lazy=True)
     lessons = db.relationship('Lesson', backref='course', lazy=True)
     students = db.relationship('Student', secondary=student_course_table, backref=db.backref('courses_joined', lazy=True))
-    students_progress = db.relationship('Student', secondary=student_course_progress_table, backref=db.backref('courses_progress_detail', lazy=True))
+    students_progress = db.relationship('StudentCourseProgress', backref='course', lazy=True)
 
     def to_dict(self):
         return {
@@ -51,5 +51,5 @@ class Course(db.Model):
             'types': [type_.id for type_ in self.types],  # Only include type IDs
             'subjects': [subject.id for subject in self.subjects],  # Only include subject IDs
             'students': [student.id for student in self.students],  # Only include student IDs
-            'students_progress': {student.id: {'progress': progress, 'completed': completed} for student, progress, completed in self.students_progress}
+            'students_progress': {sp.student_id: {'progress': sp.progress, 'completed': sp.completed} for sp in self.students_progress}
         }
