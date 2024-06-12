@@ -4,75 +4,14 @@ from app.forms import ArtForm
 from flask_login import current_user, login_required
 from ..api.aws_helpers import get_unique_filename, upload_file_to_s3
 import os
-from .helper_functions import award_points
+from .helper_functions import award_points, is_allowed_file, file_size_under_limit
 from datetime import datetime
 
 art_routes = Blueprint('art', __name__)
 
-# Helper functions
-def is_allowed_file(filename, allowed_extensions):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
-
-MAX_FILE_SIZE = 50 * 1024 * 1024  # 50MB in bytes
-
-def file_size_under_limit(file):
-    file.seek(0, os.SEEK_END)  # Go to the end of the file
-    file_size = file.tell()  # Get the position of EOF
-    file.seek(0)  # Reset the file position to the beginning
-    return file_size <= MAX_FILE_SIZE
-
 # ------- UPLOADING ART -------
 
 # Upload art
-# @art_routes.route('', methods=['POST'])
-# @login_required
-# def upload_art():
-
-#     if current_user.type != 'student':
-#         return jsonify({'errors': 'Only students can upload art'}), 403
-
-#     # Find the student record associated with the current user
-#     student = Student.query.filter_by(user_id=current_user.id).first()
-#     if not student:
-#         return jsonify({'errors': 'Student not found'}), 404
-
-#     form = ArtForm()
-#     form['csrf_token'].data = request.cookies['csrf_token']
-#     form.user_id.data = student.user_id
-
-
-#     if form.validate_on_submit():
-#         file = request.files.get('file')
-
-#         # Check both file type and file size
-#         if file and is_allowed_file(file.filename, {"jpg", "jpeg", "png", "gif"}) and file_size_under_limit(file):
-#             file_name = get_unique_filename(file.filename)
-#             file_url_response = upload_file_to_s3(file, file_name)
-
-#             if "url" in file_url_response:
-#                 new_art = Art(
-#                     name=form.name.data,
-#                     type=form.type.data,
-#                     user_id=student.id,
-#                     course_id=form.course_id.data,
-#                     media_url=file_url_response["url"]
-#                 )
-#                 db.session.add(new_art)
-#                 db.session.commit()
-#                 # Award points for uploading art
-#                 award_points(student, 20)
-#                 return jsonify(new_art.to_dict()), 201
-#             else:
-#                 error_message = file_url_response.get("errors", "Unknown error during file upload.")
-#                 return jsonify({"errors": f"File upload failed: {error_message}"}), 500
-#         else:
-#             # Return an appropriate error message if the file type is not allowed or file size exceeds the limit
-#             if not is_allowed_file(file.filename, {"jpg", "jpeg", "png", "gif"}):
-#                 return jsonify({"error": "File type not allowed"}), 400
-#             if not file_size_under_limit(file):
-#                 return jsonify({"error": "File size exceeds limit"}), 400
-
-#     return jsonify({'errors': form.errors}), 400
 
 @art_routes.route('', methods=['POST'])
 @login_required

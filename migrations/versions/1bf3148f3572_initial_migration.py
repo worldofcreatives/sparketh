@@ -1,8 +1,8 @@
-"""Initial migration with fixed backrefs
+"""Initial migration
 
-Revision ID: 10ea5adb1fb6
+Revision ID: 1bf3148f3572
 Revises: 
-Create Date: 2024-06-12 00:26:31.634552
+Create Date: 2024-06-12 13:45:52.517464
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '10ea5adb1fb6'
+revision = '1bf3148f3572'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -37,6 +37,7 @@ def upgrade():
     sa.Column('hashed_password', sa.String(length=255), nullable=False),
     sa.Column('salt', sa.String(length=255), nullable=False),
     sa.Column('type', sa.String(length=50), nullable=False),
+    sa.Column('banned', sa.Boolean(), nullable=False),
     sa.Column('status', sa.String(length=50), nullable=False),
     sa.Column('stripe_customer_id', sa.String(length=120), nullable=True),
     sa.Column('stripe_subscription_id', sa.String(length=120), nullable=True),
@@ -47,6 +48,18 @@ def upgrade():
     sa.UniqueConstraint('stripe_customer_id'),
     sa.UniqueConstraint('stripe_subscription_id'),
     sa.UniqueConstraint('username')
+    )
+    op.create_table('community_posts',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('post_type', sa.String(length=20), nullable=False),
+    sa.Column('text', sa.Text(), nullable=True),
+    sa.Column('image_url', sa.String(length=255), nullable=True),
+    sa.Column('created_date', sa.DateTime(), nullable=False),
+    sa.Column('updated_date', sa.DateTime(), nullable=False),
+    sa.Column('hidden', sa.Boolean(), nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('parents',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -86,6 +99,35 @@ def upgrade():
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('user_id')
     )
+    op.create_table('user_follows',
+    sa.Column('follower_id', sa.Integer(), nullable=False),
+    sa.Column('followee_id', sa.Integer(), nullable=False),
+    sa.Column('created_date', sa.DateTime(), nullable=False),
+    sa.ForeignKeyConstraint(['followee_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['follower_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('follower_id', 'followee_id')
+    )
+    op.create_table('community_comments',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('post_id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('text', sa.Text(), nullable=False),
+    sa.Column('parent_comment_id', sa.Integer(), nullable=True),
+    sa.Column('created_date', sa.DateTime(), nullable=False),
+    sa.Column('updated_date', sa.DateTime(), nullable=False),
+    sa.ForeignKeyConstraint(['parent_comment_id'], ['community_comments.id'], ),
+    sa.ForeignKeyConstraint(['post_id'], ['community_posts.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('community_post_likes',
+    sa.Column('post_id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('created_date', sa.DateTime(), nullable=False),
+    sa.ForeignKeyConstraint(['post_id'], ['community_posts.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('post_id', 'user_id')
+    )
     op.create_table('courses',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('title', sa.String(length=100), nullable=False),
@@ -104,6 +146,14 @@ def upgrade():
     sa.ForeignKeyConstraint(['instructor_id'], ['teachers.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('poll_options',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('post_id', sa.Integer(), nullable=False),
+    sa.Column('text', sa.String(length=255), nullable=False),
+    sa.Column('vote_count', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['post_id'], ['community_posts.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('students',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
@@ -119,6 +169,19 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('user_id')
+    )
+    op.create_table('tracks',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('title', sa.String(length=100), nullable=False),
+    sa.Column('description', sa.Text(), nullable=False),
+    sa.Column('objectives', sa.Text(), nullable=True),
+    sa.Column('outcomes', sa.Text(), nullable=True),
+    sa.Column('teacher_id', sa.Integer(), nullable=False),
+    sa.Column('created_date', sa.DateTime(), nullable=False),
+    sa.Column('updated_date', sa.DateTime(), nullable=False),
+    sa.Column('downloadable_files', sa.JSON(), nullable=True),
+    sa.ForeignKeyConstraint(['teacher_id'], ['teachers.id'], ),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('artworks',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -198,12 +261,27 @@ def upgrade():
     sa.ForeignKeyConstraint(['subject_id'], ['subjects.id'], ),
     sa.PrimaryKeyConstraint('student_id', 'subject_id')
     )
+    op.create_table('student_tracks',
+    sa.Column('student_id', sa.Integer(), nullable=False),
+    sa.Column('track_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['student_id'], ['students.id'], ),
+    sa.ForeignKeyConstraint(['track_id'], ['tracks.id'], ),
+    sa.PrimaryKeyConstraint('student_id', 'track_id')
+    )
     op.create_table('student_types',
     sa.Column('student_id', sa.Integer(), nullable=False),
     sa.Column('type_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['student_id'], ['students.id'], ),
     sa.ForeignKeyConstraint(['type_id'], ['types.id'], ),
     sa.PrimaryKeyConstraint('student_id', 'type_id')
+    )
+    op.create_table('track_courses',
+    sa.Column('track_id', sa.Integer(), nullable=False),
+    sa.Column('course_id', sa.Integer(), nullable=False),
+    sa.Column('order', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['course_id'], ['courses.id'], ),
+    sa.ForeignKeyConstraint(['track_id'], ['tracks.id'], ),
+    sa.PrimaryKeyConstraint('track_id', 'course_id')
     )
     op.create_table('student_lessons',
     sa.Column('student_id', sa.Integer(), nullable=False),
@@ -218,7 +296,9 @@ def upgrade():
 def downgrade():
     # ### commands auto generated by Alembic - please adjust! ###
     op.drop_table('student_lessons')
+    op.drop_table('track_courses')
     op.drop_table('student_types')
+    op.drop_table('student_tracks')
     op.drop_table('student_subjects')
     op.drop_table('student_courses')
     op.drop_table('student_course_progress')
@@ -227,10 +307,16 @@ def downgrade():
     op.drop_table('course_subjects')
     op.drop_table('course_requests')
     op.drop_table('artworks')
+    op.drop_table('tracks')
     op.drop_table('students')
+    op.drop_table('poll_options')
     op.drop_table('courses')
+    op.drop_table('community_post_likes')
+    op.drop_table('community_comments')
+    op.drop_table('user_follows')
     op.drop_table('teachers')
     op.drop_table('parents')
+    op.drop_table('community_posts')
     op.drop_table('users')
     op.drop_table('types')
     op.drop_table('subjects')

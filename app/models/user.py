@@ -17,11 +17,15 @@ class User(db.Model, UserMixin):
     hashed_password = db.Column(db.String(255), nullable=False)
     salt = db.Column(db.String(255), nullable=False)
     type = db.Column(db.String(50), default='parent', nullable=False)
+    banned = db.Column(db.Boolean, nullable=False, default=False)
     _status = db.Column("status", db.String(50), default='inactive', nullable=False)
     stripe_customer_id = db.Column(db.String(120), unique=True)
     stripe_subscription_id = db.Column(db.String(120), unique=True)
     created_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # followers = db.relationship('UserFollow', foreign_keys='UserFollow.followee_id', backref='followee', lazy='dynamic')
+    # following = db.relationship('UserFollow', foreign_keys='UserFollow.follower_id', backref='follower', lazy='dynamic')
 
     # Add one-to-one relationships
     parent = db.relationship('Parent', uselist=False, backref='user')
@@ -57,9 +61,12 @@ class User(db.Model, UserMixin):
             'id': self.id,
             'username': self.username,
             'type': self.type,
+            'banned': self.banned,
             'status': self.status,
             'created_date': self.created_date.isoformat(),
-            'updated_date': self.updated_date.isoformat()
+            'updated_date': self.updated_date.isoformat(),
+            # 'followers_count': self.followers.count(),
+            # 'following_count': self.following.count()
         }
 
         if self.type == 'student' and self.student:
