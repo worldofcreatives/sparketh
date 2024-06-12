@@ -2,11 +2,11 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 
-const WithCompanyGuard = (WrappedComponent) => {
+const WithParentGuard = (WrappedComponent) => {
   return (props) => {
     const user = useSelector((state) => state.session.user);
 
-    if (user && user.type === 'Company') {
+    if (user && user.type === 'Parent') {
       return <WrappedComponent {...props} />;
     } else {
       return <Navigate to="/unauthorized" />;
@@ -14,4 +14,4 @@ const WithCompanyGuard = (WrappedComponent) => {
   };
 };
 
-export default WithCompanyGuard;
+export default WithParentGuard;

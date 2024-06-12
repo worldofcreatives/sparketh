@@ -9,7 +9,7 @@ function Navigation() {
   const sessionUser = useSelector((state) => state.session.user);
   const isAuthenticated = sessionUser !== null;
   // Assuming the user type is available as sessionUser.type
-  const isCompany = sessionUser?.type === "Company";
+  const isParent = sessionUser?.type === "Parent";
 
   const logout = (e) => {
     e.preventDefault();
@@ -26,7 +26,7 @@ function Navigation() {
         {isAuthenticated && (
           <>
             <div className="content-nav">
-              {isCompany && (
+              {isParent && (
                 <>
                   <li>
                     <NavLink to="/charts" activeClassName="active">
@@ -48,7 +48,7 @@ function Navigation() {
                 </NavLink>
               </li>
 
-              {isCompany && (
+              {isParent && (
                 <>
                   <li>
                     <NavLink to="/opps/form" activeClassName="active">

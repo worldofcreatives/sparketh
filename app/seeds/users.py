@@ -1,66 +1,30 @@
-from app.models import db, User, environment, SCHEMA
+from app.models import db, User
 from werkzeug.security import generate_password_hash
-from sqlalchemy.sql import text
 import os
 import binascii
 
 def seed_users():
     users = [
         {
-            'username': 'Demo',
-            'email': 'demo@aa.io',
+            'username': 'parent1',
+            'email': 'parent1@example.com',
             'password': 'password',
-            'type': 'Company',
-            'status': 'Accepted'
+            'type': 'parent',
+            'status': 'active'
         },
         {
-            'username': 'marnie',
-            'email': 'marnie@aa.io',
+            'username': 'teacher1',
+            'email': 'teacher1@example.com',
             'password': 'password',
-            'type': 'Creator',
-            'status': 'Pre-Apply'
+            'type': 'teacher',
+            'status': 'active'
         },
         {
-            'username': 'bobbie',
-            'email': 'bobbie@aa.io',
+            'username': 'student1',
+            'email': None,
             'password': 'password',
-            'type': 'Creator',
-            'status': 'Pre-Apply'
-        },
-        {
-            'username': 'alice',
-            'email': 'alice@example.com',
-            'password': 'password',
-            'type': 'Company',
-            'status': 'Pre-Apply'
-        },
-        {
-            'username': 'charlie',
-            'email': 'charlie@example.com',
-            'password': 'password',
-            'type': 'Company',
-            'status': 'Pre-Apply'
-        },
-        {
-            'username': 'dana',
-            'email': 'dana@example.com',
-            'password': 'password',
-            'type': 'Creator',
-            'status': 'Pre-Apply'
-        },
-        {
-            'username': 'evan',
-            'email': 'evan@example.com',
-            'password': 'password',
-            'type': 'Company',
-            'status': 'Pre-Apply'
-        },
-        {
-            'username': 'fiona',
-            'email': 'fiona@example.com',
-            'password': 'password',
-            'type': 'Creator',
-            'status': 'Pre-Apply'
+            'type': 'student',
+            'status': 'active'
         }
     ]
 
@@ -78,13 +42,8 @@ def seed_users():
                 status=user_data['status']
             )
             db.session.add(user)
-
     db.session.commit()
 
 def undo_users():
-    if environment == "production":
-        db.session.execute(f"TRUNCATE table {SCHEMA}.users RESTART IDENTITY CASCADE;")
-    else:
-        db.session.execute(text("DELETE FROM users"))
-
+    db.session.execute('TRUNCATE TABLE users RESTART IDENTITY CASCADE;')
     db.session.commit()

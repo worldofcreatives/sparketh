@@ -20,22 +20,22 @@ const ProfilePage = () => {
     return <div>Loading...</div>;
   }
 
-  const { creator, company } = userProfile;
+  const { student, parent } = userProfile;
 
   return (
     <div className="profile-page">
-      {userProfile.type === 'Creator' && creator && (
+      {userProfile.type === 'Student' && student && (
         <>
           <div className="header-section">
           <img
-              src={creator.profile_pic || defaultProfilePic}
+              src={student.profile_pic || defaultProfilePic}
               alt="Profile"
               className="profile-pic"
             />
               <div className="header-info">
-              <h2>{creator.stage_name}</h2>
+              <h2>{student.stage_name}</h2>
               <p><strong>Status:</strong> {user.status}</p>
-              <p>{creator.bio}</p>
+              <p>{student.bio}</p>
               <div className="buttons-list">
                 <button onClick={() => navigate('/profile/edit')}>Edit Profile</button>
                 <button onClick={() => navigate('/profile/update')}>Update Genre or Type</button>
@@ -66,29 +66,29 @@ const ProfilePage = () => {
             <div className="card">
               <h2>Contact Information</h2>
               <div className="info-grid">
-                <p><strong>First Name:</strong> {creator.first_name}</p>
-                <p><strong>Last Name:</strong> {creator.last_name}</p>
-                <p><strong>Phone:</strong> {creator.phone}</p>
-                <p><strong>Address:</strong> {`${creator.address_1} ${creator.address_2 || ''}, ${creator.city}, ${creator.state} ${creator.postal_code}`}</p>
-                <p><strong>Portfolio URL:</strong> <a href={creator.portfolio_url} target="_blank" rel="noopener noreferrer">{creator.portfolio_url}</a></p>
-                <p><strong>Previous Projects:</strong> {creator.previous_projects}</p>
-                <p><strong>Instagram:</strong> <a href={`https://instagram.com/${creator.instagram}`} target="_blank" rel="noopener noreferrer">{creator.instagram}</a></p>
-                <p><strong>Twitter:</strong> <a href={`https://twitter.com/${creator.twitter}`} target="_blank" rel="noopener noreferrer">{creator.twitter}</a></p>
-                <p><strong>Facebook:</strong> <a href={creator.facebook} target="_blank" rel="noopener noreferrer">{creator.facebook}</a></p>
-                <p><strong>YouTube:</strong> <a href={creator.youtube} target="_blank" rel="noopener noreferrer">{creator.youtube}</a></p>
-                <p><strong>Other Social Media:</strong> {creator.other_social_media}</p>
-                <p><strong>Reference Name:</strong> {creator.reference_name}</p>
-                <p><strong>Reference Email:</strong> {creator.reference_email}</p>
-                <p><strong>Reference Phone:</strong> {creator.reference_phone}</p>
-                <p><strong>Reference Relationship:</strong> {creator.reference_relationship}</p>
+                <p><strong>First Name:</strong> {student.first_name}</p>
+                <p><strong>Last Name:</strong> {student.last_name}</p>
+                <p><strong>Phone:</strong> {student.phone}</p>
+                <p><strong>Address:</strong> {`${student.address_1} ${student.address_2 || ''}, ${student.city}, ${student.state} ${student.postal_code}`}</p>
+                <p><strong>Portfolio URL:</strong> <a href={student.portfolio_url} target="_blank" rel="noopener noreferrer">{student.portfolio_url}</a></p>
+                <p><strong>Previous Projects:</strong> {student.previous_projects}</p>
+                <p><strong>Instagram:</strong> <a href={`https://instagram.com/${student.instagram}`} target="_blank" rel="noopener noreferrer">{student.instagram}</a></p>
+                <p><strong>Twitter:</strong> <a href={`https://twitter.com/${student.twitter}`} target="_blank" rel="noopener noreferrer">{student.twitter}</a></p>
+                <p><strong>Facebook:</strong> <a href={student.facebook} target="_blank" rel="noopener noreferrer">{student.facebook}</a></p>
+                <p><strong>YouTube:</strong> <a href={student.youtube} target="_blank" rel="noopener noreferrer">{student.youtube}</a></p>
+                <p><strong>Other Social Media:</strong> {student.other_social_media}</p>
+                <p><strong>Reference Name:</strong> {student.reference_name}</p>
+                <p><strong>Reference Email:</strong> {student.reference_email}</p>
+                <p><strong>Reference Phone:</strong> {student.reference_phone}</p>
+                <p><strong>Reference Relationship:</strong> {student.reference_relationship}</p>
               </div>
 
               <div className="genres-types">
                 <div>
                   <strong>Genres:</strong>
-                  {creator.genres && creator.genres.length > 0 ? (
+                  {student.genres && student.genres.length > 0 ? (
                     <ul>
-                      {creator.genres.map((genre) => (
+                      {student.genres.map((genre) => (
                         <li key={genre.id}>{genre.name}</li>
                       ))}
                     </ul>
@@ -99,9 +99,9 @@ const ProfilePage = () => {
 
                 <div>
                   <strong>Types:</strong>
-                  {creator.types && creator.types.length > 0 ? (
+                  {student.types && student.types.length > 0 ? (
                     <ul>
-                      {creator.types.map((type) => (
+                      {student.types.map((type) => (
                         <li key={type.id}>{type.name}</li>
                       ))}
                     </ul>
@@ -115,13 +115,13 @@ const ProfilePage = () => {
         </>
       )}
 
-      {userProfile.type === 'Company' && company && (
+      {userProfile.type === 'Parent' && parent && (
         <>
           <div className="header-section">
-            {company.logo && <img src={company.logo} alt="Logo" className="profile-pic" />}
+            {parent.logo && <img src={parent.logo} alt="Logo" className="profile-pic" />}
             <div className="header-info">
-              <h2>{company.name}</h2>
-              <p>{company.bio}</p>
+              <h2>{parent.name}</h2>
+              <p>{parent.bio}</p>
               <div className="buttons-list">
                 <button onClick={() => navigate('/profile/edit')}>Edit Profile</button>
                 <button onClick={() => navigate('/profile/update')}>Update Genre or Type</button>
@@ -130,11 +130,11 @@ const ProfilePage = () => {
           </div>
           <div className="profile-info">
             <div className="card">
-              <h2>Company Information</h2>
+              <h2>Parent Information</h2>
               <div>
-                <p><strong>Name:</strong> {company.name}</p>
-                <p><strong>Bio:</strong> {company.bio}</p>
-                {/* Display other company-specific information here */}
+                <p><strong>Name:</strong> {parent.name}</p>
+                <p><strong>Bio:</strong> {parent.bio}</p>
+                {/* Display other parent-specific information here */}
               </div>
             </div>
           </div>
@@ -168,7 +168,7 @@ export default ProfilePage;
 //     return <div>Loading...</div>;
 //   }
 
-//   const { creator, company } = userProfile;
+//   const { student, parent } = userProfile;
 
 //   return (
 //     <div className="profile-page">
@@ -177,34 +177,34 @@ export default ProfilePage;
 //       <button onClick={() => navigate('/profile/edit')}>Edit Profile</button>
 //       <button onClick={() => navigate('/profile/update')}>Update Genre or Type</button>
 //       </div>
-//       {userProfile.type === 'Creator' && creator && (
+//       {userProfile.type === 'Student' && student && (
 //         <div className='profile-info'>
-//           <h2>Creator Profile</h2>
-//           {creator.profile_pic && <img src={creator.profile_pic} alt="Profile" className='profile-pic'/>}
+//           <h2>Student Profile</h2>
+//           {student.profile_pic && <img src={student.profile_pic} alt="Profile" className='profile-pic'/>}
 //           <p><strong>Status:</strong> {user.status}</p>
-//           <p><strong>Stage Name:</strong> {creator.stage_name}</p>
-//           <p><strong>Bio:</strong> {creator.bio}</p>
-//           <p><strong>First Name:</strong> {creator.first_name}</p>
-//           <p><strong>Last Name:</strong> {creator.last_name}</p>
-//           <p><strong>Phone:</strong> {creator.phone}</p>
-//           <p><strong>Address:</strong> {`${creator.address_1} ${creator.address_2 || ''}, ${creator.city}, ${creator.state} ${creator.postal_code}`}</p>
-//           <p><strong>Portfolio URL:</strong> <a href={creator.portfolio_url}>{creator.portfolio_url}</a></p>
-//           <p><strong>Previous Projects:</strong> {creator.previous_projects}</p>
-//           <p><strong>Instagram:</strong> <a href={`https://instagram.com/${creator.instagram}`}>{creator.instagram}</a></p>
-//           <p><strong>Twitter:</strong> <a href={`https://twitter.com/${creator.twitter}`}>{creator.twitter}</a></p>
-//           <p><strong>Facebook:</strong> <a href={creator.facebook}>{creator.facebook}</a></p>
-//           <p><strong>YouTube:</strong> <a href={creator.youtube}>{creator.youtube}</a></p>
-//           <p><strong>Other Social Media:</strong> {creator.other_social_media}</p>
-//           <p><strong>Reference Name:</strong> {creator.reference_name}</p>
-//           <p><strong>Reference Email:</strong> {creator.reference_email}</p>
-//           <p><strong>Reference Phone:</strong> {creator.reference_phone}</p>
-//           <p><strong>Reference Relationship:</strong> {creator.reference_relationship}</p>
+//           <p><strong>Stage Name:</strong> {student.stage_name}</p>
+//           <p><strong>Bio:</strong> {student.bio}</p>
+//           <p><strong>First Name:</strong> {student.first_name}</p>
+//           <p><strong>Last Name:</strong> {student.last_name}</p>
+//           <p><strong>Phone:</strong> {student.phone}</p>
+//           <p><strong>Address:</strong> {`${student.address_1} ${student.address_2 || ''}, ${student.city}, ${student.state} ${student.postal_code}`}</p>
+//           <p><strong>Portfolio URL:</strong> <a href={student.portfolio_url}>{student.portfolio_url}</a></p>
+//           <p><strong>Previous Projects:</strong> {student.previous_projects}</p>
+//           <p><strong>Instagram:</strong> <a href={`https://instagram.com/${student.instagram}`}>{student.instagram}</a></p>
+//           <p><strong>Twitter:</strong> <a href={`https://twitter.com/${student.twitter}`}>{student.twitter}</a></p>
+//           <p><strong>Facebook:</strong> <a href={student.facebook}>{student.facebook}</a></p>
+//           <p><strong>YouTube:</strong> <a href={student.youtube}>{student.youtube}</a></p>
+//           <p><strong>Other Social Media:</strong> {student.other_social_media}</p>
+//           <p><strong>Reference Name:</strong> {student.reference_name}</p>
+//           <p><strong>Reference Email:</strong> {student.reference_email}</p>
+//           <p><strong>Reference Phone:</strong> {student.reference_phone}</p>
+//           <p><strong>Reference Relationship:</strong> {student.reference_relationship}</p>
 //           {/* Display Genres */}
 //           <div>
 //             <strong>Genres:</strong>
-//             {creator.genres && creator.genres.length > 0 ? (
+//             {student.genres && student.genres.length > 0 ? (
 //               <ul>
-//                 {creator.genres.map((genre) => (
+//                 {student.genres.map((genre) => (
 //                   <li key={genre.id}>{genre.name}</li>
 //                 ))}
 //               </ul>
@@ -215,9 +215,9 @@ export default ProfilePage;
 //           {/* Display Types */}
 //           <div>
 //             <strong>Types:</strong>
-//             {creator.types && creator.types.length > 0 ? (
+//             {student.types && student.types.length > 0 ? (
 //               <ul>
-//                 {creator.types.map((type) => (
+//                 {student.types.map((type) => (
 //                   <li key={type.id}>{type.name}</li>
 //                 ))}
 //               </ul>
@@ -227,13 +227,13 @@ export default ProfilePage;
 //           </div>
 //         </div>
 //       )}
-//       {userProfile.type === 'Company' && company && (
+//       {userProfile.type === 'Parent' && parent && (
 //         <div className='profile-info'>
-//           <h2>Company Profile</h2>
-//           {company.logo && <img src={company.logo} alt="Logo" className='profile-pic'/>}
-//           <p><strong>Name:</strong> {company.name}</p>
-//           <p><strong>Bio:</strong> {company.bio}</p>
-//           {/* Display other company-specific information here */}
+//           <h2>Parent Profile</h2>
+//           {parent.logo && <img src={parent.logo} alt="Logo" className='profile-pic'/>}
+//           <p><strong>Name:</strong> {parent.name}</p>
+//           <p><strong>Bio:</strong> {parent.bio}</p>
+//           {/* Display other parent-specific information here */}
 //         </div>
 //       )}
 //     </div>

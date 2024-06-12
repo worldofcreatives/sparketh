@@ -1,10 +1,14 @@
 from flask.cli import AppGroup
 from .users import seed_users, undo_users
-from .companies import seed_companies, undo_companies
-from .creators import seed_creators, undo_creators
-from .opportunities import seed_opportunities, undo_opportunities
-from .genres import seed_genres, undo_genres
+from .parents import seed_parents, undo_parents
+from .students import seed_students, undo_students
 from .types import seed_types, undo_types
+from .artworks import seed_art, undo_art
+from .courses import seed_courses, undo_courses
+from .lessons import seed_lessons, undo_lessons
+from .teachers import seed_teachers, undo_teachers
+from .subjects import seed_subjects, undo_subjects
+
 
 from app.models.db import db, environment, SCHEMA
 
@@ -21,28 +25,37 @@ def seed():
         # command, which will  truncate all tables prefixed with
         # the schema name (see comment in users.py undo_users function).
         # Make sure to add all your other model's undo functions below
-        undo_opportunities()
-        undo_creators()
-        undo_companies()
+        undo_lessons()
+        undo_courses()
+        undo_art()
+        undo_teachers()
+        undo_students()
+        undo_parents()
         undo_users()
+        undo_subjects()
         undo_types()
-        undo_genres()
-    seed_genres()
     seed_types()
+    seed_subjects()
     seed_users()
-    seed_companies()
-    seed_creators()
-    seed_opportunities()
+    seed_parents()
+    seed_students()
+    seed_teachers()
+    seed_art()
+    seed_courses()
+    seed_lessons()
 
 
 
 # Creates the `flask seed undo` command
 @seed_commands.command('undo')
 def undo():
-    undo_opportunities()
-    undo_creators()
-    undo_companies()
+    undo_lessons()
+    undo_courses()
+    undo_art()
+    undo_teachers()
+    undo_students()
+    undo_parents()
     undo_users()
+    undo_subjects()
     undo_types()
-    undo_genres()
     # Add other undo functions here

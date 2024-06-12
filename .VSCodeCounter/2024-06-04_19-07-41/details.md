@@ -39,8 +39,8 @@ Total : 202 files,  13756 codes, 1898 comments, 1781 blanks, all 17435 lines
 | [app/forms/signup_form.py](/app/forms/signup_form.py) | Python | 33 | 7 | 8 | 48 |
 | [app/forms/submission_form.py](/app/forms/submission_form.py) | Python | 13 | 0 | 2 | 15 |
 | [app/models/__init__.py](/app/models/__init__.py) | Python | 29 | 2 | 7 | 38 |
-| [app/models/company.py](/app/models/company.py) | Python | 23 | 0 | 5 | 28 |
-| [app/models/creator.py](/app/models/creator.py) | Python | 74 | 2 | 7 | 83 |
+| [app/models/parent.py](/app/models/parent.py) | Python | 23 | 0 | 5 | 28 |
+| [app/models/student.py](/app/models/student.py) | Python | 74 | 2 | 7 | 83 |
 | [app/models/db.py](/app/models/db.py) | Python | 10 | 1 | 5 | 16 |
 | [app/models/feedback.py](/app/models/feedback.py) | Python | 23 | 2 | 7 | 32 |
 | [app/models/genre.py](/app/models/genre.py) | Python | 12 | 0 | 5 | 17 |
@@ -50,8 +50,8 @@ Total : 202 files,  13756 codes, 1898 comments, 1781 blanks, all 17435 lines
 | [app/models/type.py](/app/models/type.py) | Python | 12 | 0 | 5 | 17 |
 | [app/models/user.py](/app/models/user.py) | Python | 65 | 1 | 12 | 78 |
 | [app/seeds/__init__.py](/app/seeds/__init__.py) | Python | 32 | 9 | 8 | 49 |
-| [app/seeds/companies.py](/app/seeds/companies.py) | Python | 34 | 1 | 6 | 41 |
-| [app/seeds/creators.py](/app/seeds/creators.py) | Python | 98 | 2 | 6 | 106 |
+| [app/seeds/parents.py](/app/seeds/parents.py) | Python | 34 | 1 | 6 | 41 |
+| [app/seeds/students.py](/app/seeds/students.py) | Python | 98 | 2 | 6 | 106 |
 | [app/seeds/genres.py](/app/seeds/genres.py) | Python | 16 | 0 | 6 | 22 |
 | [app/seeds/opportunities.py](/app/seeds/opportunities.py) | Python | 122 | 0 | 15 | 137 |
 | [app/seeds/types.py](/app/seeds/types.py) | Python | 16 | 0 | 5 | 21 |
@@ -193,9 +193,9 @@ Total : 202 files,  13756 codes, 1898 comments, 1781 blanks, all 17435 lines
 | [react-vite/src/components/Waveform/Waveform.css](/react-vite/src/components/Waveform/Waveform.css) | CSS | 0 | 0 | 1 | 1 |
 | [react-vite/src/components/Waveform/Waveform.jsx](/react-vite/src/components/Waveform/Waveform.jsx) | JavaScript JSX | 40 | 2 | 11 | 53 |
 | [react-vite/src/components/Waveform/index.js](/react-vite/src/components/Waveform/index.js) | JavaScript | 2 | 0 | 2 | 4 |
-| [react-vite/src/components/WithCompanyGuard/WithCompanyGuard.css](/react-vite/src/components/WithCompanyGuard/WithCompanyGuard.css) | CSS | 0 | 0 | 1 | 1 |
-| [react-vite/src/components/WithCompanyGuard/WithCompanyGuard.jsx](/react-vite/src/components/WithCompanyGuard/WithCompanyGuard.jsx) | JavaScript JSX | 14 | 0 | 4 | 18 |
-| [react-vite/src/components/WithCompanyGuard/index.js](/react-vite/src/components/WithCompanyGuard/index.js) | JavaScript | 2 | 0 | 2 | 4 |
+| [react-vite/src/components/WithParentGuard/WithParentGuard.css](/react-vite/src/components/WithParentGuard/WithParentGuard.css) | CSS | 0 | 0 | 1 | 1 |
+| [react-vite/src/components/WithParentGuard/WithParentGuard.jsx](/react-vite/src/components/WithParentGuard/WithParentGuard.jsx) | JavaScript JSX | 14 | 0 | 4 | 18 |
+| [react-vite/src/components/WithParentGuard/index.js](/react-vite/src/components/WithParentGuard/index.js) | JavaScript | 2 | 0 | 2 | 4 |
 | [react-vite/src/context/Modal.css](/react-vite/src/context/Modal.css) | CSS | 22 | 0 | 2 | 24 |
 | [react-vite/src/context/Modal.jsx](/react-vite/src/context/Modal.jsx) | JavaScript JSX | 45 | 6 | 9 | 60 |
 | [react-vite/src/index.css](/react-vite/src/index.css) | CSS | 125 | 6 | 45 | 176 |

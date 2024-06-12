@@ -8,7 +8,7 @@ class ProfileForm(FlaskForm):
     # Shared fields
     bio = TextAreaField('Bio', validators=[Optional()])
 
-    # Creator-specific fields
+    # Student-specific fields
     profile_pic = FileField('Profile Picture', validators=[
         FileAllowed(['jpg', 'jpeg', 'png', 'gif'], 'Images only!'),
         Optional()
@@ -34,8 +34,8 @@ class ProfileForm(FlaskForm):
     reference_phone = StringField('Reference Phone', validators=[Optional(), Length(max=20)])
     reference_relationship = StringField('Reference Relationship', validators=[Optional(), Length(max=100)])
 
-    # Company-specific fields
-    logo = FileField('Company Logo', validators=[
+    # Parent-specific fields
+    logo = FileField('Parent Logo', validators=[
         FileAllowed(['jpg', 'jpeg', 'png', 'gif'], 'Images only!'),
         Optional()
     ])
@@ -45,11 +45,11 @@ class ProfileForm(FlaskForm):
     def __init__(self, *args, type=None, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
         # Adjusting form fields based on user type
-        if type == 'Creator':
+        if type == 'Student':
             del self.logo
             del self.name
 
-        elif type == 'Company':
+        elif type == 'Parent':
             del self.profile_pic
             del self.genres
             del self.types
@@ -71,3 +71,21 @@ class ProfileForm(FlaskForm):
             del self.reference_phone
             del self.reference_relationship
             del self.stage_name
+
+class ParentProfileForm(FlaskForm):
+    profile_pic = FileField('Profile Picture', validators=[FileAllowed(['jpg', 'jpeg', 'png', 'gif']), Optional()])
+    first_name = StringField('First Name', validators=[Optional(), Length(max=50)])
+    last_name = StringField('Last Name', validators=[Optional(), Length(max=50)])
+    address_1 = StringField('Address 1', validators=[Optional(), Length(max=100)])
+    address_2 = StringField('Address 2', validators=[Optional(), Length(max=100)])
+    city = StringField('City', validators=[Optional(), Length(max=50)])
+    state = StringField('State', validators=[Optional(), Length(max=50)])
+    zip_code = StringField('Zip Code', validators=[Optional(), Length(max=20)])
+    stripe_customer_id = StringField('Stripe Customer ID', validators=[Optional(), Length(max=50)])
+    stripe_subscription_id = StringField('Stripe Subscription ID', validators=[Optional(), Length(max=50)])
+
+class StudentProfileForm(FlaskForm):
+    bio = TextAreaField('Bio', validators=[Optional()])
+    date_of_birth = StringField('Date of Birth', validators=[Optional()])
+    skill_level = StringField('Skill Level', validators=[Optional(), Length(max=20)])
+    progress = TextAreaField('Progress', validators=[Optional()])

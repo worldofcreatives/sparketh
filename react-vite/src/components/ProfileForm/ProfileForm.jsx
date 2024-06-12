@@ -36,30 +36,30 @@ const ProfileForm = () => {
 
   useEffect(() => {
     dispatch(fetchUserProfile()).then((userProfile) => {
-      if (userProfile && userProfile.type === 'Creator') {
-        const { creator } = userProfile;
+      if (userProfile && userProfile.type === 'Student') {
+        const { student } = userProfile;
         setProfileData({
-          bio: creator.bio || '',
-          first_name: creator.first_name || '',
-          last_name: creator.last_name || '',
-          stage_name: creator.stage_name || '',
-          phone: creator.phone || '',
-          address_1: creator.address_1 || '',
-          address_2: creator.address_2 || '',
-          city: creator.city || '',
-          state: creator.state || '',
-          postal_code: creator.postal_code || '',
-          portfolio_url: creator.portfolio_url || '',
-          previous_projects: creator.previous_projects || '',
-          instagram: creator.instagram || '',
-          twitter: creator.twitter || '',
-          facebook: creator.facebook || '',
-          youtube: creator.youtube || '',
-          other_social_media: creator.other_social_media || '',
-          reference_name: creator.reference_name || '',
-          reference_email: creator.reference_email || '',
-          reference_phone: creator.reference_phone || '',
-          reference_relationship: creator.reference_relationship || '',
+          bio: student.bio || '',
+          first_name: student.first_name || '',
+          last_name: student.last_name || '',
+          stage_name: student.stage_name || '',
+          phone: student.phone || '',
+          address_1: student.address_1 || '',
+          address_2: student.address_2 || '',
+          city: student.city || '',
+          state: student.state || '',
+          postal_code: student.postal_code || '',
+          portfolio_url: student.portfolio_url || '',
+          previous_projects: student.previous_projects || '',
+          instagram: student.instagram || '',
+          twitter: student.twitter || '',
+          facebook: student.facebook || '',
+          youtube: student.youtube || '',
+          other_social_media: student.other_social_media || '',
+          reference_name: student.reference_name || '',
+          reference_email: student.reference_email || '',
+          reference_phone: student.reference_phone || '',
+          reference_relationship: student.reference_relationship || '',
         });
       }
     });
@@ -129,7 +129,7 @@ const ProfileForm = () => {
         <textarea id="bio" name="bio" value={profileData.bio} onChange={handleChange} />
       </div>
       {/* Conditionally render inputs based on user type */}
-      {userProfile.type === 'Creator' && (
+      {userProfile.type === 'Student' && (
         <>
           <div>
             <label htmlFor="profile_pic">Profile Picture:</label>
@@ -220,9 +220,9 @@ const ProfileForm = () => {
           </div>
               </>
             )}
-            {userProfile.type === 'Company' && (
+            {userProfile.type === 'Parent' && (
               <div>
-                <label htmlFor="logo">Company Logo:</label>
+                <label htmlFor="logo">Parent Logo:</label>
                 <input type="file" id="logo" name="logo" onChange={handleFileChange} accept="image/*" />
               </div>
             )}

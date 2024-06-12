@@ -3,7 +3,7 @@ import OpportunitiesChart from '../OpportunitiesChart';
 import SubmissionsChart from '../SubmissionsChart';
 import './Charts.css'; // Assuming your styles are here
 import UsersChart from '../UsersChart';
-import WithCompanyGuard from '../WithCompanyGuard/WithCompanyGuard';
+import WithParentGuard from '../WithParentGuard/WithParentGuard';
 
 const Charts = () => {
   // State to track which chart is currently selected
@@ -41,4 +41,4 @@ const Charts = () => {
   );
 };
 
-export default WithCompanyGuard(Charts); // Wrap the component with the HOC
+export default WithParentGuard(Charts); // Wrap the component with the HOC

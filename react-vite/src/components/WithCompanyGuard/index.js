@@ -1,3 +1,3 @@
-import WithCompanyGuard from './WithCompanyGuard';
+import WithParentGuard from './WithParentGuard';
 
-export default WithCompanyGuard;
+export default WithParentGuard;

@@ -4,7 +4,6 @@ from flask_login import UserMixin
 from datetime import datetime
 import os
 import binascii
-from app.utils.email_utils import send_email
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
@@ -13,16 +12,21 @@ class User(db.Model, UserMixin):
         __table_args__ = {'schema': SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(255), nullable=False, unique=True)
+    email = db.Column(db.String(255), nullable=True, unique=True)
     username = db.Column(db.String(40), nullable=False, unique=True)
     hashed_password = db.Column(db.String(255), nullable=False)
     salt = db.Column(db.String(255), nullable=False)
-    type = db.Column(db.String(50), default='Creator', nullable=False)
-    _status = db.Column("status", db.String(50), default='Pre-Apply', nullable=False)
+    type = db.Column(db.String(50), default='parent', nullable=False)
+    _status = db.Column("status", db.String(50), default='inactive', nullable=False)
     stripe_customer_id = db.Column(db.String(120), unique=True)
     stripe_subscription_id = db.Column(db.String(120), unique=True)
     created_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Add one-to-one relationships
+    parent = db.relationship('Parent', uselist=False, backref='user')
+    student = db.relationship('Student', uselist=False, backref='user')
+    teacher = db.relationship('Teacher', uselist=False, backref='user')
 
     @property
     def password(self):
@@ -36,8 +40,8 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         return check_password_hash(self.hashed_password, password + self.salt)
 
-    def is_company(self):
-        return self.type == 'Company'
+    def is_parent(self):
+        return self.type == 'parent'
 
     @property
     def status(self):
@@ -46,32 +50,38 @@ class User(db.Model, UserMixin):
     @status.setter
     def status(self, new_status):
         if new_status != self._status:
-            self.send_status_change_email(new_status, self._status)
             self._status = new_status
 
-    def send_status_change_email(self, new_status, old_status):
-        if new_status == 'Applied':
-            send_email(self.email, 'Application Received', 'Thank you for applying!')
-        elif new_status == 'Accepted':
-            # Check if the old status is not Premium Monthly or Premium Annual
-            if old_status not in ['Premium Monthly', 'Premium Annual']:
-                send_email(self.email, 'Application Accepted', 'Congratulations, your application has been accepted!')
-        elif new_status == 'Denied':
-            send_email(self.email, 'Application Denied', 'We regret to inform you that your application has been denied.')
-        elif new_status == 'Premium Monthly':
-            send_email(self.email, 'Subscription Upgraded', 'You have successfully upgraded to a Premium Monthly subscription.')
-        elif new_status == 'Premium Annual':
-            send_email(self.email, 'Subscription Upgraded', 'You have successfully upgraded to a Premium Annual subscription.')
-
     def to_dict(self):
-        return {
+        data = {
             'id': self.id,
             'username': self.username,
-            'email': self.email,
             'type': self.type,
             'status': self.status,
-            'stripe_customer_id': self.stripe_customer_id,
-            'stripe_subscription_id': self.stripe_subscription_id,
             'created_date': self.created_date.isoformat(),
-            'updated_date': self.updated_date.isoformat(),
+            'updated_date': self.updated_date.isoformat()
         }
+
+        if self.type == 'student' and self.student:
+            data['profile'] = self.student.to_dict()
+        else:
+            data['email'] = self.email
+            data['stripe_customer_id'] = self.stripe_customer_id
+            data['stripe_subscription_id'] = self.stripe_subscription_id
+
+            if self.type == 'parent' and self.parent:
+                data['students'] = [student.to_dict() for student in self.parent.student]
+
+            if self.type == 'teacher' and self.teacher:
+                data['teacher'] = self.teacher.to_dict()
+
+        return data
+
+    def validate_email(self):
+        if self.is_parent() and not self.email:
+            raise ValueError("Email is required for Parent users.")
+
+    def save(self):
+        self.validate_email()
+        db.session.add(self)
+        db.session.commit()

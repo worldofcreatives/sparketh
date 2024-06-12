@@ -38,9 +38,9 @@ const GenreTypeForm = () => {
   useEffect(() => {
     if (!isInitialized) {
       dispatch(fetchUserProfile()).then(() => {
-        if (userProfile && userProfile.creator) {
-          const genreIds = userProfile.creator.genres.map(genre => genre.id);
-          const typeIds = userProfile.creator.types.map(type => type.id);
+        if (userProfile && userProfile.student) {
+          const genreIds = userProfile.student.genres.map(genre => genre.id);
+          const typeIds = userProfile.student.types.map(type => type.id);
           setSelectedGenres(genreIds);
           setSelectedTypes(typeIds);
         }

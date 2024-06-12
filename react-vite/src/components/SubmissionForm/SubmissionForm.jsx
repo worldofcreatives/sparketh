@@ -43,7 +43,7 @@ const SubmissionForm = () => {
   };
 
   const renderSubmitButton = () => {
-    if (user.type === 'Company' || user.status === 'Accepted' || user.status === 'Premium') {
+    if (user.type === 'Parent' || user.status === 'Accepted' || user.status === 'Premium') {
       return <button type="submit" className="submit-button">Submit</button>;
     } else if (user.status === 'Pre-Apply' || user.status === 'Denied') {
       return (
@@ -204,7 +204,7 @@ export default SubmissionForm;
 //   };
 
 //   const renderSubmitButton = () => {
-//     if (user.type === 'Company' || user.status === 'Accepted' || user.status === 'Premium Monthly' || user.status === 'Premium Annual' || user.status === 'Major7eague') {
+//     if (user.type === 'Parent' || user.status === 'Accepted' || user.status === 'Premium Monthly' || user.status === 'Premium Annual' || user.status === 'Major7eague') {
 //       return <button className='submit-button' type="submit">Submit</button>;
 //     } else if (user.status === 'Pre-Apply' || user.status === 'Denied') {
 //       return (
@@ -215,7 +215,7 @@ export default SubmissionForm;
 //     } else if (user.status === 'Applied') {
 //       return (
 //         <button className='submit-button' type="button" disabled onClick={() => navigate('/apply')}>
-//           Your 7packs application is pending. Only approved creators can apply to opps.
+//           Your 7packs application is pending. Only approved students can apply to opps.
 //         </button>
 //       );
 //     }

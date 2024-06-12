@@ -15,7 +15,7 @@ Link to live site: https://packtune.onrender.com/
 ## API Documentation
 
 ### Overview
-This API facilitates interactions between creators (writers, artists, producers, musicians) and companies (music labels, sync companies, A-list artists, and producers) within the music industry. It enables the sharing of opportunities and submission of music.
+This API facilitates interactions between students (writers, artists, producers, musicians) and parents (music labels, sync parents, A-list artists, and producers) within the music industry. It enables the sharing of opportunities and submission of music.
 
 ### User Login
 
@@ -25,7 +25,7 @@ This loggs the user in.
 - **Body:**
   ```json
   {
-    "email": "creator@example.com",
+    "email": "student@example.com",
     "password": "password123"
   }
   ```
@@ -35,8 +35,8 @@ This loggs the user in.
     "token": "<access_token>",
     "user": {
       "userId": 1,
-      "email": "creator@example.com",
-      "type": "Creator",
+      "email": "student@example.com",
+      "type": "Student",
       "name": "Jane Doe",
       "profilePic": "https://example.com/profilepic.jpg"
     }
@@ -51,9 +51,9 @@ This signs a user up.
 - **Body:**
   ```json
   {
-    "email": "creator@example.com",
+    "email": "student@example.com",
     "password": "password123",
-    "type": "Creator",
+    "type": "Student",
     "name": "Jane Doe",
     "artistBandName": "Jane's Band",
     "genres": "Rock, Pop",
@@ -64,10 +64,10 @@ This signs a user up.
   ```json
   {
     "userId": 1,
-    "email": "creator@example.com",
-    "type": "Creator",
+    "email": "student@example.com",
+    "type": "Student",
     "profile": {
-      "creatorId": 1,
+      "studentId": 1,
       "name": "Jane Doe",
       "artistBandName": "Jane's Band",
       "genres": "Rock, Pop",
@@ -87,7 +87,7 @@ This allows a user to create a new opportunity.
   {
     "name": "Summer Pop Hit",
     "description": "Looking for an upbeat pop song for our summer campaign.",
-    "companyId": 1,
+    "parentId": 1,
     "genre": "Pop",
     "deadline": "2024-05-30"
   }
@@ -98,7 +98,7 @@ This allows a user to create a new opportunity.
     "oppId": 1,
     "name": "Summer Pop Hit",
     "description": "Looking for an upbeat pop song for our summer campaign.",
-    "companyId": 1,
+    "parentId": 1,
     "genre": "Pop",
     "deadline": "2024-05-30",
     "isActive": true,
@@ -114,7 +114,7 @@ This allows a user to submit to an opportunity.
 - **Body:**
   ```json
   {
-    "creatorId": 1,
+    "studentId": 1,
     "oppId": 1,
     "media": [
       {
@@ -130,7 +130,7 @@ This allows a user to submit to an opportunity.
   ```json
   {
     "subId": 1,
-    "creatorId": 1,
+    "studentId": 1,
     "oppId": 1,
     "status": "Pending",
     "isActive": true,
@@ -161,7 +161,7 @@ This allows a user to list all opportunities.
         "oppId": 1,
         "name": "Summer Pop Hit",
         "description": "Looking for an upbeat pop song for our summer campaign.",
-        "companyId": 1,
+        "parentId": 1,
         "genre": "Pop",
         "deadline": "2024-05-30",
         "isActive": true,
@@ -202,7 +202,7 @@ This allows a user to list all the submissions in an opportunity.
     "submissions": [
       {
         "subId": 1,
-        "creatorId": 1,
+        "studentId": 1,
         "oppId": 1,
         "status": "Accepted",
         "createdDate": "2024-04-02T15:00:00Z",

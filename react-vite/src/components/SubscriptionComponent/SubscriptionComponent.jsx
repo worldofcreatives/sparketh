@@ -95,7 +95,7 @@ const SubscriptionComponent = () => {
         <>
         <h1>Upgrade Your Account to Access More Features</h1>
           <div className="standard-info">
-            <h2>Standard Creators</h2>
+            <h2>Standard Students</h2>
             <p>Free</p>
             <ul>
               <li>Submit one idea per opportunity</li>

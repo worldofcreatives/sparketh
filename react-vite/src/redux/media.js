@@ -3,7 +3,7 @@ export const UPLOAD_MEDIA_REQUEST = 'media/uploadMediaRequest';
 export const UPLOAD_MEDIA_SUCCESS = 'media/uploadMediaSuccess';
 export const UPLOAD_MEDIA_FAILURE = 'media/uploadMediaFailure';
 
-//*====> Action Creators <====
+//*====> Action Students <====
 const uploadMediaRequest = () => ({
   type: UPLOAD_MEDIA_REQUEST,
 });
@@ -18,7 +18,7 @@ const uploadMediaFailure = (error) => ({
   payload: error,
 });
 
-//*====> Thunk Action Creators <====
+//*====> Thunk Action Students <====
 export const uploadMedia = (mediaData) => async (dispatch) => {
   dispatch(uploadMediaRequest());
   try {
