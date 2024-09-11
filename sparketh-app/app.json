@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "sparketh-mobile-app",
-    "slug": "sparketh-mobile-app",
+    "name": "sparketh-app",
+    "slug": "sparketh-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

@@ -30,16 +30,26 @@ def authenticate():
 @auth_routes.route('/login', methods=['POST'])
 def login():
     form = LoginForm()
-    form['csrf_token'].data = request.cookies['csrf_token']
+
+    # Check if 'csrf_token' is present in cookies
+    csrf_token = request.cookies.get('csrf_token')
+    if not csrf_token:
+        return jsonify({"errors": ["Missing CSRF token"]}), 400
+
+    # Set the CSRF token from the cookies
+    form['csrf_token'].data = csrf_token
+
     if form.validate_on_submit():
         identifier = form.data['identifier']
         user = User.query.filter((User.email == identifier) | (User.username == identifier)).first()
         if user and user.check_password(form.data['password']):
             login_user(user)
-            return user.to_dict()
+            return jsonify(user.to_dict())
         else:
-            return {'errors': ['Invalid email/username or password.']}, 401
-    return form.errors, 401
+            return jsonify({'errors': ['Invalid email/username or password.']}), 401
+
+    # Return form validation errors
+    return jsonify(form.errors), 401
 
 @auth_routes.route('/logout')
 def logout():
