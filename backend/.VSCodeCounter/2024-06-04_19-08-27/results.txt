@@ -1,0 +1,299 @@
+Date : 2024-06-04 19:08:27
+Directory : /Users/dev/Documents/packtune
+Total : 202 files,  13756 codes, 1898 comments, 1781 blanks, all 17435 lines
+
+Languages
++------------------+------------+------------+------------+------------+------------+
+| language         | files      | code       | comment    | blank      | total      |
++------------------+------------+------------+------------+------------+------------+
+| JSON             |          3 |      4,849 |          0 |          3 |      4,852 |
+| JavaScript JSX   |         47 |      3,770 |      1,277 |        631 |      5,678 |
+| Python           |         45 |      2,426 |        341 |        537 |      3,304 |
+| JavaScript       |         67 |      1,236 |        144 |        259 |      1,639 |
+| CSS              |         31 |      1,003 |        136 |        237 |      1,376 |
+| Markdown         |          3 |        312 |          0 |         76 |        388 |
+| toml             |          1 |         39 |          0 |          4 |         43 |
+| Ini              |          1 |         38 |          0 |         13 |         51 |
+| pip requirements |          1 |         33 |          0 |          1 |         34 |
+| HTML             |          2 |         31 |          0 |         11 |         42 |
+| Docker           |          1 |         19 |          0 |          9 |         28 |
++------------------+------------+------------+------------+------------+------------+
+
+Directories
++---------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                    | files      | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                       |        202 |     13,756 |      1,898 |      1,781 |     17,435 |
+| . (Files)                                                                                               |          6 |      1,099 |          0 |         85 |      1,184 |
+| app                                                                                                     |         42 |      2,124 |        314 |        488 |      2,926 |
+| app (Files)                                                                                             |          2 |         83 |         15 |         24 |        122 |
+| app/api                                                                                                 |         10 |      1,034 |        255 |        286 |      1,575 |
+| app/forms                                                                                               |         11 |        194 |         13 |         39 |        246 |
+| app/models                                                                                              |         11 |        383 |         19 |         82 |        484 |
+| app/seeds                                                                                               |          7 |        403 |         12 |         52 |        467 |
+| app/utils                                                                                               |          1 |         27 |          0 |          5 |         32 |
+| migrations                                                                                              |          4 |        340 |         27 |         62 |        429 |
+| migrations (Files)                                                                                      |          2 |         98 |         17 |         42 |        157 |
+| migrations/versions                                                                                     |          2 |        242 |         10 |         20 |        272 |
+| react-vite                                                                                              |        150 |     10,193 |      1,557 |      1,146 |     12,896 |
+| react-vite (Files)                                                                                      |          6 |      4,215 |          1 |         16 |      4,232 |
+| react-vite/dist                                                                                         |         17 |         50 |         80 |         22 |        152 |
+| react-vite/dist (Files)                                                                                 |          1 |         16 |          0 |          6 |         22 |
+| react-vite/dist/assets                                                                                  |         16 |         34 |         80 |         16 |        130 |
+| react-vite/src                                                                                          |        127 |      5,928 |      1,476 |      1,108 |      8,512 |
+| react-vite/src (Files)                                                                                  |          2 |        145 |          6 |         49 |        200 |
+| react-vite/src/components                                                                               |        112 |      4,480 |      1,401 |        885 |      6,766 |
+| react-vite/src/components/ApplicationComplete                                                           |          3 |         40 |          0 |         12 |         52 |
+| react-vite/src/components/CancelPage                                                                    |          2 |         15 |          0 |          6 |         21 |
+| react-vite/src/components/Charts                                                                        |          3 |         53 |          1 |         10 |         64 |
+| react-vite/src/components/ContactUs                                                                     |          2 |         83 |          0 |          7 |         90 |
+| react-vite/src/components/GenreTypeForm                                                                 |          2 |        108 |          0 |         16 |        124 |
+| react-vite/src/components/LandingPage                                                                   |          3 |         61 |          2 |         21 |         84 |
+| react-vite/src/components/LoginFormModal                                                                |          3 |         60 |          0 |         11 |         71 |
+| react-vite/src/components/LoginFormPage                                                                 |          3 |         97 |          0 |         16 |        113 |
+| react-vite/src/components/MusicPlayer                                                                   |          3 |        123 |         95 |         41 |        259 |
+| react-vite/src/components/Navigation                                                                    |          5 |        234 |         80 |         54 |        368 |
+| react-vite/src/components/OldMusicPlayer                                                                |          2 |         41 |          3 |          7 |         51 |
+| react-vite/src/components/OnboardingApplication                                                         |          3 |        464 |        308 |         74 |        846 |
+| react-vite/src/components/OpenModalButton                                                               |          2 |         18 |          0 |          7 |         25 |
+| react-vite/src/components/Opportunities                                                                 |          3 |         43 |          2 |         11 |         56 |
+| react-vite/src/components/OpportunitiesBox                                                              |          3 |         83 |          2 |         18 |        103 |
+| react-vite/src/components/OpportunitiesChart                                                            |          2 |        114 |        110 |         32 |        256 |
+| react-vite/src/components/OpportunitiesLayout                                                           |          3 |        183 |        117 |         48 |        348 |
+| react-vite/src/components/Opportunity                                                                   |          3 |         54 |          1 |         10 |         65 |
+| react-vite/src/components/OpportunityForm                                                               |          3 |        211 |          4 |         29 |        244 |
+| react-vite/src/components/OpportunityPage                                                               |          3 |         26 |          0 |          9 |         35 |
+| react-vite/src/components/OpportunityUpdateForm                                                         |          2 |        172 |          2 |         17 |        191 |
+| react-vite/src/components/PasswordReset                                                                 |          2 |         81 |          1 |          8 |         90 |
+| react-vite/src/components/PasswordResetRequest                                                          |          2 |         64 |          2 |          8 |         74 |
+| react-vite/src/components/ProfileForm                                                                   |          3 |        230 |          4 |         19 |        253 |
+| react-vite/src/components/ProfilePage                                                                   |          3 |        200 |         91 |         36 |        327 |
+| react-vite/src/components/RangeSlider                                                                   |          3 |         93 |          2 |         19 |        114 |
+| react-vite/src/components/SignupFormModal                                                               |          3 |         90 |          0 |         11 |        101 |
+| react-vite/src/components/SignupFormPage                                                                |          3 |        105 |          0 |         14 |        119 |
+| react-vite/src/components/SubmissionDetails                                                             |          3 |         44 |          2 |         12 |         58 |
+| react-vite/src/components/SubmissionForm                                                                |          3 |        105 |        177 |         33 |        315 |
+| react-vite/src/components/SubmissionItem                                                                |          3 |        146 |         27 |         32 |        205 |
+| react-vite/src/components/Submissions                                                                   |          3 |        299 |         18 |         52 |        369 |
+| react-vite/src/components/SubmissionsChart                                                              |          2 |        124 |          7 |         15 |        146 |
+| react-vite/src/components/SubscriptionComponent                                                         |          3 |        159 |         60 |         40 |        259 |
+| react-vite/src/components/SuccessPage                                                                   |          2 |         15 |          0 |          6 |         21 |
+| react-vite/src/components/Unauthorized                                                                  |          2 |         11 |          0 |          4 |         15 |
+| react-vite/src/components/UserInfo                                                                      |          3 |        106 |         65 |         30 |        201 |
+| react-vite/src/components/UserSubmissions                                                               |          3 |        221 |        216 |         61 |        498 |
+| react-vite/src/components/UsersChart                                                                    |          2 |         46 |          0 |          8 |         54 |
+| react-vite/src/components/Waveform                                                                      |          3 |         42 |          2 |         14 |         58 |
+| react-vite/src/components/WithParentGuard                                                              |          3 |         16 |          0 |          7 |         23 |
+| react-vite/src/context                                                                                  |          2 |         67 |          6 |         11 |         84 |
+| react-vite/src/redux                                                                                    |          9 |      1,074 |         63 |        158 |      1,295 |
+| react-vite/src/router                                                                                   |          2 |        162 |          0 |          5 |        167 |
++---------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++---------------------------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+
+| filename                                                                                                | language         | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+
+| /Users/dev/Documents/packtune/Dockerfile                                                                | Docker           |         19 |          0 |          9 |         28 |
+| /Users/dev/Documents/packtune/Pipfile                                                                   | toml             |         39 |          0 |          4 |         43 |
+| /Users/dev/Documents/packtune/Pipfile.lock                                                              | JSON             |        709 |          0 |          1 |        710 |
+| /Users/dev/Documents/packtune/README.md                                                                 | Markdown         |        195 |          0 |         28 |        223 |
+| /Users/dev/Documents/packtune/app/__init__.py                                                           | Python           |         75 |         11 |         21 |        107 |
+| /Users/dev/Documents/packtune/app/api/auth_routes.py                                                    | Python           |        136 |        105 |         39 |        280 |
+| /Users/dev/Documents/packtune/app/api/aws_helpers.py                                                    | Python           |         83 |          5 |         23 |        111 |
+| /Users/dev/Documents/packtune/app/api/aws_routes.py                                                     | Python           |         17 |          1 |          7 |         25 |
+| /Users/dev/Documents/packtune/app/api/contact_routes.py                                                 | Python           |         27 |          1 |          7 |         35 |
+| /Users/dev/Documents/packtune/app/api/media_routes.py                                                   | Python           |         44 |         27 |         21 |         92 |
+| /Users/dev/Documents/packtune/app/api/opportunity_routes.py                                             | Python           |        350 |         63 |        113 |        526 |
+| /Users/dev/Documents/packtune/app/api/profile_routes.py                                                 | Python           |        157 |          8 |         28 |        193 |
+| /Users/dev/Documents/packtune/app/api/stripe_routes.py                                                  | Python           |        111 |          1 |         17 |        129 |
+| /Users/dev/Documents/packtune/app/api/submission_routes.py                                              | Python           |          0 |         27 |          9 |         36 |
+| /Users/dev/Documents/packtune/app/api/user_routes.py                                                    | Python           |        109 |         17 |         22 |        148 |
+| /Users/dev/Documents/packtune/app/config.py                                                             | Python           |          8 |          4 |          3 |         15 |
+| /Users/dev/Documents/packtune/app/forms/__init__.py                                                     | Python           |          9 |          0 |          1 |         10 |
+| /Users/dev/Documents/packtune/app/forms/feedback_form.py                                                | Python           |          5 |          0 |          2 |          7 |
+| /Users/dev/Documents/packtune/app/forms/login_form.py                                                   | Python           |         20 |          2 |          7 |         29 |
+| /Users/dev/Documents/packtune/app/forms/media_form.py                                                   | Python           |         16 |          0 |          3 |         19 |
+| /Users/dev/Documents/packtune/app/forms/opportunity_form.py                                             | Python           |          9 |          0 |          2 |         11 |
+| /Users/dev/Documents/packtune/app/forms/password_reset_form.py                                          | Python           |         10 |          0 |          2 |         12 |
+| /Users/dev/Documents/packtune/app/forms/password_reset_request_form.py                                  | Python           |          6 |          0 |          2 |          8 |
+| /Users/dev/Documents/packtune/app/forms/profile_form.py                                                 | Python           |         63 |          4 |          7 |         74 |
+| /Users/dev/Documents/packtune/app/forms/search_form.py                                                  | Python           |         10 |          0 |          3 |         13 |
+| /Users/dev/Documents/packtune/app/forms/signup_form.py                                                  | Python           |         33 |          7 |          8 |         48 |
+| /Users/dev/Documents/packtune/app/forms/submission_form.py                                              | Python           |         13 |          0 |          2 |         15 |
+| /Users/dev/Documents/packtune/app/models/__init__.py                                                    | Python           |         29 |          2 |          7 |         38 |
+| /Users/dev/Documents/packtune/app/models/parent.py                                                     | Python           |         23 |          0 |          5 |         28 |
+| /Users/dev/Documents/packtune/app/models/student.py                                                     | Python           |         74 |          2 |          7 |         83 |
+| /Users/dev/Documents/packtune/app/models/db.py                                                          | Python           |         10 |          1 |          5 |         16 |
+| /Users/dev/Documents/packtune/app/models/feedback.py                                                    | Python           |         23 |          2 |          7 |         32 |
+| /Users/dev/Documents/packtune/app/models/genre.py                                                       | Python           |         12 |          0 |          5 |         17 |
+| /Users/dev/Documents/packtune/app/models/media.py                                                       | Python           |         28 |          3 |          8 |         39 |
+| /Users/dev/Documents/packtune/app/models/opportunity.py                                                 | Python           |         56 |          4 |         12 |         72 |
+| /Users/dev/Documents/packtune/app/models/submission.py                                                  | Python           |         51 |          4 |          9 |         64 |
+| /Users/dev/Documents/packtune/app/models/type.py                                                        | Python           |         12 |          0 |          5 |         17 |
+| /Users/dev/Documents/packtune/app/models/user.py                                                        | Python           |         65 |          1 |         12 |         78 |
+| /Users/dev/Documents/packtune/app/seeds/__init__.py                                                     | Python           |         32 |          9 |          8 |         49 |
+| /Users/dev/Documents/packtune/app/seeds/parents.py                                                    | Python           |         34 |          1 |          6 |         41 |
+| /Users/dev/Documents/packtune/app/seeds/students.py                                                     | Python           |         98 |          2 |          6 |        106 |
+| /Users/dev/Documents/packtune/app/seeds/genres.py                                                       | Python           |         16 |          0 |          6 |         22 |
+| /Users/dev/Documents/packtune/app/seeds/opportunities.py                                                | Python           |        122 |          0 |         15 |        137 |
+| /Users/dev/Documents/packtune/app/seeds/types.py                                                        | Python           |         16 |          0 |          5 |         21 |
+| /Users/dev/Documents/packtune/app/seeds/users.py                                                        | Python           |         85 |          0 |          6 |         91 |
+| /Users/dev/Documents/packtune/app/utils/email_utils.py                                                  | Python           |         27 |          0 |          5 |         32 |
+| /Users/dev/Documents/packtune/flask-README.md                                                           | Markdown         |        104 |          0 |         42 |        146 |
+| /Users/dev/Documents/packtune/migrations/alembic.ini                                                    | Ini              |         38 |          0 |         13 |         51 |
+| /Users/dev/Documents/packtune/migrations/env.py                                                         | Python           |         60 |         17 |         29 |        106 |
+| /Users/dev/Documents/packtune/migrations/versions/20240323_134212_.py                                   | Python           |        219 |          5 |          9 |        233 |
+| /Users/dev/Documents/packtune/migrations/versions/20240528_170608_.py                                   | Python           |         23 |          5 |         11 |         39 |
+| /Users/dev/Documents/packtune/react-vite/.eslintrc.cjs                                                  | JavaScript       |         29 |          0 |          1 |         30 |
+| /Users/dev/Documents/packtune/react-vite/README.md                                                      | Markdown         |         13 |          0 |          6 |         19 |
+| /Users/dev/Documents/packtune/react-vite/dist/assets/DailyMotion-110b6476.js                            | JavaScript       |          1 |          0 |          1 |          2 |
+| /Users/dev/Documents/packtune/react-vite/dist/assets/Facebook-a967a520.js                               | JavaScript       |          1 |          0 |          1 |          2 |
+| /Users/dev/Documents/packtune/react-vite/dist/assets/FilePlayer-17850fee.js                             | JavaScript       |          1 |          0 |          1 |          2 |
+| /Users/dev/Documents/packtune/react-vite/dist/assets/Kaltura-cf751f87.js                                | JavaScript       |          1 |          0 |          1 |          2 |
+| /Users/dev/Documents/packtune/react-vite/dist/assets/Mixcloud-f35fb0d4.js                               | JavaScript       |          1 |          0 |          1 |          2 |
+| /Users/dev/Documents/packtune/react-vite/dist/assets/Mux-ebe27513.js                                    | JavaScript       |          1 |          0 |          1 |          2 |
+| /Users/dev/Documents/packtune/react-vite/dist/assets/Preview-d61d3859.js                                | JavaScript       |          1 |          0 |          1 |          2 |
+| /Users/dev/Documents/packtune/react-vite/dist/assets/SoundCloud-25e07cb4.js                             | JavaScript       |          1 |          0 |          1 |          2 |
+| /Users/dev/Documents/packtune/react-vite/dist/assets/Streamable-0c3fc29b.js                             | JavaScript       |          1 |          0 |          1 |          2 |
+| /Users/dev/Documents/packtune/react-vite/dist/assets/Twitch-93ece7e7.js                                 | JavaScript       |          1 |          0 |          1 |          2 |
+| /Users/dev/Documents/packtune/react-vite/dist/assets/Vidyard-6f411186.js                                | JavaScript       |          1 |          0 |          1 |          2 |
+| /Users/dev/Documents/packtune/react-vite/dist/assets/Vimeo-1491e928.js                                  | JavaScript       |          1 |          0 |          1 |          2 |
+| /Users/dev/Documents/packtune/react-vite/dist/assets/Wistia-7238aba2.js                                 | JavaScript       |          1 |          0 |          1 |          2 |
+| /Users/dev/Documents/packtune/react-vite/dist/assets/YouTube-ef8df436.js                                | JavaScript       |          1 |          0 |          1 |          2 |
+| /Users/dev/Documents/packtune/react-vite/dist/assets/index-696f3ddc.js                                  | JavaScript       |         19 |         80 |          1 |        100 |
+| /Users/dev/Documents/packtune/react-vite/dist/assets/index-d1ae4bcd.css                                 | CSS              |          1 |          0 |          1 |          2 |
+| /Users/dev/Documents/packtune/react-vite/dist/index.html                                                | HTML             |         16 |          0 |          6 |         22 |
+| /Users/dev/Documents/packtune/react-vite/index.html                                                     | HTML             |         15 |          0 |          5 |         20 |
+| /Users/dev/Documents/packtune/react-vite/package-lock.json                                              | JSON             |      4,104 |          0 |          1 |      4,105 |
+| /Users/dev/Documents/packtune/react-vite/package.json                                                   | JSON             |         36 |          0 |          1 |         37 |
+| /Users/dev/Documents/packtune/react-vite/src/components/ApplicationComplete/ApplicationComplete.css     | CSS              |         20 |          0 |          5 |         25 |
+| /Users/dev/Documents/packtune/react-vite/src/components/ApplicationComplete/ApplicationComplete.jsx     | JavaScript JSX   |         18 |          0 |          5 |         23 |
+| /Users/dev/Documents/packtune/react-vite/src/components/ApplicationComplete/index.js                    | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/CancelPage/CancelPage.jsx                       | JavaScript JSX   |         13 |          0 |          4 |         17 |
+| /Users/dev/Documents/packtune/react-vite/src/components/CancelPage/index.js                             | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/Charts/Charts.css                               | CSS              |         13 |          0 |          2 |         15 |
+| /Users/dev/Documents/packtune/react-vite/src/components/Charts/Charts.jsx                               | JavaScript JSX   |         38 |          1 |          6 |         45 |
+| /Users/dev/Documents/packtune/react-vite/src/components/Charts/index.js                                 | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/ContactUs/ContactUs.jsx                         | JavaScript JSX   |         81 |          0 |          5 |         86 |
+| /Users/dev/Documents/packtune/react-vite/src/components/ContactUs/index.js                              | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/GenreTypeForm/GenreTypeForm.jsx                 | JavaScript JSX   |        106 |          0 |         14 |        120 |
+| /Users/dev/Documents/packtune/react-vite/src/components/GenreTypeForm/index.js                          | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/LandingPage/LandingPage.css                     | CSS              |         39 |          2 |         10 |         51 |
+| /Users/dev/Documents/packtune/react-vite/src/components/LandingPage/LandingPage.jsx                     | JavaScript JSX   |         20 |          0 |          9 |         29 |
+| /Users/dev/Documents/packtune/react-vite/src/components/LandingPage/index.js                            | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/LoginFormModal/LoginForm.css                    | CSS              |          0 |          0 |          1 |          1 |
+| /Users/dev/Documents/packtune/react-vite/src/components/LoginFormModal/LoginFormModal.jsx               | JavaScript JSX   |         58 |          0 |          8 |         66 |
+| /Users/dev/Documents/packtune/react-vite/src/components/LoginFormModal/index.js                         | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/LoginFormPage/LoginForm.css                     | CSS              |          9 |          0 |          2 |         11 |
+| /Users/dev/Documents/packtune/react-vite/src/components/LoginFormPage/LoginFormPage.jsx                 | JavaScript JSX   |         86 |          0 |         12 |         98 |
+| /Users/dev/Documents/packtune/react-vite/src/components/LoginFormPage/index.js                          | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/MusicPlayer/MusicPlayer.css                     | CSS              |         37 |          0 |          9 |         46 |
+| /Users/dev/Documents/packtune/react-vite/src/components/MusicPlayer/MusicPlayer.jsx                     | JavaScript JSX   |         84 |         95 |         30 |        209 |
+| /Users/dev/Documents/packtune/react-vite/src/components/MusicPlayer/index.js                            | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/Navigation/Navigation.css                       | CSS              |         60 |          4 |         16 |         80 |
+| /Users/dev/Documents/packtune/react-vite/src/components/Navigation/Navigation.jsx                       | JavaScript JSX   |         84 |         76 |         20 |        180 |
+| /Users/dev/Documents/packtune/react-vite/src/components/Navigation/OpenModalMenuItem.jsx                | JavaScript JSX   |         18 |          0 |          5 |         23 |
+| /Users/dev/Documents/packtune/react-vite/src/components/Navigation/ProfileButton.jsx                    | JavaScript JSX   |         70 |          0 |         11 |         81 |
+| /Users/dev/Documents/packtune/react-vite/src/components/Navigation/index.js                             | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/OldMusicPlayer/OldMusicPlayer.jsx               | JavaScript JSX   |         39 |          3 |          5 |         47 |
+| /Users/dev/Documents/packtune/react-vite/src/components/OldMusicPlayer/index.js                         | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/OnboardingApplication/OnboardingApplication.css | CSS              |        118 |         11 |         21 |        150 |
+| /Users/dev/Documents/packtune/react-vite/src/components/OnboardingApplication/OnboardingApplication.jsx | JavaScript JSX   |        344 |        297 |         51 |        692 |
+| /Users/dev/Documents/packtune/react-vite/src/components/OnboardingApplication/index.js                  | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/OpenModalButton/OpenModalButton.jsx             | JavaScript JSX   |         16 |          0 |          5 |         21 |
+| /Users/dev/Documents/packtune/react-vite/src/components/OpenModalButton/index.js                        | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/Opportunities/Opportunities.css                 | CSS              |          0 |          0 |          1 |          1 |
+| /Users/dev/Documents/packtune/react-vite/src/components/Opportunities/Opportunities.jsx                 | JavaScript JSX   |         41 |          2 |          8 |         51 |
+| /Users/dev/Documents/packtune/react-vite/src/components/Opportunities/index.js                          | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/OpportunitiesBox/OpportunitiesBox.css           | CSS              |         51 |          2 |         10 |         63 |
+| /Users/dev/Documents/packtune/react-vite/src/components/OpportunitiesBox/OpportunitiesBox.jsx           | JavaScript JSX   |         30 |          0 |          6 |         36 |
+| /Users/dev/Documents/packtune/react-vite/src/components/OpportunitiesBox/index.js                       | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/OpportunitiesChart/OpportunitiesChart.jsx       | JavaScript JSX   |        112 |        110 |         30 |        252 |
+| /Users/dev/Documents/packtune/react-vite/src/components/OpportunitiesChart/index.js                     | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/OpportunitiesLayout/OpportunitiesLayout.css     | CSS              |         66 |          1 |         13 |         80 |
+| /Users/dev/Documents/packtune/react-vite/src/components/OpportunitiesLayout/OpportunitiesLayout.jsx     | JavaScript JSX   |        115 |        116 |         33 |        264 |
+| /Users/dev/Documents/packtune/react-vite/src/components/OpportunitiesLayout/index.js                    | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/Opportunity/Opportunity.css                     | CSS              |          3 |          0 |          1 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/Opportunity/Opportunity.jsx                     | JavaScript JSX   |         49 |          1 |          7 |         57 |
+| /Users/dev/Documents/packtune/react-vite/src/components/Opportunity/index.js                            | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/OpportunityForm/OpportunityForm.css             | CSS              |         17 |          0 |          2 |         19 |
+| /Users/dev/Documents/packtune/react-vite/src/components/OpportunityForm/OpportunityForm.jsx             | JavaScript JSX   |        192 |          4 |         25 |        221 |
+| /Users/dev/Documents/packtune/react-vite/src/components/OpportunityForm/index.js                        | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/OpportunityPage/OpportunityPage.css             | CSS              |          0 |          0 |          1 |          1 |
+| /Users/dev/Documents/packtune/react-vite/src/components/OpportunityPage/OpportunityPage.jsx             | JavaScript JSX   |         24 |          0 |          6 |         30 |
+| /Users/dev/Documents/packtune/react-vite/src/components/OpportunityPage/index.js                        | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/OpportunityUpdateForm/OpportunityUpdateForm.jsx | JavaScript JSX   |        170 |          2 |         15 |        187 |
+| /Users/dev/Documents/packtune/react-vite/src/components/OpportunityUpdateForm/index.js                  | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/PasswordReset/PasswordReset.jsx                 | JavaScript JSX   |         79 |          1 |          6 |         86 |
+| /Users/dev/Documents/packtune/react-vite/src/components/PasswordReset/index.js                          | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/PasswordResetRequest/PasswordResetRequest.jsx   | JavaScript JSX   |         62 |          2 |          6 |         70 |
+| /Users/dev/Documents/packtune/react-vite/src/components/PasswordResetRequest/index.js                   | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/ProfileForm/ProfileForm.css                     | CSS              |         10 |          1 |          2 |         13 |
+| /Users/dev/Documents/packtune/react-vite/src/components/ProfileForm/ProfileForm.jsx                     | JavaScript JSX   |        218 |          3 |         15 |        236 |
+| /Users/dev/Documents/packtune/react-vite/src/components/ProfileForm/index.js                            | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/ProfilePage/ProfilePage.css                     | CSS              |         64 |          3 |         12 |         79 |
+| /Users/dev/Documents/packtune/react-vite/src/components/ProfilePage/ProfilePage.jsx                     | JavaScript JSX   |        134 |         88 |         22 |        244 |
+| /Users/dev/Documents/packtune/react-vite/src/components/ProfilePage/index.js                            | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/RangeSlider/RangeSlider.css                     | CSS              |         47 |          1 |         10 |         58 |
+| /Users/dev/Documents/packtune/react-vite/src/components/RangeSlider/RangeSlider.jsx                     | JavaScript JSX   |         44 |          1 |          7 |         52 |
+| /Users/dev/Documents/packtune/react-vite/src/components/RangeSlider/index.js                            | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/SignupFormModal/SignupForm.css                  | CSS              |          0 |          0 |          1 |          1 |
+| /Users/dev/Documents/packtune/react-vite/src/components/SignupFormModal/SignupFormModal.jsx             | JavaScript JSX   |         88 |          0 |          8 |         96 |
+| /Users/dev/Documents/packtune/react-vite/src/components/SignupFormModal/index.js                        | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/SignupFormPage/SignupForm.css                   | CSS              |          5 |          0 |          1 |          6 |
+| /Users/dev/Documents/packtune/react-vite/src/components/SignupFormPage/SignupFormPage.jsx               | JavaScript JSX   |         98 |          0 |         11 |        109 |
+| /Users/dev/Documents/packtune/react-vite/src/components/SignupFormPage/index.js                         | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/SubmissionDetails/SubmissionDetails.css         | CSS              |         10 |          0 |          3 |         13 |
+| /Users/dev/Documents/packtune/react-vite/src/components/SubmissionDetails/SubmissionDetails.jsx         | JavaScript JSX   |         32 |          2 |          7 |         41 |
+| /Users/dev/Documents/packtune/react-vite/src/components/SubmissionDetails/index.js                      | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/SubmissionForm/SubmissionForm.css               | CSS              |         22 |          0 |          4 |         26 |
+| /Users/dev/Documents/packtune/react-vite/src/components/SubmissionForm/SubmissionForm.jsx               | JavaScript JSX   |         81 |        177 |         27 |        285 |
+| /Users/dev/Documents/packtune/react-vite/src/components/SubmissionForm/index.js                         | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/SubmissionItem/SubmissionItem.css               | CSS              |         60 |         26 |         18 |        104 |
+| /Users/dev/Documents/packtune/react-vite/src/components/SubmissionItem/SubmissionItem.jsx               | JavaScript JSX   |         84 |          1 |         12 |         97 |
+| /Users/dev/Documents/packtune/react-vite/src/components/SubmissionItem/index.js                         | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/Submissions/Submissions.css                     | CSS              |         65 |          0 |         11 |         76 |
+| /Users/dev/Documents/packtune/react-vite/src/components/Submissions/Submissions.jsx                     | JavaScript JSX   |        232 |         18 |         39 |        289 |
+| /Users/dev/Documents/packtune/react-vite/src/components/Submissions/index.js                            | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/SubmissionsChart/SubmissionsChart.jsx           | JavaScript JSX   |        122 |          7 |         13 |        142 |
+| /Users/dev/Documents/packtune/react-vite/src/components/SubmissionsChart/index.js                       | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/SubscriptionComponent/SubscriptionComponent.css | CSS              |         57 |          2 |         12 |         71 |
+| /Users/dev/Documents/packtune/react-vite/src/components/SubscriptionComponent/SubscriptionComponent.jsx | JavaScript JSX   |        100 |         58 |         26 |        184 |
+| /Users/dev/Documents/packtune/react-vite/src/components/SubscriptionComponent/index.js                  | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/SuccessPage/SuccessPage.jsx                     | JavaScript JSX   |         13 |          0 |          4 |         17 |
+| /Users/dev/Documents/packtune/react-vite/src/components/SuccessPage/index.js                            | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/Unauthorized/Unauthorized.jsx                   | JavaScript JSX   |          9 |          0 |          2 |         11 |
+| /Users/dev/Documents/packtune/react-vite/src/components/Unauthorized/index.js                           | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/UserInfo/UserInfo.css                           | CSS              |          4 |          0 |          1 |          5 |
+| /Users/dev/Documents/packtune/react-vite/src/components/UserInfo/UserInfo.jsx                           | JavaScript JSX   |        100 |         65 |         27 |        192 |
+| /Users/dev/Documents/packtune/react-vite/src/components/UserInfo/index.js                               | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/UserSubmissions/UserSubmissions.css             | CSS              |         78 |         77 |         18 |        173 |
+| /Users/dev/Documents/packtune/react-vite/src/components/UserSubmissions/UserSubmissions.jsx             | JavaScript JSX   |        141 |        139 |         40 |        320 |
+| /Users/dev/Documents/packtune/react-vite/src/components/UserSubmissions/index.js                        | JavaScript       |          2 |          0 |          3 |          5 |
+| /Users/dev/Documents/packtune/react-vite/src/components/UsersChart/UsersChart.jsx                       | JavaScript JSX   |         44 |          0 |          6 |         50 |
+| /Users/dev/Documents/packtune/react-vite/src/components/UsersChart/index.js                             | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/Waveform/Waveform.css                           | CSS              |          0 |          0 |          1 |          1 |
+| /Users/dev/Documents/packtune/react-vite/src/components/Waveform/Waveform.jsx                           | JavaScript JSX   |         40 |          2 |         11 |         53 |
+| /Users/dev/Documents/packtune/react-vite/src/components/Waveform/index.js                               | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/components/WithParentGuard/WithParentGuard.css           | CSS              |          0 |          0 |          1 |          1 |
+| /Users/dev/Documents/packtune/react-vite/src/components/WithParentGuard/WithParentGuard.jsx           | JavaScript JSX   |         14 |          0 |          4 |         18 |
+| /Users/dev/Documents/packtune/react-vite/src/components/WithParentGuard/index.js                       | JavaScript       |          2 |          0 |          2 |          4 |
+| /Users/dev/Documents/packtune/react-vite/src/context/Modal.css                                          | CSS              |         22 |          0 |          2 |         24 |
+| /Users/dev/Documents/packtune/react-vite/src/context/Modal.jsx                                          | JavaScript JSX   |         45 |          6 |          9 |         60 |
+| /Users/dev/Documents/packtune/react-vite/src/index.css                                                  | CSS              |        125 |          6 |         45 |        176 |
+| /Users/dev/Documents/packtune/react-vite/src/main.jsx                                                   | JavaScript JSX   |         20 |          0 |          4 |         24 |
+| /Users/dev/Documents/packtune/react-vite/src/redux/feedback.js                                          | JavaScript       |         89 |          6 |         15 |        110 |
+| /Users/dev/Documents/packtune/react-vite/src/redux/media.js                                             | JavaScript       |         50 |          4 |          9 |         63 |
+| /Users/dev/Documents/packtune/react-vite/src/redux/opportunities.js                                     | JavaScript       |        317 |         17 |         39 |        373 |
+| /Users/dev/Documents/packtune/react-vite/src/redux/profile.js                                           | JavaScript       |         74 |          8 |         17 |         99 |
+| /Users/dev/Documents/packtune/react-vite/src/redux/session.js                                           | JavaScript       |         86 |          2 |         16 |        104 |
+| /Users/dev/Documents/packtune/react-vite/src/redux/store.js                                             | JavaScript       |         38 |          0 |          5 |         43 |
+| /Users/dev/Documents/packtune/react-vite/src/redux/submissions.js                                       | JavaScript       |        295 |         17 |         34 |        346 |
+| /Users/dev/Documents/packtune/react-vite/src/redux/useropps.js                                          | JavaScript       |         43 |          0 |          8 |         51 |
+| /Users/dev/Documents/packtune/react-vite/src/redux/users.js                                             | JavaScript       |         82 |          9 |         15 |        106 |
+| /Users/dev/Documents/packtune/react-vite/src/router/Layout.jsx                                          | JavaScript JSX   |         22 |          0 |          3 |         25 |
+| /Users/dev/Documents/packtune/react-vite/src/router/index.jsx                                           | JavaScript JSX   |        140 |          0 |          2 |        142 |
+| /Users/dev/Documents/packtune/react-vite/vite.config.js                                                 | JavaScript       |         18 |          1 |          2 |         21 |
+| /Users/dev/Documents/packtune/requirements.txt                                                          | pip requirements |         33 |          0 |          1 |         34 |
+| Total                                                                                                   |                  |     13,756 |      1,898 |      1,781 |     17,435 |
++---------------------------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+
