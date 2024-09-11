@@ -1,19 +1,19 @@
 import React from 'react';
-import { View, TextInput, Button, Text, StyleSheet } from 'react-native';
+import { View, TextInput, Button, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = ({ navigation }) => {
   const { control, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
-      identifier: '', // Changed from 'username' to 'identifier'
-      password: '', // Initialize with an empty string
+      identifier: '',
+      password: '',
     }
   });
 
   const onSubmit = async (data) => {
     try {
-      // Fetch CSRF token from cookies if needed
       const csrfToken = document.cookie
         .split('; ')
         .find((row) => row.startsWith('csrf_token='))
@@ -22,14 +22,15 @@ const Login = ({ navigation }) => {
       const response = await axios.post('http://localhost:8000/api/auth/login', data, {
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRF-Token': csrfToken,  // Include the CSRF token in headers
+          'X-CSRF-Token': csrfToken,
         },
-        withCredentials: true,  // Include cookies in requests
+        withCredentials: true,
       });
 
       if (response.status === 200) {
-        console.log('User data from backend:', response.data); // Debugging line
-        navigation.navigate('Profile', { user: response.data }); // Ensure this is correct
+        console.log('User data from backend:', response.data);
+        await AsyncStorage.setItem('user', JSON.stringify(response.data)); // Store user data
+        navigation.navigate('Profile', { user: response.data }); // Navigate to Profile
       }
     } catch (error) {
       console.error('Login error:', error);
@@ -42,7 +43,7 @@ const Login = ({ navigation }) => {
       <Controller
         control={control}
         rules={{ required: true }}
-        name="identifier" // Changed from 'username' to 'identifier'
+        name="identifier"
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
             style={styles.input}
@@ -73,6 +74,11 @@ const Login = ({ navigation }) => {
       {errors.password && <Text>This is required.</Text>}
 
       <Button title="Login" onPress={handleSubmit(onSubmit)} />
+
+      {/* Button to navigate to the Sign Up screen */}
+      <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+        <Text style={styles.linkText}>Don't have an account? Sign Up</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -80,6 +86,7 @@ const Login = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: 'center', padding: 16 },
   input: { borderWidth: 1, padding: 8, marginVertical: 8 },
+  linkText: { color: 'blue', marginTop: 16, textAlign: 'center' },
 });
 
 export default Login;
